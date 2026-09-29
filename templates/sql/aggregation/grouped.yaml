@@ -1,0 +1,41 @@
+template_id: sql.aggregation.grouped
+version: 2
+family: aggregation
+difficulty: 2
+description: Grouped SUM/AVG/COUNT/DISTINCT revenue statistics with NULL semantics.
+tables:
+  - name: orders
+    row_kind: orders
+    row_count: 50
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: true}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config:
+  year: 2025
+requirements:
+  objective: grouped_order_statistics
+  year: 2025
+  group_by: [orders.status]
+  null_handling: sum_avg_ignore_nulls
+  count_semantics: count_star_counts_rows_count_amount_counts_non_null
+  empty_group_behavior: no_row_for_absent_status
+  output_columns: [orders.status, order_count, total_amount, avg_amount]
+  order_by: [orders.status]
+edge_cases:
+  - null_values
+  - single_row_groups
+  - zero_values
+oracle:
+  type: reference_query
+  strategy: independent_grouped_aggregation
+instruction_template: >-
+  Using the {tables} table, compute per-status order statistics for {year}: order count
+  as COUNT(*) AS order_count, total amount as SUM(amount) AS total_amount, and average
+  amount as AVG(amount) AS avg_amount. Return exactly the columns status, order_count,
+  total_amount, avg_amount in that order.
+  {null_handling}: NULL amounts are skipped by SUM/AVG. {count_semantics}.
+  {empty_group_behavior}: statuses with zero rows produce no output row.
+  Group by status ({group_by}) and order by status. Active edge cases: {edge_cases}.

@@ -1,0 +1,20 @@
+{
+  "run_id": "UNSET_UNTIL_EXECUTION",
+  "production_config_id": "sha256:content-defined-at-preflight",
+  "factory_version": "0.8.0",
+  "source_revision": "UNSET_AT_EXECUTION",
+  "model_id": "alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest",
+  "model_revision": "ollama-digest:a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+  "prompt_version": "sql-v2",
+  "generation_config": {"temperature": 0.4, "top_p": 0.95, "max_tokens": 2048},
+  "task_engine_version": "1.0",
+  "sandbox_version": "1.0",
+  "verification_version": "1.0",
+  "quality_version": "1.0",
+  "provenance_version": "1.0",
+  "product_version": "1.0",
+  "seed": 12001,
+  "target_golden": 1000,
+  "batch_policy": "adaptive; measured yield only; immutable config required for resume",
+  "actual_metrics": "UNSET_UNTIL_EXECUTION"
+}

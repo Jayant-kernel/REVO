@@ -1,0 +1,54 @@
+template_id: sql.retention.30_day
+version: 2
+family: retention
+difficulty: 3
+description: 30-day purchase retention cohorts from signup.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 20
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: events
+    row_kind: events
+    row_count: 80
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: event_type, type: VARCHAR, nullable: false}
+      - {name: event_time, type: TIMESTAMP, nullable: false}
+generation_config:
+  retention_window_days: 30
+  qualifying_event: purchase
+requirements:
+  objective: retained_customers_30_day
+  retention_window_days: 30
+  qualifying_event: purchase
+  cohort_definition: all_customers_signup_anchored
+  boundary_policy: inclusive_both_ends_day_30_counts
+  repeated_event_policy: any_qualifying_event_retained
+  timestamp_interpretation: event_calendar_date_compared_to_signup_date
+  output_columns: [customers.customer_id, retained]
+  order_by: [customers.customer_id]
+edge_cases:
+  - no_events
+  - duplicate_events
+  - multiple_purchases
+  - same_day_events
+  - retention_boundaries
+oracle:
+  type: reference_query
+  strategy: independent_aggregation
+instruction_template: >-
+  Using the {tables} tables, determine for each customer ({cohort_definition}) whether they
+  performed a '{qualifying_event}' event whose CAST(event_time AS DATE) satisfies
+  signup_date <= CAST(event_time AS DATE) <= signup_date +
+  {retention_window_days} days ({boundary_policy}: an event exactly 30 days after signup
+  counts; events before signup never count). {repeated_event_policy}: one qualifying event
+  suffices. Return customer_id and retained (BOOLEAN) ordered by customer_id.
+  Event time is interpreted by its stored naive calendar date; no timezone conversion is
+  applied. Handle customers with no events, duplicate events, multiple purchases,
+  same-day events, and the day-30/day-31 boundaries ({edge_cases}).

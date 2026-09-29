@@ -1,0 +1,51 @@
+template_id: sql.windows.ranked
+version: 2
+family: window_functions
+difficulty: 3
+description: ROW_NUMBER/RANK running totals and LAG deltas over customer orders.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 8
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: orders
+    row_kind: orders
+    row_count: 48
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: true}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config:
+  year: 2025
+requirements:
+  objective: ranked_orders_with_running_total
+  year: 2025
+  status_filter: completed
+  partition_by: customer_id
+  rank_order: amount_desc
+  running_order: order_date_then_order_id
+  tie_policy: rank_gaps_shared_rank
+  null_ordering: nulls_last
+  lag_semantics: previous_amount_by_order_date_then_order_id_null_for_first_row
+  output_columns: [customers.customer_id, orders.order_id, orders.order_date, order_rank, running_total, previous_amount]
+  order_by: [customers.customer_id, orders.order_date, orders.order_id]
+edge_cases:
+  - ties
+  - null_values
+oracle:
+  type: reference_query
+  strategy: independent_window_computation
+instruction_template: >-
+  Using the {tables} tables, consider each customer's {year} '{status_filter}' orders
+  partitioned by {partition_by}. Rank orders by {rank_order} with RANK ({tie_policy});
+  NULL amounts sort {null_ordering}. Compute a running total of amount ordered by
+  {running_order}, with LAG(amount) defaulting to NULL on each partition's first row.
+  Return customer_id, order_id, order_date, order_rank, running_total, and the
+  LAG result as previous_amount, ordered by customer_id, order_date, and order_id.
+  Ties and NULL amounts are present ({edge_cases}); SUM ignores NULL amounts.

@@ -1,0 +1,46 @@
+template_id: sql.joins.simple
+version: 1
+family: simple_joins
+difficulty: 1
+description: Total revenue per customer from a one-to-many customers/orders join.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 12
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: orders
+    row_kind: orders
+    row_count: 40
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config:
+  year: 2025
+requirements:
+  objective: total_revenue_per_customer
+  year: 2025
+  status_filter: completed
+  join_type: inner
+  unmatched_behavior: exclude_customers_without_orders
+  null_semantics: null_keys_never_match_amounts_never_null
+  duplicate_handling: each_order_counted_once
+  output_columns: [customers.customer_id, total_revenue]
+  order_by: [total_revenue]
+edge_cases:
+  - missing_relationships
+  - null_values
+oracle:
+  type: reference_query
+  strategy: independent_join_aggregation
+instruction_template: >-
+  Using the {tables} tables, calculate the total revenue for each customer during {year},
+  considering only orders with status '{status_filter}'. Use an INNER JOIN ({join_type});
+  {unmatched_behavior}. Return customer_id and total_revenue, ordered from highest to
+  lowest revenue. NULL join keys never match ({null_semantics}); {duplicate_handling}.

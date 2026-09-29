@@ -1,0 +1,56 @@
+template_id: sql.temporal.monthly
+version: 3
+family: temporal
+difficulty: 2
+description: Independent monthly order and event counts in an inclusive date window.
+tables:
+  - name: orders
+    row_kind: orders
+    row_count: 60
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+  - name: events
+    row_kind: events
+    row_count: 60
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: event_type, type: VARCHAR, nullable: false}
+      - {name: event_time, type: TIMESTAMP, nullable: false}
+generation_config:
+  year: 2025
+  window_start: "2025-01-01"
+  window_end: "2025-03-31"
+requirements:
+  objective: monthly_activity_in_window
+  year: 2025
+  window_start: "2025-01-01"
+  window_end: "2025-03-31"
+  boundary_policy: inclusive_both_ends
+  month_definition: calendar_month_YYYY_MM
+  month_representation: duckdb_strftime_yyyy_mm_varchar
+  sql_dialect: DuckDB
+  prohibited_functions: [DATE_FORMAT, TO_CHAR]
+  aggregation_semantics: independently_aggregate_orders_and_events_by_month_then_union_month_keys
+  output_columns: [activity_month, order_count, event_count]
+  order_by: [activity_month]
+edge_cases:
+  - out_of_order_timestamps
+  - same_day_events
+oracle:
+  type: reference_query
+  strategy: independent_temporal_aggregation
+instruction_template: >-
+  Using the {tables} tables, write valid DuckDB SQL. Count orders and events per
+  calendar month within the inclusive window {window_start} to {window_end}.
+  activity_month must be a VARCHAR formatted exactly YYYY-MM using DuckDB-compatible
+  semantics (for example strftime); do not use MySQL DATE_FORMAT or PostgreSQL
+  TO_CHAR. Independently aggregate orders by order_date and events by DATE(event_time),
+  then combine the monthly keys so rows are not multiplied by joining raw orders
+  to raw events. Return exactly activity_month, order_count, and event_count in
+  that order, ordered by activity_month. Months are {month_definition}; timestamps
+  are naive with no time zones. {edge_cases}.

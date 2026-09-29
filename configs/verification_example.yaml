@@ -1,0 +1,17 @@
+# Example Verification settings (Phase 4). Copy and adapt.
+verification:
+  hidden_cases: 3
+  properties:
+    enabled: true
+  metamorphic:
+    enabled: true
+  mutation:
+    enabled: true
+    max_mutations: 20
+    min_score: 0.9
+  performance:
+    enabled: true
+    warn_after_ms: null
+  comparison:
+    float_abs_tol: 1e-9
+    float_rel_tol: 1e-7

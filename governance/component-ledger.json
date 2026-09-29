@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "release_candidate": "premium-qualification-080",
+  "commercially_cleared": false,
+  "approval_signoff": null,
+  "components": [
+    {
+      "component_type": "generator_model",
+      "name": "alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest",
+      "ollama_manifest_digest": "a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+      "ollama_weight_blob": "sha256:d82ade0c355b4c33ff1f14fc81ef0b399b66c13cee4c6422cc14918f68fd1019",
+      "architecture": "mistral3",
+      "parameter_count": "23.6B",
+      "quantization": "Q4_K_M",
+      "embedded_base_model": "mistralai/Devstral-Small-2-24B-Instruct-2512",
+      "embedded_license_claim": "Apache-2.0",
+      "license_evidence_status": "REVIEW_REQUIRED",
+      "commercial_use_status": "UNKNOWN",
+      "redistribution_status": "UNKNOWN",
+      "modifications": [
+        "third-party GGUF quantization",
+        "abliterated derivative"
+      ],
+      "evidence": [
+        "ollama show --modelfile",
+        "ollama show --verbose"
+      ],
+      "blocking_reasons": [
+        "Ollama artifact has not been mapped to an immutable upstream repository commit",
+        "license and notice files are not embedded by ollama show --license",
+        "commercial output-distribution review has not been signed"
+      ]
+    }
+  ]
+}

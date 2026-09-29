@@ -1,0 +1,15 @@
+# Example Quality settings (Phase 5). Copy and adapt.
+quality:
+  mutation_min_score: 0.9
+  require_strong_verification: true
+  family_quotas: {}
+  max_family_share: null
+  audit_rate: 0.2
+  audit_seed: 42
+  risk_threshold_high: 5
+  risk_threshold_medium: 2
+  rare_family_threshold: 0.05
+  contamination_block_exact_private_eval: true
+  contamination_block_known_source: true
+  known_source_hashes: []
+  selection_seed: 42

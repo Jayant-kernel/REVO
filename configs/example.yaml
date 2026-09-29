@@ -1,0 +1,5 @@
+# Placeholder for future runtime configuration (Phase 1+).
+# Phase 0 defines conventions only: YAML + Pydantic validation.
+# See docs/technical-stack.md. Do not add secrets here.
+project: verified-data-factory
+phase: 0

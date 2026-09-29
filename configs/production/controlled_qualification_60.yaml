@@ -1,0 +1,53 @@
+production:
+  config_version: "3.0"
+  run_name: controlled-qualification-060
+  target_golden_records: 60
+  initial_task_batch: 50
+  candidates_per_task: 2
+  max_batches: 4
+  output_dir: runs/controlled-qualification-060
+  seed: 33001
+  model:
+    model_id: alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest
+    model_revision: ollama-digest:a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4
+    provider: devstral
+    endpoint: http://localhost:11434/v1
+    prompt_version: sql-v2
+    parser_version: "1.0"
+    temperature: 0.3
+    top_p: 0.9
+    max_tokens: 2048
+  budget:
+    max_total_tasks: 200
+    max_total_candidates: 400
+    max_wall_time_minutes: 1440
+  family_distribution:
+    simple_joins: 5
+    multi_joins: 5
+    aggregation: 5
+    cte: 5
+    subqueries: 5
+    window_functions: 5
+    temporal: 5
+    deduplication: 5
+    retention: 5
+    funnel: 5
+  quality_config: configs/quality_example.yaml
+  sandbox_config: configs/sandbox_example.yaml
+  provenance_config: configs/provenance_example.yaml
+  product_config: configs/product_example.yaml
+  audit:
+    sample_size: 60
+    risk_based_selection: true
+    seed: 43001
+  pause_conditions:
+    zero_golden_attempts: 60
+    execution_error_rate: 0.45
+    inconclusive_rate: 0.25
+    semantic_duplicate_rate: 0.85
+  diversity_warnings:
+    semantic_duplicate_rate: 0.75
+    structural_duplicate_rate: 0.35
+    exact_duplicate_rate: 0.25
+  private_benchmark_target: 150
+  business_hypothesis: INSUFFICIENT_EVIDENCE

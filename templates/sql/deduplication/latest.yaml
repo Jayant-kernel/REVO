@@ -1,0 +1,37 @@
+template_id: sql.dedup.latest
+version: 2
+family: deduplication
+difficulty: 2
+description: Latest record per entity with explicit tie-breaking.
+tables:
+  - name: events
+    row_kind: events
+    row_count: 50
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: event_type, type: VARCHAR, nullable: false}
+      - {name: event_time, type: TIMESTAMP, nullable: false}
+generation_config: {}
+requirements:
+  objective: latest_event_per_customer
+  duplicate_key: customer_id_event_type_event_time
+  winner_rule: max_event_time
+  tie_break: highest_event_id
+  timestamp_tie_policy: highest_event_id_wins
+  output_columns: [events.customer_id, events.event_type, events.event_time]
+  order_by: [events.customer_id]
+edge_cases:
+  - duplicates
+  - duplicate_events
+  - ties
+oracle:
+  type: reference_query
+  strategy: independent_dedup_selection
+instruction_template: >-
+  Using the {tables} table, return the latest event per customer. A duplicate is defined
+  by equal {duplicate_key}. Select exactly one row per customer: compare all of that
+  customer's events (do not partition by event_type), choose the row with {winner_rule},
+  and on an exact timestamp tie choose {tie_break} ({timestamp_tie_policy}). Return
+  customer_id, event_type and event_time ordered by customer_id. Duplicates and ties are
+  present ({edge_cases}).

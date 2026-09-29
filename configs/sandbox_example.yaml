@@ -1,0 +1,19 @@
+# Example Sandbox settings (Phase 3). Copy and adapt.
+# Runtime candidate execution needs no network; only image BUILD does.
+sandbox:
+  image: verified-data-factory-sandbox:1.0
+  # image_digest: sha256:... # optional pin; runtime records actual digest
+  timeout_seconds: 10
+  memory_mb: 512
+  cpus: 1.0
+  pids_limit: 64
+  max_result_rows: 10000
+  max_result_bytes: 1048576
+  max_stdout_bytes: 65536
+  max_stderr_bytes: 65536
+  network: none
+  read_only_root: true
+  non_root: true
+  cap_drop_all: true
+  no_new_privileges: true
+  single_statement_only: true

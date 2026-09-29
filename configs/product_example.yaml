@@ -1,0 +1,24 @@
+# Example Data Product settings (Phase 7). Copy and adapt.
+product:
+  product_name: demo-train
+  product_type: TRAIN
+  visibility: INTERNAL
+  schema_version: "1.0"
+  output_format: jsonl
+  include_sql_target: true
+  metadata_exposure: standard
+  provenance_exposure: true
+  split_policy:
+    seed: 42
+    train: 0.8
+    public_eval: 0.1
+    private_eval: 0.1
+    group_by: semantic_group
+    require_group_isolation: true
+    balance_families: false
+    min_split_size: 0
+    policy_version: "1.0"
+  shard_size: 0
+  preview_size: 5
+  output_dir: release
+  config_version: "1.0"

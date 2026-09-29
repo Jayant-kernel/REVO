@@ -1,0 +1,9 @@
+# Example Provenance settings (Phase 6). Copy and adapt.
+provenance:
+  emit_raw_artifacts: true
+  max_inline_bytes: 1048576
+  source_scope:
+    - src/verified_data_factory
+    - pyproject.toml
+    - configs/
+  config_version: "1.0"

@@ -1,0 +1,62 @@
+template_id: sql.joins.multi
+version: 1
+family: multi_joins
+difficulty: 2
+description: Revenue per customer across customers/orders/order_items/products with gaps.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 12
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: orders
+    row_kind: orders
+    row_count: 36
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+  - name: products
+    row_kind: products
+    row_count: 8
+    columns:
+      - {name: product_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: category, type: VARCHAR, nullable: false}
+      - {name: price, type: DOUBLE, nullable: false}
+  - name: order_items
+    row_kind: order_items
+    row_count: 60
+    columns:
+      - {name: item_id, type: INTEGER, nullable: false}
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: product_id, type: INTEGER, nullable: false}
+      - {name: quantity, type: INTEGER, nullable: false}
+generation_config:
+  year: 2025
+requirements:
+  objective: revenue_per_customer_category
+  year: 2025
+  status_filter: completed
+  join_type: inner
+  unmatched_behavior: exclude_entities_without_full_chain
+  line_revenue_def: sum_quantity_times_price
+  output_columns: [customers.customer_id, products.category, line_revenue]
+  order_by: [line_revenue]
+edge_cases:
+  - missing_relationships
+  - multiple_matching_rows
+oracle:
+  type: reference_query
+  strategy: independent_multi_join_aggregation
+instruction_template: >-
+  Using the {tables} tables, compute total line revenue per customer and product category
+  for {year}, keeping only orders with status '{status_filter}'. Join with INNER JOINs
+  ({join_type}); {unmatched_behavior}. Line revenue is defined as {line_revenue_def}
+  (order_items.quantity * products.price, summed). Return customer_id, category and
+  line_revenue ordered by line_revenue descending. Coverage gaps exist ({edge_cases}).

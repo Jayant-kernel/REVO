@@ -1,0 +1,16 @@
+# Example Generation settings (Phase 2). Copy and adapt; never commit secrets.
+# The model server is expected to be a self-hosted OpenAI-compatible
+# endpoint (e.g. vLLM serving an open-weight model). No server is required
+# for unit tests (they use FakeProvider).
+provider:
+  name: qwen # qwen | devstral (see generation.providers.PROVIDERS)
+  base_url: http://localhost:8000/v1
+  api_key_env: VDF_API_KEY # optional; read from the environment, never stored
+  model_revision: unspecified
+  timeout_s: 120
+  max_retries: 2
+  retry_backoff_s: 1.0
+sampling:
+  temperature: 0.4
+  top_p: 0.95
+  max_tokens: 2048

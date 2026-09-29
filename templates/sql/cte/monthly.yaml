@@ -1,0 +1,44 @@
+template_id: sql.cte.monthly
+version: 2
+family: cte
+difficulty: 3
+description: Monthly revenue per customer via CTE decomposition, top month per customer.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 10
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: orders
+    row_kind: orders
+    row_count: 48
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config:
+  year: 2025
+requirements:
+  objective: top_revenue_month_per_customer
+  year: 2025
+  status_filter: completed
+  top_tie_break: earliest_month_wins
+  unmatched_behavior: exclude_customers_without_qualifying_orders
+  output_columns: [customers.customer_id, revenue_month, monthly_revenue]
+  order_by: [customers.customer_id]
+edge_cases:
+  - missing_relationships
+oracle:
+  type: reference_query
+  strategy: independent_cte_aggregation
+instruction_template: >-
+  Using the {tables} tables, use a CTE to compute monthly revenue per customer for {year}
+  (status '{status_filter}'), then return each customer's top revenue month. Return
+  customer_id, revenue_month as a VARCHAR formatted exactly YYYY-MM (not a DATE or
+  TIMESTAMP), and monthly_revenue ordered by customer_id.
+  {unmatched_behavior}. Month-revenue ties break by {top_tie_break}.

@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.env/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.hypothesis/
+
+# Type checking / linting
+.mypy_cache/
+.ruff_cache/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Secrets / credentials — never commit
+.env
+*.pem
+*.key
+secrets.yaml
+secrets.yml
+
+# Model weights — never commit
+*.bin
+*.safetensors
+*.gguf
+*.onnx
+/models/
+/weights/
+/checkpoints/
+
+# Generated datasets / artifacts — never commit (see docs/licensing.md, docs/data-model.md)
+data/
+datasets/
+*.jsonl
+*.parquet
+*.duckdb
+*.db
+
+# Docker runtime data
+.docker/
+
+# Local config overrides
+configs/local*.yaml
+configs/local*.yml

@@ -1,0 +1,47 @@
+template_id: sql.cte.monthly
+version: 4
+family: cte
+difficulty: 3
+description: Monthly revenue per customer via a DuckDB-specific CTE contract.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 10
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: orders
+    row_kind: orders
+    row_count: 48
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config: {year: 2025}
+requirements:
+  objective: top_revenue_month_per_customer
+  year: 2025
+  status_filter: completed
+  top_tie_break: earliest_month_wins
+  unmatched_behavior: exclude_customers_without_qualifying_orders
+  month_representation: duckdb_strftime_yyyy_mm_varchar
+  duckdb_month_expression: "strftime('%Y-%m', CAST(order_date AS DATE))"
+  sql_dialect: DuckDB
+  prohibited_functions: [DATE_FORMAT, TO_CHAR]
+  output_columns: [customer_id, revenue_month, monthly_revenue]
+  order_by: [customer_id]
+edge_cases: [missing_relationships]
+oracle: {type: reference_query, strategy: independent_cte_aggregation}
+instruction_template: >-
+  Write valid DuckDB SQL using customers and orders. Use exactly one monthly-revenue
+  CTE for completed orders in {year}; group it by customer_id and
+  strftime('%Y-%m', CAST(order_date AS DATE)). Never reverse the strftime arguments:
+  its format literal is first and its DATE value is second. Do not apply strftime to
+  revenue_month after it has become a VARCHAR. Rank and filter that same CTE once to
+  return each customer's top revenue month; do not join it to a second copy. Return
+  exactly customer_id, revenue_month, monthly_revenue ordered by customer_id. Do not
+  use DATE_FORMAT or TO_CHAR. {unmatched_behavior}; ties use {top_tie_break}.

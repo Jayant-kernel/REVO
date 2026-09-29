@@ -1,0 +1,25 @@
+quality:
+  config_version: "2.0-premium-93"
+  mutation_min_score: 1.0
+  require_strong_verification: true
+  family_quotas:
+    simple_joins: 8
+    multi_joins: 8
+    aggregation: 8
+    cte: 8
+    subqueries: 8
+    window_functions: 8
+    temporal: 8
+    deduplication: 8
+    retention: 8
+    funnel: 8
+  max_family_share: 0.10
+  audit_rate: 1.0
+  audit_seed: 93001
+  risk_threshold_high: 5
+  risk_threshold_medium: 2
+  rare_family_threshold: 0.05
+  contamination_block_exact_private_eval: true
+  contamination_block_known_source: true
+  known_source_hashes: []
+  selection_seed: 93001

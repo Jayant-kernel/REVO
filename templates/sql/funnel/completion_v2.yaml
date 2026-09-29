@@ -1,0 +1,46 @@
+template_id: sql.funnel.completion
+version: 2
+family: funnel
+difficulty: 4
+description: Funnel completion and sessionization with inactivity threshold.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 15
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: events
+    row_kind: funnel_events
+    row_count: 90
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: event_type, type: VARCHAR, nullable: false}
+      - {name: event_time, type: TIMESTAMP, nullable: false}
+generation_config:
+  funnel_steps: [view, add_to_cart, checkout, purchase]
+  session_gap_minutes: 30
+requirements:
+  objective: funnel_completion_per_customer
+  funnel_steps: [view, add_to_cart, checkout, purchase]
+  session_gap_minutes: 30
+  consecutiveness: steps_in_order_gaps_allowed
+  cross_session_policy: steps_may_span_sessions
+  repeat_policy: first_occurrence_chains
+  output_columns: [customers.customer_id, max_step_reached, completed]
+  order_by: [customers.customer_id]
+edge_cases: [missing_relationships, out_of_order_timestamps, duplicate_events]
+oracle: {type: reference_query, strategy: independent_funnel_ordering}
+instruction_template: >-
+  Using the {tables} tables, compute per-customer funnel progress through the ordered steps
+  {funnel_steps}. {consecutiveness}: steps must occur in timestamp order but non-step events
+  may interleave; {repeat_policy}: scan chronologically and the first matching next step
+  extends the chain. Session boundaries have no effect on the result ({cross_session_policy});
+  do not calculate a session id. Return every customer, including customers with no events
+  (max_step_reached = 0 and completed = FALSE). max_step_reached is the number of completed
+  prefix steps (0 through 4), and completed is BOOLEAN true iff all steps are reached. Return
+  customer_id, max_step_reached, completed ordered by customer_id. Handle out-of-order
+  timestamps and duplicate events ({edge_cases}). Naive timestamps, no timezones.

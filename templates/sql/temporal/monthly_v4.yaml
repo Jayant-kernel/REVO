@@ -1,0 +1,55 @@
+template_id: sql.temporal.monthly
+version: 4
+family: temporal
+difficulty: 2
+description: DuckDB-specific independent monthly order and event aggregation.
+tables:
+  - name: orders
+    row_kind: orders
+    row_count: 60
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+  - name: events
+    row_kind: events
+    row_count: 60
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: event_type, type: VARCHAR, nullable: false}
+      - {name: event_time, type: TIMESTAMP, nullable: false}
+generation_config: {year: 2025, window_start: "2025-01-01", window_end: "2025-03-31"}
+requirements:
+  objective: monthly_activity_in_window
+  year: 2025
+  window_start: "2025-01-01"
+  window_end: "2025-03-31"
+  boundary_policy: inclusive_both_ends
+  month_definition: calendar_month_YYYY_MM
+  month_representation: duckdb_strftime_yyyy_mm_varchar
+  order_month_expression: "strftime('%Y-%m', CAST(order_date AS DATE))"
+  event_month_expression: "strftime('%Y-%m', CAST(event_time AS DATE))"
+  sql_dialect: DuckDB
+  prohibited_functions: [DATE_FORMAT, TO_CHAR]
+  aggregation_semantics: independently_aggregate_orders_and_events_by_month_then_union_month_keys
+  output_columns: [activity_month, order_count, event_count]
+  order_by: [activity_month]
+edge_cases: [out_of_order_timestamps, same_day_events]
+oracle: {type: reference_query, strategy: independent_temporal_aggregation}
+instruction_template: >-
+  Write valid DuckDB SQL using only orders and events. Create orders_by_month with
+  activity_month and order_count using strftime('%Y-%m', CAST(order_date AS DATE));
+  create events_by_month with activity_month and event_count using
+  strftime('%Y-%m', CAST(event_time AS DATE)). The format literal is first; never
+  reverse strftime arguments and never format activity_month again after it is a
+  VARCHAR. Aggregate each source before combining them; never join raw orders to raw
+  events. Combine the aggregate CTEs with a FULL OUTER JOIN using
+  o.activity_month = e.activity_month, then select
+  COALESCE(o.activity_month, e.activity_month) AS activity_month,
+  COALESCE(o.order_count, 0) AS order_count, and COALESCE(e.event_count, 0) AS
+  event_count. Never select an unqualified activity_month or an undefined event_count.
+  Include both ends of {window_start} through {window_end}; return exactly those three
+  columns ordered by activity_month. Do not use DATE_FORMAT or TO_CHAR.

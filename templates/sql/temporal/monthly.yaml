@@ -1,0 +1,50 @@
+template_id: sql.temporal.monthly
+version: 2
+family: temporal
+difficulty: 2
+description: Monthly aggregation with date filtering and interval arithmetic.
+tables:
+  - name: orders
+    row_kind: orders
+    row_count: 60
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+  - name: events
+    row_kind: events
+    row_count: 60
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: event_type, type: VARCHAR, nullable: false}
+      - {name: event_time, type: TIMESTAMP, nullable: false}
+generation_config:
+  year: 2025
+  window_start: "2025-01-01"
+  window_end: "2025-03-31"
+requirements:
+  objective: monthly_activity_in_window
+  year: 2025
+  window_start: "2025-01-01"
+  window_end: "2025-03-31"
+  boundary_policy: inclusive_both_ends
+  month_definition: calendar_month_YYYY_MM
+  output_columns: [activity_month, order_count, event_count]
+  order_by: [activity_month]
+edge_cases:
+  - out_of_order_timestamps
+  - same_day_events
+oracle:
+  type: reference_query
+  strategy: independent_temporal_aggregation
+instruction_template: >-
+  Using the {tables} tables, count orders and events per calendar month within the window
+  {window_start} to {window_end} ({boundary_policy}, {year}). Months are
+  {month_definition} buckets of order_date and DATE(event_time). Return activity_month,
+  order_count and event_count ordered by month. activity_month must be a VARCHAR formatted
+  exactly YYYY-MM (not a DATE or TIMESTAMP). Timestamps may arrive out of order and
+  multiple events can share a day ({edge_cases}); month bucketing must be exact.
+  Naive timestamps, no timezones.

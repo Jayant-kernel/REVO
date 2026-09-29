@@ -1,0 +1,21 @@
+# Example business experiment (Phase 8). Copy and adapt.
+experiment:
+  experiment_version: "1.0"
+  benchmark_id: bench-private-1
+  baseline:
+    model: fixture-base
+    model_revision: ""
+    adaptation_method: NONE
+  control:
+    model: fixture-base
+    baseline_dataset_id: generic-synthetic-1
+    adaptation_method: SFT
+  treatment:
+    model: fixture-base
+    dataset_release_id: sha256:REPLACE-WITH-RELEASE-ID
+    adaptation_method: SFT
+  evaluation_config:
+    primary_metric: execution_accuracy
+  seeds: [42]
+  scoring_method: external-harness-aggregation
+  prompt_version: ""

@@ -1,0 +1,19 @@
+{
+  "customer_requests": [],
+  "experiment_gaps": [
+    "no real-model experiment run",
+    "no production costs measured",
+    "no customer pilots recorded"
+  ],
+  "product_gaps": [],
+  "schema_version": "1.0",
+  "technical_gaps": [
+    "no real-model experiment run",
+    "no production costs measured",
+    "no customer pilots recorded"
+  ],
+  "unvalidated_assumptions": [
+    "Verified synthetic SQL data improves models on unseen benchmarks"
+  ],
+  "validated_needs": []
+}
