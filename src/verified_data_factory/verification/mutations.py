@@ -15,8 +15,8 @@ are recorded evidence of suite weakness — never candidate guilt.
 from __future__ import annotations
 
 import re
-from copy import deepcopy
 from collections.abc import Callable
+from copy import deepcopy
 from typing import Any
 
 from verified_data_factory.generation.models import CandidateSolution

@@ -84,9 +84,10 @@ Golden artifacts inside the bundle.
 
 ### Phase 4 — Production controls
 
-**FACT** — The production runner now implements multiple batches, pre-generation
+**FACT** — The production runner implements resumable batches, pre-generation
 task and candidate caps, wall-time checks, target stopping, audit sizing, pause
-conditions, resumable checkpoints, and persisted stop reasons.
+conditions, and persisted stop reasons. Each explicit execution authorization is
+limited to one batch and then requires review before continuation.
 
 **FACT** — A fresh-generation configuration targeting 60 records is preserved at
 `configs/production/controlled_qualification_60.yaml`.

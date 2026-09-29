@@ -1,16 +1,44 @@
-# Starting a production run
+# Starting a guarded production run
 
-Production is not started by this preparation work. The configuration is frozen at `configs/production/production_sql_v1.yaml` and has a content-defined configuration ID.
+The supported interface is the `factory production` CLI. There is no production API and none is required for the current local workflow.
 
-1. Run `factory production preflight --config configs/production/production_sql_v1.yaml` and resolve every failed required check.
-2. Run `factory production plan --config configs/production/production_sql_v1.yaml`. This is a dry run: it makes zero model calls, Docker executions, candidates, or Golden decisions.
-3. Review the pinned model digest, `sql-v2` prompt version, sampling settings, budget caps, and output path.
-4. In a separately authorized execution task, enable and run the reviewed production runner using the frozen configuration.
-5. Use `factory production status --run runs/production-sql-v1` to monitor checkpoints.
-6. Use `factory production report --run runs/production-sql-v1 --output runs/production-sql-v1/reports/production-report.json` for aggregate evidence.
-7. Inspect family and failure reports after every batch. Pause on configured systematic-problem triggers; do not silently change the model or prompt.
-8. Complete the deterministic risk-based audit.
-9. Create a Phase 6 dataset snapshot only after Golden membership, quality, contamination, and audit requirements are final.
-10. Build and validate the Phase 7 release, then freeze it. A private benchmark may only use eligible held-out records.
+Install the editable project once so the `factory` command is available:
 
-Changing model identity/revision, prompt version, sampling, candidate count, task seed policy, sandbox policy, verification policy, or quality policy requires a new configuration identity and a new operational run.
+```powershell
+python -m pip install -e ".[dev]"
+```
+
+If the editable command is not installed, use the equivalent source-tree form:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m verified_data_factory.cli production --help
+```
+
+## Recommended sequence
+
+Start with the disposable 10-task, 30-candidate smoke configuration. It covers all ten SQL families and is explicitly labeled `REVIEW_REQUIRED_NON_COMMERCIAL` because checkpoint rights are unresolved.
+
+```powershell
+factory production plan --config configs/production/smoke_qualification_001.yaml
+factory production preflight --config configs/production/smoke_qualification_001.yaml
+factory production run --config configs/production/smoke_qualification_001.yaml --run runs/smoke-qualification-001 --execute
+factory production status --run runs/smoke-qualification-001
+factory production report --run runs/smoke-qualification-001 --output runs/smoke-qualification-001/reports/production-report.json
+```
+
+`plan` is read-only. `preflight` must pass the exact model digest, pinned sandbox digest, Docker, configuration, storage, secrets, and stale-container checks. `run` refuses a different destination and refuses to create a manifest when preflight fails.
+
+Every execution authorization permits at most one batch. A successful non-terminal batch ends in `AWAITING_BATCH_AUTHORIZATION`; inspect status, family/failure reports, novelty, diversity, elapsed time, and audit samples before invoking `run --execute` again. A `PAUSED`, `TARGET_REACHED`, or other terminal state cannot continue automatically.
+
+Only after the smoke run is reviewed and checkpoint governance is explicitly accepted should Batch 1 of Production-002 be authorized:
+
+```powershell
+factory production plan --config configs/production/production_sql_v2.yaml
+factory production preflight --config configs/production/production_sql_v2.yaml
+factory production run --config configs/production/production_sql_v2.yaml --run runs/production-002 --execute
+```
+
+Production-002 Batch 1 is 500 tasks × 3 candidates. Do not start it merely because preflight is green. Changing model identity, revision, prompt, sampling, task seeds, sandbox, verification, or quality policy creates a new configuration identity and requires a new run identity.
+
+Commercial/public release remains blocked until model governance is `COMMERCIALLY_CLEARED`, human audit is complete, a dataset snapshot is frozen, and release validation passes.

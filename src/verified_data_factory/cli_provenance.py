@@ -335,7 +335,6 @@ def _config_present(nodes: dict[str, Any], name: str) -> bool:
 def cmd_provenance_snapshot(args: argparse.Namespace) -> int:
     """Build a dataset snapshot id from a golden.jsonl file."""
     from verified_data_factory.provenance import build_dataset_snapshot, load_provenance_config
-    from verified_data_factory.provenance.nodes import golden_record_node
     from verified_data_factory.quality.models import GoldenRecord
 
     golden = [GoldenRecord.model_validate(g) for g in _load_jsonl(args.golden)]

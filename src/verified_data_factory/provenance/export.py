@@ -43,7 +43,6 @@ from .models import (
     ReproducibilityReport,
     RunManifest,
 )
-from .nodes import golden_record_node
 from .reproducibility import assess_reproducibility
 from .source import capture_source_snapshot
 

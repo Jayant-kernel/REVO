@@ -24,6 +24,7 @@ class QwenProvider(OpenAICompatibleProvider):
         self,
         base_url: str,
         api_key: str | None = None,
+        model_id: str = MODEL_ID,
         model_revision: str = "unspecified",
         timeout_s: float = 120.0,
         max_retries: int = 2,
@@ -31,7 +32,7 @@ class QwenProvider(OpenAICompatibleProvider):
         client: httpx.Client | None = None,
     ) -> None:
         super().__init__(
-            model_id=MODEL_ID,
+            model_id=model_id,
             base_url=base_url,
             api_key=api_key,
             model_revision=model_revision,

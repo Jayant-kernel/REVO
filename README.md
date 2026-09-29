@@ -64,6 +64,8 @@ factory task generate --template sql.retention.30_day --seed 12345
 factory task export --catalog configs/task_catalog.yaml --output tasks.jsonl
 factory generate one --template sql.joins.simple --seed 101 --provider fake
 factory generate batch --catalog configs/task_catalog.yaml --provider fake
+factory production plan --config configs/production/smoke_qualification_001.yaml
+factory production preflight --config configs/production/smoke_qualification_001.yaml
 pytest
 ```
 
@@ -100,6 +102,8 @@ Phase 2 API) and `docs/task-semantics.md` (per-family oracle reference).
 - `docs/golden-selection.md` — Golden qualification rules
 - `docs/audit.md` — risk-based human audit sampling
 - `docs/phase-6-provenance.md` — Provenance & Reproducibility (as-built)
+- `docs/production/START_PRODUCTION.md` — guarded smoke and production CLI workflow
+- `docs/production/artifact-retention.md` — immutable run evidence and Git policy
 - `docs/provenance-model.md` — node/edge model, identity, canonicalization
 - `docs/reproducibility.md` — layered reproducibility levels and statuses
 - `docs/provenance-bundle.md` — bundle format, diffing, CLI usage

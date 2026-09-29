@@ -5,12 +5,14 @@ production:
   initial_task_batch: 50
   candidates_per_task: 2
   max_batches: 4
+  batches_per_authorization: 1
   output_dir: runs/controlled-qualification-060
   seed: 33001
   model:
     model_id: alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest
     model_revision: ollama-digest:a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4
     provider: devstral
+    governance_status: REVIEW_REQUIRED_NON_COMMERCIAL
     endpoint: http://localhost:11434/v1
     prompt_version: sql-v2
     parser_version: "1.0"
@@ -33,7 +35,7 @@ production:
     retention: 5
     funnel: 5
   quality_config: configs/quality_example.yaml
-  sandbox_config: configs/sandbox_example.yaml
+  sandbox_config: configs/sandbox_production.yaml
   provenance_config: configs/provenance_example.yaml
   product_config: configs/product_example.yaml
   audit:

@@ -27,6 +27,7 @@ def create_provider(
     name: str,
     base_url: str,
     api_key: str | None = None,
+    model_id: str | None = None,
     model_revision: str = "unspecified",
     timeout_s: float = 120.0,
     max_retries: int = 2,
@@ -40,12 +41,17 @@ def create_provider(
         raise ProviderConfigurationError(
             f"unknown provider {name!r} (known: {sorted(PROVIDERS)})"
         ) from exc
+    options = {
+        "base_url": base_url,
+        "api_key": api_key,
+        "model_revision": model_revision,
+        "timeout_s": timeout_s,
+        "max_retries": max_retries,
+        "retry_backoff_s": retry_backoff_s,
+        "client": client,
+    }
+    if model_id is not None:
+        options["model_id"] = model_id
     return cls(
-        base_url=base_url,
-        api_key=api_key,
-        model_revision=model_revision,
-        timeout_s=timeout_s,
-        max_retries=max_retries,
-        retry_backoff_s=retry_backoff_s,
-        client=client,
+        **options,
     )

@@ -46,6 +46,7 @@ secrets.yml
 /checkpoints/
 
 # Generated datasets / artifacts — never commit (see docs/licensing.md, docs/data-model.md)
+/runs/
 data/
 datasets/
 *.jsonl

@@ -23,7 +23,7 @@ def load_config(path: str | Path) -> ProductionConfig:
         raw = yaml.safe_load(Path(path).read_text(encoding="utf-8-sig"))
         section = raw["production"]
         return ProductionConfig.model_validate(section)
-    except Exception as exc:
+    except (OSError, KeyError, TypeError, ValueError, yaml.YAMLError) as exc:
         raise ProductionConfigError(f"invalid production config: {exc}") from exc
 
 
@@ -36,7 +36,7 @@ def assert_resume_config(config: ProductionConfig, manifest_path: str | Path) ->
     try:
         manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
         recorded = manifest["production_config_id"]
-    except Exception as exc:
+    except (OSError, KeyError, TypeError, ValueError) as exc:
         raise ProductionConfigError(f"resume manifest is unreadable: {exc}") from exc
     if recorded != config_id(config):
         raise ProductionConfigError("configuration identity mismatch; start a new production run")
@@ -52,10 +52,13 @@ def plan(config: ProductionConfig) -> dict[str, Any]:
     return {
         "dry_run": True, "production_config_id": config_id(config), "model": config.model.model_id,
         "model_revision": config.model.model_revision, "endpoint": config.model.endpoint,
+        "governance_status": config.model.governance_status,
         "prompt_version": config.model.prompt_version, "generation": {"temperature": config.model.temperature, "top_p": config.model.top_p, "max_tokens": config.model.max_tokens},
         "target_golden_records": config.target_golden_records, "initial_task_batch": config.initial_task_batch,
         "candidates_per_task": config.candidates_per_task, "initial_candidates": initial_candidates,
-        "max_batches": config.max_batches, "max_budget": config.budget.model_dump(),
+        "max_batches": config.max_batches,
+        "batches_per_authorization": config.batches_per_authorization,
+        "max_budget": config.budget.model_dump(),
         "family_distribution": config.family_distribution, "output_dir": config.output_dir,
         "quality_policy": config.quality_config, "audit_policy": config.audit.model_dump(),
         "release_policy": config.product_config, "estimated_batches": "ESTIMATE: determined from measured Golden yield after Batch 1",
@@ -74,6 +77,7 @@ def _docker(args: list[str]) -> tuple[bool, str]:
 def preflight(config: ProductionConfig, root: str | Path = ".") -> dict[str, Any]:
     root = Path(root)
     results: dict[str, Any] = {"production_config_id": config_id(config), "checks": {}}
+    sandbox_settings: Any | None = None
     try:
         from verified_data_factory.products import load_product_config
         from verified_data_factory.provenance import load_provenance_config
@@ -81,11 +85,11 @@ def preflight(config: ProductionConfig, root: str | Path = ".") -> dict[str, Any
         from verified_data_factory.sandbox import load_config as load_sandbox_config
 
         load_quality_config(config.quality_config)
-        load_sandbox_config(config.sandbox_config)
+        sandbox_settings = load_sandbox_config(config.sandbox_config)
         load_provenance_config(config.provenance_config)
         load_product_config(config.product_config)
         configuration_ok, configuration_message = config.model.prompt_version == PROMPT_VERSION, "validated"
-    except Exception as exc:
+    except (OSError, KeyError, TypeError, ValueError, yaml.YAMLError) as exc:
         configuration_ok, configuration_message = False, str(exc)
     results["checks"]["configuration"] = {"ok": configuration_ok, "message": configuration_message}
     results["checks"]["storage"] = {"ok": shutil.disk_usage(root).free > 0, "free_bytes": shutil.disk_usage(root).free}
@@ -94,13 +98,25 @@ def preflight(config: ProductionConfig, root: str | Path = ".") -> dict[str, Any
         tags = httpx.get(config.model.endpoint.removesuffix("/v1") + "/api/tags", timeout=10).json().get("models", [])
         found = next((m for m in tags if m.get("name") == config.model.model_id), None)
         results["checks"]["model"] = {"ok": bool(found and found.get("digest") and config.model.model_revision.endswith(found["digest"])), "available": bool(found), "digest": (found or {}).get("digest")}
-    except Exception as exc:
+    except (httpx.HTTPError, KeyError, TypeError, ValueError) as exc:
         results["checks"]["model"] = {"ok": False, "message": str(exc)}
     docker_ok, docker_info = _docker(["info", "--format", "{{.ServerVersion}}"])
-    image_ok, image_info = _docker(["image", "inspect", "verified-data-factory-sandbox:1.0", "--format", "{{.Id}}"])
+    image_name = sandbox_settings.image if sandbox_settings is not None else ""
+    expected_digest = sandbox_settings.image_digest if sandbox_settings is not None else None
+    image_ok, image_info = _docker(
+        ["image", "inspect", image_name, "--format", "{{.Id}}"]
+    )
     stale_ok, stale_info = _docker(["ps", "-aq", "--filter", "name=vdf-"])
     results["checks"]["docker"] = {"ok": docker_ok, "version": docker_info}
-    results["checks"]["sandbox"] = {"ok": image_ok, "image_digest": image_info, "stale_vdf_containers": stale_info.splitlines() if stale_ok else []}
+    stale_containers = stale_info.splitlines() if stale_ok and stale_info else []
+    digest_ok = bool(image_ok and expected_digest and image_info == expected_digest)
+    results["checks"]["sandbox"] = {
+        "ok": bool(digest_ok and stale_ok and not stale_containers),
+        "image": image_name,
+        "expected_digest": expected_digest,
+        "actual_digest": image_info if image_ok else None,
+        "stale_vdf_containers": stale_containers,
+    }
     results["checks"]["secrets"] = {"ok": "api_key" not in json.dumps(config.model_dump(mode="json")).lower(), "message": "no inline API key fields"}
     results["ok"] = all(item.get("ok", False) for item in results["checks"].values())
     return results
@@ -118,7 +134,32 @@ def _jsonl(path: Path) -> list[dict[str, Any]]:
 
 def status(run_dir: str | Path) -> dict[str, Any]:
     root = Path(run_dir)
-    return {"run_dir": str(root), "tasks": _jsonl_count(root / "tasks/tasks.jsonl"), "candidates": _jsonl_count(root / "candidates/candidates.jsonl"), "executions": _jsonl_count(root / "execution/triples.jsonl"), "verifications": _jsonl_count(root / "verification/verification.jsonl"), "golden": _jsonl_count(root / "quality/export/golden.jsonl")}
+    candidate_bundles = _jsonl(root / "candidates/candidates.jsonl")
+    attempts = 0
+    successes = 0
+    for bundle in candidate_bundles:
+        results = bundle.get("results")
+        if isinstance(results, list):
+            attempts += len(results)
+            successes += sum(
+                1
+                for item in results
+                if isinstance(item, dict) and item.get("candidate_solution") is not None
+            )
+        elif "candidate_solution" in bundle or "generation_status" in bundle:
+            attempts += 1
+            successes += int(bundle.get("candidate_solution") is not None)
+    return {
+        "run_dir": str(root),
+        "tasks": _jsonl_count(root / "tasks/tasks.jsonl"),
+        "candidate_bundles": len(candidate_bundles),
+        "candidates": attempts,
+        "generation_successes": successes,
+        "generation_failures": attempts - successes,
+        "executions": _jsonl_count(root / "execution/triples.jsonl"),
+        "verifications": _jsonl_count(root / "verification/verification.jsonl"),
+        "golden": _jsonl_count(root / "quality/export/golden.jsonl"),
+    }
 
 
 def report(run_dir: str | Path) -> dict[str, Any]:

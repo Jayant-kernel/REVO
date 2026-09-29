@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from verified_data_factory.cli import main
 from verified_data_factory.production import (
     ProductionConfigError,
     assert_resume_config,
@@ -12,9 +14,8 @@ from verified_data_factory.production import (
     report,
     status,
 )
-from verified_data_factory.production.runner import run_authorized
-from verified_data_factory.production.runner import _pause_reason
-
+from verified_data_factory.production.runner import _pause_reason, run_authorized
+from verified_data_factory.sandbox import load_config as load_sandbox_config
 
 CONFIG = Path("configs/production/production_sql_v1.yaml")
 
@@ -40,6 +41,16 @@ def test_invalid_production_config_is_rejected(tmp_path: Path) -> None:
         load_config(path)
 
 
+def test_unknown_production_provider_is_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "unknown-provider.yaml"
+    path.write_text(
+        CONFIG.read_text(encoding="utf-8").replace("provider: devstral", "provider: unknown"),
+        encoding="utf-8",
+    )
+    with pytest.raises(ProductionConfigError, match="provider"):
+        load_config(path)
+
+
 def test_plan_is_dry_and_has_no_side_effects(monkeypatch: pytest.MonkeyPatch) -> None:
     production = load_config(CONFIG)
     monkeypatch.setattr("verified_data_factory.production.api.requests_made", lambda: (_ for _ in ()).throw(AssertionError("network")))
@@ -49,6 +60,18 @@ def test_plan_is_dry_and_has_no_side_effects(monkeypatch: pytest.MonkeyPatch) ->
     assert result["docker_executions"] == 0
     assert result["candidates_generated"] == 0
     assert result["initial_candidates"] == 1500
+    assert result["batches_per_authorization"] == 1
+
+
+def test_production_config_cannot_authorize_multiple_batches() -> None:
+    production = load_config(CONFIG)
+    with pytest.raises(ValueError, match="less than or equal to 1"):
+        type(production).model_validate(
+            {
+                **production.model_dump(mode="python"),
+                "batches_per_authorization": 2,
+            }
+        )
 
 
 def test_status_counts_existing_artifacts_without_generation(tmp_path: Path) -> None:
@@ -59,11 +82,33 @@ def test_status_counts_existing_artifacts_without_generation(tmp_path: Path) -> 
     (run / "verification").mkdir()
     (run / "quality/export").mkdir(parents=True)
     (run / "tasks/tasks.jsonl").write_text('{"task_id":"a"}\n', encoding="utf-8")
-    (run / "candidates/candidates.jsonl").write_text('{"task_id":"a"}\n', encoding="utf-8")
+    (run / "candidates/candidates.jsonl").write_text(
+        json.dumps(
+            {
+                "task_id": "a",
+                "results": [
+                    {"generation_status": "SUCCEEDED", "candidate_solution": {"candidate_id": "c1"}},
+                    {"generation_status": "SUCCEEDED", "candidate_solution": {"candidate_id": "c2"}},
+                    {
+                        "generation_status": "FAILED",
+                        "candidate_solution": None,
+                        "failure_reason": "provider error",
+                    },
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     (run / "execution/triples.jsonl").write_text('{"candidate":{"candidate_id":"c"}}\n', encoding="utf-8")
     (run / "verification/verification.jsonl").write_text('{"candidate_id":"c"}\n', encoding="utf-8")
     (run / "quality/export/golden.jsonl").write_text('{}\n', encoding="utf-8")
-    assert status(run)["golden"] == 1
+    run_status = status(run)
+    assert run_status["candidate_bundles"] == 1
+    assert run_status["candidates"] == 3
+    assert run_status["generation_successes"] == 2
+    assert run_status["generation_failures"] == 1
+    assert run_status["golden"] == 1
     assert report(run)["golden"] == 1
 
 
@@ -87,9 +132,189 @@ def test_runner_requires_explicit_execution_authorization(tmp_path: Path) -> Non
         run_authorized(load_config(CONFIG), tmp_path, execute=False)
 
 
-def test_runner_pause_conditions_are_enforced() -> None:
-    from types import SimpleNamespace
+def test_cli_run_rejects_destination_outside_frozen_config(tmp_path: Path) -> None:
+    """The CLI must fail before creating anything at an unapproved run path."""
+    config_path = tmp_path / "production.yaml"
+    config_path.write_text(
+        CONFIG.read_text(encoding="utf-8").replace(
+            "initial_task_batch: 500", "initial_task_batch: 499"
+        ),
+        encoding="utf-8",
+    )
+    unapproved = tmp_path / "wrong-run"
 
+    with pytest.raises(ProductionConfigError, match="frozen output_dir"):
+        main(
+            [
+                "production",
+                "run",
+                "--config",
+                str(config_path),
+                "--run",
+                str(unapproved),
+                "--execute",
+            ]
+        )
+
+    assert not unapproved.exists()
+
+
+def test_cli_preflight_rejects_unexpected_sandbox_digest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    sandbox_path = tmp_path / "sandbox.yaml"
+    sandbox_path.write_text(
+        "sandbox:\n"
+        "  image: verified-data-factory-sandbox:1.0\n"
+        "  image_digest: sha256:expected\n",
+        encoding="utf-8",
+    )
+    config_path = tmp_path / "production.yaml"
+    config_path.write_text(
+        CONFIG.read_text(encoding="utf-8").replace(
+            "configs/sandbox_production.yaml", sandbox_path.as_posix()
+        ),
+        encoding="utf-8",
+    )
+
+    class Response:
+        def json(self) -> dict[str, object]:
+            return {
+                "models": [
+                    {
+                        "name": "alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest",
+                        "digest": "a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+                    }
+                ]
+            }
+
+    monkeypatch.setattr(
+        "verified_data_factory.production.api.httpx.get", lambda *args, **kwargs: Response()
+    )
+
+    def fake_docker(args: list[str]) -> tuple[bool, str]:
+        if args[0] == "info":
+            return True, "29.0"
+        if args[:2] == ["image", "inspect"]:
+            return True, "sha256:actual"
+        return True, ""
+
+    monkeypatch.setattr("verified_data_factory.production.api._docker", fake_docker)
+
+    assert main(["production", "preflight", "--config", str(config_path)]) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["checks"]["sandbox"]["ok"] is False
+    assert payload["checks"]["sandbox"]["expected_digest"] == "sha256:expected"
+    assert payload["checks"]["sandbox"]["actual_digest"] == "sha256:actual"
+
+
+def test_cli_preflight_rejects_stale_factory_containers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    sandbox_path = tmp_path / "sandbox.yaml"
+    sandbox_path.write_text(
+        "sandbox:\n"
+        "  image: verified-data-factory-sandbox:1.0\n"
+        "  image_digest: sha256:expected\n",
+        encoding="utf-8",
+    )
+    config_path = tmp_path / "production.yaml"
+    config_path.write_text(
+        CONFIG.read_text(encoding="utf-8").replace(
+            "configs/sandbox_production.yaml", sandbox_path.as_posix()
+        ),
+        encoding="utf-8",
+    )
+
+    class Response:
+        def json(self) -> dict[str, object]:
+            return {
+                "models": [
+                    {
+                        "name": "alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest",
+                        "digest": "a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+                    }
+                ]
+            }
+
+    monkeypatch.setattr(
+        "verified_data_factory.production.api.httpx.get", lambda *args, **kwargs: Response()
+    )
+
+    def fake_docker(args: list[str]) -> tuple[bool, str]:
+        if args[0] == "info":
+            return True, "29.0"
+        if args[:2] == ["image", "inspect"]:
+            return True, "sha256:expected"
+        if args[:2] == ["ps", "-aq"]:
+            return True, "stale-container-id"
+        return True, ""
+
+    monkeypatch.setattr("verified_data_factory.production.api._docker", fake_docker)
+
+    assert main(["production", "preflight", "--config", str(config_path)]) == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["checks"]["sandbox"]["ok"] is False
+    assert payload["checks"]["sandbox"]["stale_vdf_containers"] == ["stale-container-id"]
+
+
+def test_runner_refuses_failed_preflight_before_writing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = tmp_path / "new-production-run"
+    production = load_config(CONFIG).model_copy(update={"output_dir": str(run)})
+    monkeypatch.setattr(
+        "verified_data_factory.production.api.preflight",
+        lambda config: {"ok": False, "checks": {"sandbox": {"ok": False}}},
+    )
+    monkeypatch.setattr(
+        "verified_data_factory.production.runner.load_builtin_registry",
+        lambda: (_ for _ in ()).throw(AssertionError("execution started before preflight")),
+    )
+
+    with pytest.raises(ProductionConfigError, match="preflight"):
+        run_authorized(production, run, execute=True)
+
+    assert not run.exists()
+
+
+def test_new_run_manifest_persists_exact_model_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = tmp_path / "new-production-run"
+    production = load_config(CONFIG).model_copy(update={"output_dir": str(run)})
+    monkeypatch.setattr(
+        "verified_data_factory.production.api.preflight",
+        lambda config: {"ok": True, "checks": {}},
+    )
+    monkeypatch.setattr(
+        "verified_data_factory.production.runner.load_builtin_registry",
+        lambda: (_ for _ in ()).throw(RuntimeError("stop after manifest")),
+    )
+
+    with pytest.raises(RuntimeError, match="stop after manifest"):
+        run_authorized(production, run, execute=True)
+
+    manifest = json.loads((run / "manifests/run-manifest.json").read_text(encoding="utf-8"))
+    assert manifest["model_id"] == production.model.model_id
+    assert manifest["model_revision"] == production.model.model_revision
+    assert manifest["provider"] == production.model.provider
+    assert manifest["governance_status"] == "REVIEW_REQUIRED_NON_COMMERCIAL"
+
+
+def test_all_production_configs_pin_the_sandbox_image_digest() -> None:
+    configs = sorted(Path("configs/production").glob("*.yaml"))
+    assert configs
+    for path in configs:
+        production = load_config(path)
+        assert production.sandbox_config == "configs/sandbox_production.yaml"
+        sandbox = load_sandbox_config(production.sandbox_config)
+        assert sandbox.image_digest == (
+            "sha256:6ee6badb20867c6426abb0b2ced747a126178f0a99b5bf4d94e65a62c236f7ac"
+        )
+
+
+def test_runner_pause_conditions_are_enforced() -> None:
     production = load_config(CONFIG)
     succeeded = SimpleNamespace(
         execution=SimpleNamespace(status="SUCCEEDED"),

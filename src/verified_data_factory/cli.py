@@ -293,8 +293,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_vbatch.set_defaults(func=cmd_verify_batch)
 
     from verified_data_factory.cli_business import register_business_commands
-    from verified_data_factory.cli_products import register_product_commands
     from verified_data_factory.cli_production import register_production_commands
+    from verified_data_factory.cli_products import register_product_commands
     from verified_data_factory.cli_provenance import register_provenance_commands
     from verified_data_factory.cli_quality import register_quality_commands
 

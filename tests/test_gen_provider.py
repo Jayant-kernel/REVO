@@ -49,6 +49,16 @@ def test_adapters_registered_and_interchangeable():
         create_provider("gpt4", base_url="http://x/v1")
 
 
+def test_registered_provider_accepts_a_frozen_model_id_override():
+    provider = create_provider(
+        "qwen",
+        base_url="http://localhost:8000/v1",
+        model_id="local/qwen-production:immutable",
+        model_revision="sha256:revision",
+    )
+    assert provider.model_id == "local/qwen-production:immutable"
+
+
 def test_no_proprietary_providers():
     import verified_data_factory.generation.providers as providers_pkg
 

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from typing import Literal
 
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 FAMILIES = (
     "simple_joins", "multi_joins", "aggregation", "cte", "subqueries",
@@ -13,7 +14,10 @@ class ProductionModel(BaseModel):
     model_config = {"frozen": True}
     model_id: str = Field(min_length=1)
     model_revision: str = Field(min_length=1)
-    provider: str = Field(min_length=1)
+    provider: Literal["devstral", "qwen"]
+    governance_status: Literal[
+        "REVIEW_REQUIRED_NON_COMMERCIAL", "COMMERCIALLY_CLEARED"
+    ]
     endpoint: str = Field(min_length=1)
     prompt_version: str = Field(min_length=1)
     parser_version: str = Field(min_length=1)
@@ -44,6 +48,7 @@ class ProductionConfig(BaseModel):
     initial_task_batch: int = Field(ge=1)
     candidates_per_task: int = Field(ge=1)
     max_batches: int = Field(ge=1)
+    batches_per_authorization: int = Field(default=1, ge=1, le=1)
     output_dir: str = Field(min_length=1)
     seed: int = Field(ge=0)
     model: ProductionModel
@@ -76,7 +81,7 @@ class ProductionConfig(BaseModel):
         return value
 
     @model_validator(mode="after")
-    def safe_budget_and_path(self) -> "ProductionConfig":
+    def safe_budget_and_path(self) -> ProductionConfig:
         if self.initial_task_batch * self.candidates_per_task > self.budget.max_total_candidates:
             raise ValueError("initial candidate volume exceeds max_total_candidates")
         if self.initial_task_batch > self.budget.max_total_tasks:

@@ -6,7 +6,14 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .production import assert_resume_config, load_config, plan, preflight, report, status, write_report_bundle
+from .production import (
+    assert_resume_config,
+    load_config,
+    plan,
+    preflight,
+    status,
+    write_report_bundle,
+)
 from .production.runner import run_authorized
 
 
@@ -66,7 +73,7 @@ def register_production_commands(subparsers: argparse._SubParsersAction[Any]) ->
     p_report.add_argument("--run", required=True)
     p_report.add_argument("--output", default=None)
     p_report.set_defaults(func=cmd_report)
-    p_run = psub.add_parser("run", help="Guarded: does not start generation in preparation mode")
+    p_run = psub.add_parser("run", help="Execute one guarded, explicitly authorized batch")
     p_run.add_argument("--config", required=True)
     p_run.add_argument("--run", required=True)
     p_run.add_argument("--execute", action="store_true", help="Required explicit authorization")

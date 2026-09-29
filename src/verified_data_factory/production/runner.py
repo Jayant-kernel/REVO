@@ -7,25 +7,28 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
-from verified_data_factory.generation import GenerationConfig, generate_candidates
+from verified_data_factory.generation import GenerationConfig, create_provider, generate_candidates
 from verified_data_factory.generation.models import CandidateSolution
-from verified_data_factory.generation.providers.devstral import DevstralProvider
 from verified_data_factory.quality import analyze_dataset, export_dataset, load_quality_config
 from verified_data_factory.quality.models import VerifiedRecord
-from verified_data_factory.sandbox import SandboxExecutor, load_config as load_sandbox_config
+from verified_data_factory.sandbox import SandboxExecutor
+from verified_data_factory.sandbox import load_config as load_sandbox_config
 from verified_data_factory.sandbox.models import ExecutionResult
-from verified_data_factory.task_engine import generate_task, load_builtin_registry, write_jsonl
+from verified_data_factory.task_engine import generate_task, load_builtin_registry
 from verified_data_factory.task_engine.export import read_jsonl
 from verified_data_factory.verification import verification_from_dict, verify_candidate
 
+from . import api as production_api
 from .api import assert_resume_config, config_id
 from .errors import ProductionConfigError
 from .models import FAMILIES, ProductionConfig
 
 
-def _jsonl(path: Path) -> list[dict[str, object]]:
+def _jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line] if path.exists() else []
 
 
@@ -41,7 +44,11 @@ def _write_state(root: Path, payload: dict[str, object]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def _pause_reason(config: ProductionConfig, records: list[VerifiedRecord], qualities: list[object]) -> str | None:
+def _pause_reason(
+    config: ProductionConfig,
+    records: Sequence[VerifiedRecord],
+    qualities: Sequence[object],
+) -> str | None:
     if not records:
         return None
     limits = config.pause_conditions
@@ -72,6 +79,24 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
     if not execute:
         raise ProductionConfigError("production execution requires explicit authorization")
     root = Path(run_dir)
+    configured_root = Path(config.output_dir)
+    if root.resolve() != configured_root.resolve():
+        raise ProductionConfigError(
+            "run destination must match the frozen output_dir: "
+            f"expected {configured_root}, received {root}"
+        )
+    if sum(config.family_distribution.values()) != config.initial_task_batch:
+        raise ProductionConfigError("family distribution does not match initial_task_batch")
+    readiness = production_api.preflight(config)
+    if not readiness["ok"]:
+        failed = sorted(
+            name
+            for name, result in readiness.get("checks", {}).items()
+            if not result.get("ok", False)
+        )
+        raise ProductionConfigError(
+            "production preflight failed: " + ", ".join(failed or ["unknown check"])
+        )
     started = time.monotonic()
     manifest_path = root / "manifests/run-manifest.json"
     if manifest_path.exists():
@@ -84,6 +109,12 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
                     "production_config_id": config_id(config),
                     "run_name": config.run_name,
                     "config_version": config.config_version,
+                    "model_id": config.model.model_id,
+                    "model_revision": config.model.model_revision,
+                    "provider": config.model.provider,
+                    "endpoint": config.model.endpoint,
+                    "prompt_version": config.model.prompt_version,
+                    "governance_status": config.model.governance_status,
                 },
                 indent=2,
                 sort_keys=True,
@@ -92,15 +123,40 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
             encoding="utf-8",
         )
     task_path, candidate_path = root / "tasks/tasks.jsonl", root / "candidates/candidates.jsonl"
-    if sum(config.family_distribution.values()) != config.initial_task_batch:
-        raise ProductionConfigError("family distribution does not match initial_task_batch")
     registry = load_builtin_registry()
-    provider = DevstralProvider(base_url=config.model.endpoint, model_revision=config.model.model_revision)
+    provider = create_provider(
+        config.model.provider,
+        base_url=config.model.endpoint,
+        model_id=config.model.model_id,
+        model_revision=config.model.model_revision,
+    )
     sampling = GenerationConfig(temperature=config.model.temperature, top_p=config.model.top_p, max_tokens=config.model.max_tokens)
     triple_path = root / "execution/triples.jsonl"
     executor = SandboxExecutor(load_sandbox_config(config.sandbox_config))
     verification_path = root / "verification/verification.jsonl"
-    for batch_index in range(config.max_batches):
+    state_path = root / "manifests/run-state.json"
+    start_batch_index = 0
+    if state_path.exists():
+        previous_state = json.loads(state_path.read_text(encoding="utf-8"))
+        previous_status = previous_state.get("status")
+        previous_batch = int(previous_state.get("batch", 0))
+        if previous_status == "AWAITING_BATCH_AUTHORIZATION":
+            start_batch_index = previous_batch
+        elif previous_status == "RUNNING":
+            start_batch_index = max(0, previous_batch - 1)
+        else:
+            raise ProductionConfigError(
+                f"run state {previous_status!r} cannot continue automatically; human review is required"
+            )
+    elif task_path.exists():
+        existing_task_count = len(read_jsonl(task_path))
+        if existing_task_count:
+            start_batch_index = (existing_task_count - 1) // config.initial_task_batch
+    for batch_index in range(
+        start_batch_index,
+        min(start_batch_index + config.batches_per_authorization, config.max_batches),
+    ):
+        _write_state(root, {"status": "RUNNING", "batch": batch_index + 1})
         elapsed_minutes = (time.monotonic() - started) / 60
         if elapsed_minutes >= config.budget.max_wall_time_minutes:
             _write_state(root, {"status": "PAUSED", "reason": "wall-time budget reached", "batch": batch_index})
@@ -176,4 +232,16 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
         if reason:
             _write_state(root, {**state, "status": "PAUSED", "reason": reason})
             return
+        if batch_index + 1 >= config.max_batches:
+            _write_state(root, {**state, "status": "MAX_BATCHES_REACHED"})
+            return
+        _write_state(
+            root,
+            {
+                **state,
+                "status": "AWAITING_BATCH_AUTHORIZATION",
+                "reason": "one authorized batch completed; review results before continuing",
+            },
+        )
+        return
     _write_state(root, {"status": "MAX_BATCHES_REACHED", "batch": config.max_batches, "target": config.target_golden_records})
