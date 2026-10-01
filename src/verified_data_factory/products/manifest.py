@@ -85,6 +85,7 @@ def build_manifest(
         product_name=config.product_name,
         product_type=config.product_type,
         visibility=config.visibility,
+        acceptance_profile=config.acceptance_profile,
         release_id=release_id,
         dataset_snapshot_id=dataset_snapshot_id,
         schema_name=schema.schema_name,

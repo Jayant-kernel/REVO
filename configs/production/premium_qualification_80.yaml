@@ -1,5 +1,5 @@
 production:
-  config_version: "4.0-premium-93"
+  config_version: "4.3-premium-93-diversity-gate"
   run_name: premium-qualification-080
   target_golden_records: 80
   initial_task_batch: 80
@@ -42,6 +42,8 @@ production:
     sample_size: 960
     risk_based_selection: true
     seed: 93001
+  review_pool_mode: true
+  min_distinct_templates_per_family: 4
   pause_conditions:
     zero_golden_attempts: 80
     execution_error_rate: 0.25

@@ -68,6 +68,8 @@ _STATUSES = ["completed", "completed", "completed", "pending", "cancelled"]
 _CATEGORIES = ["electronics", "apparel", "groceries", "books", "toys"]
 _FUNNEL_STEPS = ["view", "add_to_cart", "checkout", "purchase"]
 _EVENT_TYPES = ["view", "click", "purchase", "refund", "signup"]
+_ACCOUNT_STATES = ["active", "active", "suspended", "canceled"]
+_INVOICE_STATES = ["paid", "paid", "open", "void"]
 
 _BASE_DATE = _dt.date(2025, 1, 1)
 
@@ -166,6 +168,154 @@ def _gen_events(
                     _dt.datetime(2025, 1, 1) + _dt.timedelta(days=day, seconds=rng.randrange(86400))  # noqa: DTZ001
                 ),
             }
+        )
+    return rows
+
+
+def _gen_accounts(n: int, rng: random.Random) -> list[dict[str, Any]]:
+    if n < 3:
+        raise FixtureError("SaaS account fixture needs at least three accounts")
+    rows = [
+        {
+            "account_id": i,
+            "account_name": f"Workspace {i}",
+            "account_status": _ACCOUNT_STATES[rng.randrange(len(_ACCOUNT_STATES))],
+        }
+        for i in range(1, n + 1)
+    ]
+    rows[0]["account_status"] = "active"
+    rows[1]["account_status"] = "suspended"
+    rows[-1]["account_status"] = "active"  # account without invoices
+    return rows
+
+
+def _gen_invoices(
+    n: int, rng: random.Random, account_ids: list[int]
+) -> list[dict[str, Any]]:
+    if n < 6 or len(account_ids) < 3:
+        raise FixtureError("SaaS invoice fixture needs six invoices and three accounts")
+    eligible = account_ids[:-1]  # preserve a genuinely unmatched active account
+    rows = [
+        {
+            "invoice_id": i,
+            "account_id": rng.choice(eligible),
+            "issued_on": str(_BASE_DATE + _dt.timedelta(days=rng.randrange(365))),
+            "amount_cents": rng.randrange(500, 50_001),
+            "invoice_status": _INVOICE_STATES[rng.randrange(len(_INVOICE_STATES))],
+        }
+        for i in range(1, n + 1)
+    ]
+    # These are contractual boundaries, not incidental random outcomes.
+    rows[0].update(
+        account_id=account_ids[0],
+        issued_on="2025-01-01",
+        invoice_status="paid",
+        amount_cents=0,
+    )
+    rows[1].update(account_id=account_ids[1], issued_on="2025-06-15", invoice_status="paid")
+    rows[2].update(account_id=account_ids[0], issued_on="2025-06-15", invoice_status="open")
+    rows[3].update(account_id=account_ids[0], issued_on="2024-12-31", invoice_status="paid")
+    rows[4].update(account_id=account_ids[0], issued_on="2026-01-01", invoice_status="paid")
+    rows[5].update(account_id=account_ids[0], issued_on="2025-12-31", invoice_status="paid")
+    return rows
+
+
+def _gen_payment_entries(n: int, rng: random.Random) -> list[dict[str, Any]]:
+    if n < 8:
+        raise FixtureError("payment fixture needs at least eight entries")
+    rows = [
+        {
+            "entry_id": i,
+            "merchant_id": rng.randrange(1, 9),
+            "posted_on": str(_BASE_DATE + _dt.timedelta(days=rng.randrange(365))),
+            "entry_kind": "settlement" if rng.randrange(4) else "reversal",
+            "entry_status": "posted" if rng.randrange(5) else "failed",
+            "amount_cents": rng.randrange(1_000, 50_001),
+        }
+        for i in range(1, n + 1)
+    ]
+    for row in rows:
+        if row["entry_kind"] == "reversal":
+            row["amount_cents"] = -int(row["amount_cents"])
+    rows[0].update(merchant_id=1, posted_on="2025-01-01", entry_kind="settlement", entry_status="posted", amount_cents=10_000)
+    rows[1].update(merchant_id=1, posted_on="2025-01-02", entry_kind="reversal", entry_status="posted", amount_cents=-10_000)
+    rows[2].update(merchant_id=2, posted_on="2025-06-15", entry_kind="settlement", entry_status="posted", amount_cents=25_000)
+    rows[3].update(merchant_id=2, posted_on="2025-06-16", entry_kind="settlement", entry_status="failed", amount_cents=99_900)
+    rows[4].update(merchant_id=3, posted_on="2025-06-17", entry_kind="reversal", entry_status="posted", amount_cents=-2_500)
+    rows[5].update(merchant_id=2, posted_on="2024-12-31", entry_kind="settlement", entry_status="posted", amount_cents=88_800)
+    rows[6].update(merchant_id=2, posted_on="2026-01-01", entry_kind="reversal", entry_status="posted", amount_cents=-1_000)
+    rows[7].update(merchant_id=2, posted_on="2025-12-31", entry_kind="settlement", entry_status="posted", amount_cents=5_000)
+    return rows
+
+
+def _gen_support_tickets(n: int, rng: random.Random) -> list[dict[str, Any]]:
+    if n < 6:
+        raise FixtureError("support SLA fixture needs at least six tickets")
+    rows: list[dict[str, Any]] = []
+    for i in range(1, n + 1):
+        opened = _dt.datetime(2025, 1, 1) + _dt.timedelta(  # noqa: DTZ001
+            days=rng.randrange(365), hours=rng.randrange(24)
+        )
+        due = opened + _dt.timedelta(hours=24)
+        resolution = None if rng.randrange(7) == 0 else due + _dt.timedelta(
+            hours=rng.randrange(-12, 37)
+        )
+        rows.append(
+            {
+                "ticket_id": i,
+                "team": ("Accounts", "Payments", "Platform")[rng.randrange(3)],
+                "priority": ("high", "normal")[rng.randrange(2)],
+                "opened_at": opened.isoformat(sep=" "),
+                "due_at": due.isoformat(sep=" "),
+                "resolved_at": resolution.isoformat(sep=" ") if resolution else None,
+            }
+        )
+    rows[0].update(team="Accounts", priority="high", opened_at="2025-01-01 00:00:00",
+                   due_at="2025-01-02 00:00:00", resolved_at="2025-01-02 00:00:00")
+    rows[1].update(team="Accounts", priority="high", opened_at="2025-01-01 01:00:00",
+                   due_at="2025-01-02 01:00:00", resolved_at="2025-01-02 01:00:01")
+    rows[2].update(team="Payments", priority="high", opened_at="2025-06-01 00:00:00",
+                   due_at="2025-06-02 00:00:00", resolved_at=None)
+    rows[3].update(team="Payments", priority="normal", opened_at="2024-12-31 23:59:59",
+                   due_at="2025-01-01 23:59:59", resolved_at="2025-01-02 00:00:00")
+    rows[4].update(team="Platform", priority="normal", opened_at="2026-01-01 00:00:00",
+                   due_at="2026-01-02 00:00:00", resolved_at="2026-01-02 00:00:01")
+    rows[5].update(team="Payments", priority="normal", opened_at="2025-12-31 23:59:59",
+                   due_at="2026-01-01 23:59:59", resolved_at="2026-01-02 00:00:00")
+    return rows
+
+
+def _gen_grade_revisions(n: int, rng: random.Random) -> list[dict[str, Any]]:
+    if n < 7:
+        raise FixtureError("grade revision fixture needs at least seven revisions")
+    rows: list[dict[str, Any]] = []
+    for i in range(1, n + 1):
+        recorded = _dt.datetime(2025, 1, 1) + _dt.timedelta(  # noqa: DTZ001
+            days=rng.randrange(365), hours=rng.randrange(24)
+        )
+        rows.append(
+            {
+                "revision_id": i,
+                "student_id": rng.randrange(4, 13),
+                "course_id": rng.randrange(1, 6),
+                "recorded_at": recorded.isoformat(sep=" "),
+                "revision_status": "valid" if rng.randrange(5) else "cancelled",
+                "grade": ("A", "B", "C", "D")[rng.randrange(4)],
+            }
+        )
+    fixed = [
+        (1, 1, "2025-01-01 10:00:00", "valid", "B"),
+        (1, 1, "2025-02-01 10:00:00", "valid", "A"),
+        (1, 1, "2025-03-01 10:00:00", "cancelled", "F"),
+        (1, 1, "2025-02-01 10:00:00", "valid", "A+"),
+        (2, 2, "2025-07-01 10:00:00", "cancelled", "C"),
+        (3, 3, "2025-05-01 10:00:00", "valid", "B"),
+        (1, 2, "2025-04-01 10:00:00", "valid", "C"),
+    ]
+    for row, (student, course, fixed_recorded, status, grade) in zip(rows, fixed, strict=False):
+        row.update(
+            student_id=student, course_id=course, recorded_at=fixed_recorded,
+            revision_status=status, grade=grade,
         )
     return rows
 
@@ -496,7 +646,12 @@ def apply_edge_cases(
                     ok = _inject_ties(rows, rng)
                     break
         elif case in ("missing_relationships", "no_events"):
-            if "orders" in tables:
+            if "accounts" in tables and "invoices" in tables:
+                invoice_accounts = {r["account_id"] for r in tables["invoices"]}
+                ok = any(
+                    a["account_id"] not in invoice_accounts for a in tables["accounts"]
+                )
+            elif "orders" in tables:
                 ok = _ensure_orderless_customer(tables)
             else:
                 ok = _ensure_eventless_customer(tables, rng)
@@ -519,7 +674,87 @@ def apply_edge_cases(
         elif case == "zero_values":
             ok = _inject_zero_negative(next(iter(tables.values())), rng, negative=False)
         elif case == "negative_values":
-            ok = _inject_zero_negative(next(iter(tables.values())), rng, negative=True)
+            if "payment_entries" in tables:
+                ok = any(r["amount_cents"] < 0 for r in tables["payment_entries"])
+            else:
+                ok = _inject_zero_negative(next(iter(tables.values())), rng, negative=True)
+        elif case == "account_without_invoices":
+            invoice_accounts = {r["account_id"] for r in tables.get("invoices", [])}
+            ok = any(
+                a["account_id"] not in invoice_accounts for a in tables.get("accounts", [])
+            )
+        elif case == "inactive_accounts":
+            accounts = {a["account_id"]: a for a in tables.get("accounts", [])}
+            ok = any(
+                r["invoice_status"] == "paid"
+                and accounts[r["account_id"]]["account_status"] != "active"
+                for r in tables.get("invoices", [])
+            )
+        elif case == "invoice_year_boundary":
+            dates = {r["issued_on"] for r in tables.get("invoices", [])}
+            ok = {"2024-12-31", "2025-01-01", "2026-01-01"} <= dates
+        elif case == "payment_reversal":
+            ok = any(
+                r["entry_kind"] == "reversal"
+                and r["entry_status"] == "posted"
+                and r["amount_cents"] < 0
+                for r in tables.get("payment_entries", [])
+            )
+        elif case == "payment_year_boundary":
+            dates = {r["posted_on"] for r in tables.get("payment_entries", [])}
+            ok = {"2024-12-31", "2025-01-01", "2026-01-01"} <= dates
+        elif case == "failed_payment":
+            ok = any(
+                r["entry_status"] == "failed"
+                for r in tables.get("payment_entries", [])
+            )
+        elif case == "ticket_unresolved":
+            ok = any(r["resolved_at"] is None for r in tables.get("support_tickets", []))
+        elif case == "sla_deadline_boundary":
+            ok = any(
+                r["resolved_at"] == r["due_at"]
+                for r in tables.get("support_tickets", [])
+            ) and any(
+                r["resolved_at"] is not None and r["resolved_at"] > r["due_at"]
+                for r in tables.get("support_tickets", [])
+            )
+        elif case == "ticket_year_boundary":
+            years = {r["opened_at"][:4] for r in tables.get("support_tickets", [])}
+            ok = {"2024", "2025", "2026"} <= years
+        elif case == "canceled_latest_revision":
+            revisions = tables.get("grade_revisions", [])
+            groups: dict[tuple[int, int], list[dict[str, Any]]] = {}
+            for revision in revisions:
+                groups.setdefault((revision["student_id"], revision["course_id"]), []).append(
+                    revision
+                )
+            ok = any(
+                any(r["revision_status"] == "valid" for r in group)
+                and max(group, key=lambda r: (r["recorded_at"], r["revision_id"]))["revision_status"]
+                == "cancelled"
+                for group in groups.values()
+            )
+        elif case == "grade_timestamp_tie":
+            revisions = tables.get("grade_revisions", [])
+            ok = any(
+                left["student_id"] == right["student_id"]
+                and left["course_id"] == right["course_id"]
+                and left["recorded_at"] == right["recorded_at"]
+                and left["revision_status"] == right["revision_status"] == "valid"
+                and left["revision_id"] != right["revision_id"]
+                for i, left in enumerate(revisions) for right in revisions[i + 1 :]
+            )
+        elif case == "grade_only_canceled_group":
+            revisions = tables.get("grade_revisions", [])
+            groups = {}
+            for revision in revisions:
+                groups.setdefault((revision["student_id"], revision["course_id"]), []).append(
+                    revision
+                )
+            ok = any(
+                all(r["revision_status"] == "cancelled" for r in group)
+                for group in groups.values()
+            )
         elif case == "empty_result":
             # NOT fixture evidence: no Phase 1 template declares this, because
             # an "empty result" is a property of a filter + data combination
@@ -544,6 +779,7 @@ def generate_fixture_tables(
     tables: dict[str, list[dict[str, Any]]] = {}
     defs = {t.name: t for t in template.schema_definition}
     customer_ids: list[int] = []
+    account_ids: list[int] = []
     order_ids: list[int] = []
     product_ids: list[int] = []
 
@@ -554,6 +790,17 @@ def generate_fixture_tables(
         if kind == "customers":
             rows = _gen_customers(n, rng)
             customer_ids = [r["customer_id"] for r in rows]
+        elif kind == "saas_accounts":
+            rows = _gen_accounts(n, rng)
+            account_ids = [r["account_id"] for r in rows]
+        elif kind == "saas_invoices":
+            rows = _gen_invoices(n, rng, account_ids)
+        elif kind == "payment_entries":
+            rows = _gen_payment_entries(n, rng)
+        elif kind == "support_tickets":
+            rows = _gen_support_tickets(n, rng)
+        elif kind == "grade_revisions":
+            rows = _gen_grade_revisions(n, rng)
         elif kind == "products":
             rows = _gen_products(n, rng)
             product_ids = [r["product_id"] for r in rows]
@@ -580,6 +827,27 @@ def generate_fixture_tables(
         tables[table.name] = [{k: r.get(k) for k in wanted} for r in rows]
 
     ensured = apply_edge_cases(template, tables, defs, seed)
+    if template.generation_config.get("ensure_subquery_threshold_boundary"):
+        # Versioned template opt-in: one customer has only nonqualifying
+        # completed orders, so > 500 and > 0 cannot agree accidentally.
+        customers = tables["customers"]
+        orders = tables["orders"]
+        used = {order["customer_id"] for order in orders}
+        orderless = [row["customer_id"] for row in customers if row["customer_id"] not in used]
+        if len(orderless) < 2:
+            raise FixtureError("subquery threshold boundary needs two orderless customers")
+        owner = orderless[0]
+        next_id = max(order["order_id"] for order in orders) + 1
+        for offset, amount in enumerate((250.0, 500.0)):
+            orders.append(
+                {
+                    "order_id": next_id + offset,
+                    "customer_id": owner,
+                    "order_date": "2025-06-15",
+                    "amount": amount,
+                    "status": "completed",
+                }
+            )
     return tables, ensured
 
 

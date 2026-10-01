@@ -58,12 +58,24 @@ def analyze_contamination(
                     hard=config.contamination_block_exact_private_eval,
                 )
             )
-        elif others:
+        same_task_others = [i for i in others if by_id[i].task_id == quality.task_id]
+        cross_task_others = [i for i in others if by_id[i].task_id != quality.task_id]
+        if same_task_others and not private_others:
             flags[cid].append(
                 ContaminationFlag(
                     flag_type="EXACT_OVERLAP",
-                    detail=f"identical task shared with {len(others)} record(s)",
+                    detail=f"identical task shared with {len(same_task_others)} sibling candidate(s)",
                     hard=False,
+                    scope="SAME_TASK_SIBLINGS",
+                )
+            )
+        if cross_task_others and not private_others:
+            flags[cid].append(
+                ContaminationFlag(
+                    flag_type="EXACT_OVERLAP_CROSS_TASK",
+                    detail=f"identical canonical task shared with {len(cross_task_others)} other task(s)",
+                    hard=False,
+                    scope="CROSS_TASK",
                 )
             )
         # Normalized SQL overlap across roles.

@@ -1,0 +1,45 @@
+template_id: sql.subqueries.exists
+version: 2
+family: subqueries
+difficulty: 3
+description: Customers with qualifying completed orders and an explicit threshold boundary.
+tables:
+  - name: customers
+    row_kind: customers
+    row_count: 12
+    columns:
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: name, type: VARCHAR, nullable: false}
+      - {name: country, type: VARCHAR, nullable: true}
+      - {name: signup_date, type: DATE, nullable: false}
+  - name: orders
+    row_kind: orders
+    row_count: 40
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: order_date, type: DATE, nullable: false}
+      - {name: amount, type: DOUBLE, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config:
+  year: 2025
+  ensure_subquery_threshold_boundary: true
+requirements:
+  objective: customers_with_big_completed_order
+  year: 2025
+  status_filter: completed
+  min_amount: 500
+  threshold_operator: strictly_greater_than
+  exists_semantics: at_least_one_qualifying_order
+  no_match_behavior: excluded_from_output_orderless_customers_exist
+  output_columns: [customers.customer_id, customers.name]
+  order_by: [customers.customer_id]
+edge_cases:
+  - missing_relationships
+oracle:
+  type: reference_query
+  strategy: independent_exists_subquery
+instruction_template: >-
+  Which customers placed at least one completed order over {min_amount} during {year}?
+  Return customer_id and name in customer_id order. Do not include customers
+  who have no such order, including customers with no orders.

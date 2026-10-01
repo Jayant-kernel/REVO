@@ -20,7 +20,7 @@ from verified_data_factory.task_engine.models import TaskInstance
 from verified_data_factory.verification.models import VerificationResult
 
 QUALITY_ENGINE_VERSION = "1.0"
-QUALITY_CONFIG_VERSION = "1.0"
+QUALITY_CONFIG_VERSION = "1.1-scoped-overlap"
 
 DatasetRole = Literal["TRAIN", "PUBLIC_EVAL", "PRIVATE_EVAL", "UNKNOWN"]
 GoldenDecision = Literal["GOLDEN", "EXCLUDED", "INCONCLUSIVE", "AUDIT_REQUIRED"]
@@ -99,6 +99,7 @@ class ContaminationFlag(BaseModel):
     flag_type: str = Field(min_length=1)
     detail: str = ""
     hard: bool = False
+    scope: Literal["UNRESOLVED", "SAME_TASK_SIBLINGS", "CROSS_TASK"] = "UNRESOLVED"
 
 
 class AuditItem(BaseModel):

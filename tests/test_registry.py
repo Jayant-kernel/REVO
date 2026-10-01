@@ -7,7 +7,7 @@ from verified_data_factory.task_engine.registry import TemplateRegistry
 
 
 def test_registry_lists_all_templates(registry):
-    assert len(registry) == 18
+    assert len(registry) == 23
 
 
 def test_registry_get(registry):

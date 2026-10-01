@@ -1,0 +1,47 @@
+template_id: sql.joins.saas_paid_invoices
+version: 1
+family: simple_joins
+difficulty: 2
+description: Paid invoices issued in 2025 for currently active SaaS accounts.
+tables:
+  - name: accounts
+    row_kind: saas_accounts
+    row_count: 12
+    columns:
+      - {name: account_id, type: INTEGER, nullable: false}
+      - {name: account_name, type: VARCHAR, nullable: false}
+      - {name: account_status, type: VARCHAR, nullable: false}
+  - name: invoices
+    row_kind: saas_invoices
+    row_count: 32
+    columns:
+      - {name: invoice_id, type: INTEGER, nullable: false}
+      - {name: account_id, type: INTEGER, nullable: false}
+      - {name: issued_on, type: DATE, nullable: false}
+      - {name: amount_cents, type: INTEGER, nullable: false}
+      - {name: invoice_status, type: VARCHAR, nullable: false}
+generation_config:
+  domain: saas_subscriptions
+requirements:
+  objective: paid_invoices_of_currently_active_accounts
+  year: 2025
+  status_filter: paid
+  account_status_filter: active
+  join_type: inner
+  unmatched_behavior: exclude_accounts_without_invoices
+  null_semantics: account_and_invoice_keys_non_null
+  output_columns: [invoices.invoice_id, accounts.account_name, invoices.amount_cents]
+  order_by: [invoices.invoice_id]
+edge_cases:
+  - missing_relationships
+  - account_without_invoices
+  - inactive_accounts
+  - invoice_year_boundary
+oracle:
+  type: reference_query
+  strategy: independent_saas_invoice_selection
+instruction_template: >-
+  List the invoices issued in {year} that are marked paid and belong to an
+  account whose current status is active. Show invoice_id, account_name, and
+  amount_cents in invoice_id order. Amounts are integer minor units; an
+  account with no invoices has no row.

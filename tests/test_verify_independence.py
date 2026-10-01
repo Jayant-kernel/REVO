@@ -53,7 +53,7 @@ def test_oracle_signatures_take_only_requirements_and_rows():
         for name, member in inspect.getmembers(oracle_mod, inspect.isfunction)
         if name.startswith("oracle_")
     ]
-    assert len(fns) == 10
+    assert len(fns) == 14
     for fn in fns:
         params = list(inspect.signature(fn).parameters)
         assert params == ["requirements", "tables"], (fn.__name__, params)
@@ -107,17 +107,22 @@ def test_frozen_template_set_is_explicit():
     registry = load_builtin_registry()
     assert {(t.template_id, t.version) for t in registry.list()} == {
         ("sql.aggregation.grouped", 2),
+        ("sql.aggregation.payment_net_settled", 1),
+            ("sql.aggregation.support_sla_breaches", 1),
         ("sql.cte.monthly", 2),
         ("sql.cte.monthly", 3),
         ("sql.cte.monthly", 4),
             ("sql.dedup.latest", 2),
+            ("sql.dedup.education_grade_revisions", 1),
             ("sql.funnel.completion", 2),
             ("sql.funnel.completion", 3),
         ("sql.joins.multi", 1),
         ("sql.joins.simple", 1),
+        ("sql.joins.saas_paid_invoices", 1),
             ("sql.retention.30_day", 1),
             ("sql.retention.30_day", 2),
         ("sql.subqueries.exists", 1),
+        ("sql.subqueries.exists", 2),
         ("sql.temporal.monthly", 2),
         ("sql.temporal.monthly", 3),
         ("sql.temporal.monthly", 4),

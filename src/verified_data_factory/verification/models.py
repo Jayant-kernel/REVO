@@ -11,7 +11,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-VERIFICATION_CONFIG_VERSION = "1.0"
+VERIFICATION_CONFIG_VERSION = "1.1-adversarial"
 
 Verdict = Literal["PASS", "FAIL", "INCONCLUSIVE"]
 Strength = Literal["STRONG", "WEAK", "UNKNOWN"]
@@ -107,6 +107,7 @@ class HiddenCaseOutcome(BaseModel):
 
     index: int = Field(ge=0)
     seed: int = Field(ge=0)
+    source: Literal["DERIVED", "INDEPENDENT_ADVERSARIAL"] = "DERIVED"
     status: Verdict = "INCONCLUSIVE"
     failure_code: VerificationFailureCode | None = None
     detail: str = ""

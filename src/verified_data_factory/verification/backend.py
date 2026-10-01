@@ -74,3 +74,10 @@ class DerivedTaskBackend(SandboxBackend):
         template = registry.get(task.template_id, task.template_version)
         hidden_task = generate_task(template, hidden_seed, dict(task.generation_metadata.config))
         return hidden_task.tables
+
+    def independent_adversarial_tables(
+        self, task: TaskInstance
+    ) -> dict[str, list[dict[str, Any]]] | None:
+        from .adversarial import independent_adversarial_tables
+
+        return independent_adversarial_tables(task)

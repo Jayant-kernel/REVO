@@ -9,7 +9,7 @@ never judgments, and never an LLM.
 from __future__ import annotations
 
 from verified_data_factory.task_engine.models import TaskInstance
-from verified_data_factory.task_engine.validation import KNOWN_EDGE_CASES, SEMANTIC_REQUIREMENTS
+from verified_data_factory.task_engine.validation import RELEASE_EDGE_CASES, SEMANTIC_REQUIREMENTS
 
 from .models import TaskQualityEvidence
 
@@ -66,8 +66,9 @@ def assess_task_quality(task: TaskInstance) -> TaskQualityEvidence:
 
     ambiguity = _detect_ambiguity(task)
     expected = sorted(FAMILY_EDGE_CASES.get(task.family, frozenset()))
-    present_edges = sorted(e for e in expected if e in task.edge_cases)
-    edge_rate = len(present_edges) / len(expected) if expected else 1.0
+    expected_present = set(expected) & set(task.edge_cases)
+    present_edges = sorted(set(task.edge_cases) & RELEASE_EDGE_CASES)
+    edge_rate = len(expected_present) / len(expected) if expected else 1.0
 
     schema_ok, schema_issues = _check_schema_consistency(task)
     instr_ok, instr_issues = _check_instruction_consistency(task)
@@ -135,4 +136,5 @@ def _check_instruction_consistency(task: TaskInstance) -> tuple[bool, list[str]]
 
 
 def known_edge_cases() -> frozenset[str]:
-    return KNOWN_EDGE_CASES
+    """The frozen 17-category release coverage denominator."""
+    return RELEASE_EDGE_CASES

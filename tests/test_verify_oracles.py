@@ -435,7 +435,7 @@ def test_oracle_registry_covers_all_templates():
         assert entry.oracle_version >= 1
         assert entry.strategy == template.oracle_spec.strategy
     # Versioned semantic clarifications keep v1 available for historical runs.
-    assert len(known_templates()) == 23
+    assert len(known_templates()) == 28
 
 
 def test_oracle_unknown_raises():
@@ -453,11 +453,15 @@ def test_oracles_run_on_real_phase1_fixtures(registry):
         "sql.joins.simple": 101,
         "sql.joins.multi": 201,
         "sql.aggregation.grouped": 301,
+        "sql.aggregation.payment_net_settled": 302,
+            "sql.aggregation.support_sla_breaches": 303,
+        "sql.joins.saas_paid_invoices": 102,
         "sql.cte.monthly": 401,
         "sql.subqueries.exists": 501,
         "sql.windows.ranked": 601,
         "sql.temporal.monthly": 701,
         "sql.dedup.latest": 801,
+        "sql.dedup.education_grade_revisions": 802,
         "sql.retention.30_day": 901,
         "sql.funnel.completion": 1001,
     }

@@ -1,0 +1,41 @@
+template_id: sql.aggregation.support_sla_breaches
+version: 1
+family: aggregation
+difficulty: 2
+description: Count resolved support tickets that breached their SLA by team and priority.
+tables:
+  - name: support_tickets
+    row_kind: support_tickets
+    row_count: 40
+    columns:
+      - {name: ticket_id, type: INTEGER, nullable: false}
+      - {name: team, type: VARCHAR, nullable: false}
+      - {name: priority, type: VARCHAR, nullable: false}
+      - {name: opened_at, type: TIMESTAMP, nullable: false}
+      - {name: due_at, type: TIMESTAMP, nullable: false}
+      - {name: resolved_at, type: TIMESTAMP, nullable: true}
+generation_config:
+  domain: support_operations
+requirements:
+  objective: resolved_sla_breaches_by_team_priority
+  year: 2025
+  group_by: [support_tickets.team, support_tickets.priority]
+  null_handling: unresolved_tickets_are_excluded
+  count_semantics: each_resolved_ticket_after_due_at_counts_once
+  empty_group_behavior: groups_with_no_breaches_have_no_row
+  boundary_policy: resolved_at_equal_to_due_at_is_not_a_breach
+  output_columns: [support_tickets.team, support_tickets.priority, breach_count]
+  order_by: [support_tickets.team, support_tickets.priority]
+edge_cases:
+  - ticket_unresolved
+  - sla_deadline_boundary
+  - ticket_year_boundary
+oracle:
+  type: reference_query
+  strategy: independent_support_sla_count
+instruction_template: >-
+  For support tickets opened in {year}, count the tickets resolved after their
+  SLA deadline, grouped by team and priority. An unresolved ticket is not a
+  resolved breach, and a resolution exactly at the deadline is on time.
+  Return team, priority, and breach_count in team and priority order. Omit
+  groups with no qualifying tickets.

@@ -13,7 +13,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 PRODUCT_ENGINE_VERSION = "1.0"
-PRODUCT_SCHEMA_VERSION = "1.0"
+PRODUCT_SCHEMA_VERSION = "1.1"
 SQL_SCHEMA_NAME = "verified-data-factory/sql"
 SQL_SCHEMA_VERSION = "1.0"
 SQL_DIALECT = "DuckDB"
@@ -73,6 +73,7 @@ class ProductConfig(BaseModel):
     product_name: str = Field(min_length=1)
     product_type: ProductType
     visibility: Visibility = "INTERNAL"
+    acceptance_profile: Literal["STANDARD", "PREMIUM_93"] = "STANDARD"
     schema_version: str = Field(default=SQL_SCHEMA_VERSION, min_length=1)
     output_format: PackagingFormat = "jsonl"
     include_sql_target: bool = True
@@ -170,6 +171,7 @@ class ReleaseManifest(BaseModel):
     product_name: str = Field(min_length=1)
     product_type: ProductType
     visibility: Visibility
+    acceptance_profile: Literal["STANDARD", "PREMIUM_93"] = "STANDARD"
     release_id: str = Field(min_length=1)
     dataset_snapshot_id: str = Field(min_length=1)
     schema_name: str = Field(min_length=1)

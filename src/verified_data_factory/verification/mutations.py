@@ -85,6 +85,18 @@ def _op_flip_first_direction(task: TaskInstance, sql: str) -> str | None:
     return None
 
 
+def _op_grade_valid_filter_drop(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"\bWHERE\s+revision_status\s*=\s*'valid'\s*", "", sql)
+
+
+def _op_grade_time_flip(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"\brecorded_at\s+DESC\b", "recorded_at ASC", sql)
+
+
+def _op_grade_tie_flip(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"\brevision_id\s+DESC\b", "revision_id ASC", sql)
+
+
 def _op_inner_to_cross(task: TaskInstance, sql: str) -> str | None:
     """Drop the join condition (INNER JOIN -> CROSS JOIN without ON).
 
@@ -260,6 +272,11 @@ OPERATORS: dict[str, MutationOperator] = {
     "window-widen-30-to-300": MutationOperator("window-widen-30-to-300", _op_window_widen),
     "partition-column-swap": MutationOperator("partition-column-swap", _op_partition_swap),
     "where-clause-drop": MutationOperator("where-clause-drop", _op_drop_where),
+    "grade-valid-filter-drop": MutationOperator(
+        "grade-valid-filter-drop", _op_grade_valid_filter_drop
+    ),
+    "grade-time-flip": MutationOperator("grade-time-flip", _op_grade_time_flip),
+    "grade-tie-flip": MutationOperator("grade-tie-flip", _op_grade_tie_flip),
 }
 
 OPERATORS_BY_FAMILY: dict[str, list[str]] = {
@@ -283,13 +300,28 @@ OPERATORS_BY_FAMILY: dict[str, list[str]] = {
     "funnel": ["order-flip", "threshold-to-zero", "where-clause-drop"],
 }
 
+# The payments task includes explicit cross-year ledger rows, unlike the
+# original aggregation task. Dropping its WHERE clause is meaningful there.
+OPERATORS_BY_TEMPLATE: dict[str, list[str]] = {
+    "sql.aggregation.payment_net_settled": [
+        "agg-sum-to-avg", "order-flip", "where-clause-drop"
+    ],
+    "sql.aggregation.support_sla_breaches": [
+        "agg-count-distinct-one", "order-flip", "where-clause-drop"
+    ],
+    "sql.dedup.education_grade_revisions": [
+        "grade-valid-filter-drop", "grade-time-flip", "grade-tie-flip"
+    ],
+}
+
 
 def applicable_operators(
     task: TaskInstance, sql: str, max_mutations: int
 ) -> list[MutationOperator]:
     """Operators whose transform applies, capped for cost control."""
     chosen: list[MutationOperator] = []
-    for name in OPERATORS_BY_FAMILY.get(task.family, []):
+    names = OPERATORS_BY_TEMPLATE.get(task.template_id, OPERATORS_BY_FAMILY.get(task.family, []))
+    for name in names:
         mutated = OPERATORS[name].apply(task, sql)
         if mutated is not None and mutated != sql:
             chosen.append(OPERATORS[name])

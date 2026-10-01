@@ -2,11 +2,13 @@
 
 import hashlib
 import json
+from types import SimpleNamespace
 
 import pytest
 
 from tests.quality_dataset import build_fixture_dataset
 from verified_data_factory.quality import QualityConfig, analyze_dataset, record_audit_result
+from verified_data_factory.quality.contamination import analyze_contamination
 from verified_data_factory.task_engine import canonical_task_dict
 
 
@@ -28,6 +30,23 @@ def test_exact_overlap_private_eval_flagged_hard():
     assert any(f.hard for f in flagged[0].contamination_flags)
     assert flagged[0].decision == "EXCLUDED"
     assert "CONTAMINATION" in flagged[0].decision_reasons
+
+
+def test_exact_task_overlap_distinguishes_siblings_from_other_tasks():
+    qualities = [
+        SimpleNamespace(candidate_id="a", task_id="task-1", role="TRAIN", template_id="t", template_version=1),
+        SimpleNamespace(candidate_id="b", task_id="task-1", role="TRAIN", template_id="t", template_version=1),
+        SimpleNamespace(candidate_id="c", task_id="task-2", role="TRAIN", template_id="t", template_version=1),
+    ]
+    flags, _ = analyze_contamination(
+        qualities,
+        {"a": "same canonical task", "b": "same canonical task", "c": "same canonical task"},
+        {"a": "SELECT 1", "b": "SELECT 2", "c": "SELECT 3"},
+        QualityConfig(),
+    )
+    assert any(f.scope == "SAME_TASK_SIBLINGS" for f in flags["a"])
+    assert any(f.scope == "CROSS_TASK" for f in flags["a"])
+    assert not any(f.scope == "SAME_TASK_SIBLINGS" for f in flags["c"])
 
 
 def test_template_leakage_and_normalized_overlap_flagged_soft():

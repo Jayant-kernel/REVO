@@ -33,6 +33,7 @@ def validate_release(
     qualities_by_id: dict[str, dict[str, Any]] | None = None,
     justifications: dict[str, str] | None = None,
     supply_chain: dict[str, Any] | None = None,
+    review_package: str | Path | None = None,
     mutation_min_score: float = 0.9,
 ) -> ReleaseValidationReport:
     """Validate a built release directory; never raises on bad content.
@@ -178,6 +179,47 @@ def validate_release(
 
     # --- visibility -----------------------------------------------------------
     public_release = manifest.visibility == "PUBLIC"
+    reviewed_package_id: str | None = None
+    if public_release:
+        if review_package is None:
+            errors.append(
+                _err("release.independent_review", "PUBLIC release requires a frozen two-reviewer package")
+            )
+        else:
+            try:
+                from verified_data_factory.quality.review_package import review_status
+
+                review = review_status(review_package)
+                reviewed_package_id = review.get("package_id")
+                if manifest.acceptance_profile == "PREMIUM_93":
+                    if review.get("candidate_class") != "PREMIUM_PRE_REVIEW":
+                        errors.append(
+                            _err(
+                                "release.premium_review",
+                                "PREMIUM_93 requires a premium-qualified frozen review package",
+                            )
+                        )
+                    if review.get("item_count") != 80 or any(
+                        verdict != "PASS" for verdict in review["status_by_record"].values()
+                    ):
+                        errors.append(
+                            _err(
+                                "release.premium_review",
+                                "all 80 premium review rows require final PASS",
+                            )
+                        )
+                    if not reviewed_package_id:
+                        errors.append(
+                            _err("release.premium_review", "review package identity is missing")
+                        )
+                for record in records:
+                    record_id = str(record.get("golden_record_id", ""))
+                    if review["status_by_record"].get(record_id) != "PASS":
+                        errors.append(
+                            _err("release.independent_review", f"{record_id}: final two-reviewer status is not PASS")
+                        )
+            except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+                errors.append(_err("release.independent_review", f"invalid review package: {exc}"))
     if public_release:
         for record in records:
             if record.get("sql") and manifest.product_type == "PUBLIC_EVAL":
@@ -244,6 +286,14 @@ def validate_release(
             if public_release and quality.get("auditor_result") != "PASS":
                 errors.append(
                     _err("release.human_audit", f"{gid}: human audit result is not PASS")
+                )
+            if (
+                public_release
+                and manifest.acceptance_profile == "PREMIUM_93"
+                and quality.get("review_package_id") != reviewed_package_id
+            ):
+                errors.append(
+                    _err("release.premium_review", f"{gid}: derived review evidence is not bound to the frozen package")
                 )
             if status == "SCORED" and score is not None and score < mutation_min_score:
                 errors.append(

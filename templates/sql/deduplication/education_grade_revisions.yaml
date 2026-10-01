@@ -1,0 +1,43 @@
+template_id: sql.dedup.education_grade_revisions
+version: 1
+family: deduplication
+difficulty: 3
+description: Most recent valid grade revision per student and course, excluding cancelled corrections.
+tables:
+  - name: grade_revisions
+    row_kind: grade_revisions
+    row_count: 42
+    columns:
+      - {name: revision_id, type: INTEGER, nullable: false}
+      - {name: student_id, type: INTEGER, nullable: false}
+      - {name: course_id, type: INTEGER, nullable: false}
+      - {name: recorded_at, type: TIMESTAMP, nullable: false}
+      - {name: revision_status, type: VARCHAR, nullable: false}
+      - {name: grade, type: VARCHAR, nullable: false}
+generation_config:
+  domain: education
+requirements:
+  objective: latest_valid_grade_per_student_course
+  duplicate_key: student_id_and_course_id
+  winner_rule: latest_recorded_at_among_valid_revisions
+  tie_break: highest_revision_id
+  timestamp_tie_policy: highest_revision_id_wins
+  canceled_policy: exclude_cancelled_before_selecting_latest
+  no_valid_policy: omit_student_course_without_valid_revision
+  output_columns: [grade_revisions.student_id, grade_revisions.course_id, grade_revisions.grade, grade_revisions.recorded_at, grade_revisions.revision_id]
+  order_by: [grade_revisions.student_id, grade_revisions.course_id]
+edge_cases:
+  - canceled_latest_revision
+  - grade_timestamp_tie
+  - grade_only_canceled_group
+oracle:
+  type: reference_query
+  strategy: independent_valid_grade_revision_selection
+instruction_template: >-
+  From the {tables} table, show the current grade for each student and course
+  from the most recently
+  recorded valid revision. Ignore cancelled corrections before choosing a
+  winner. If valid revisions share a timestamp, use the higher revision_id.
+  Leave out student-course pairs with no valid revision. Return student_id,
+  course_id, grade, recorded_at, and revision_id, ordered by student_id and
+  course_id.

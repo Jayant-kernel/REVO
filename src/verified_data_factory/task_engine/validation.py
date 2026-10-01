@@ -31,6 +31,38 @@ KNOWN_EDGE_CASES = frozenset(
         "window_end_boundary",
         "zero_values",
         "negative_values",
+        "account_without_invoices",
+        "inactive_accounts",
+        "invoice_year_boundary",
+        "payment_reversal",
+        "payment_year_boundary",
+        "failed_payment",
+        "ticket_unresolved",
+        "sla_deadline_boundary",
+        "ticket_year_boundary",
+        "canceled_latest_revision",
+        "grade_timestamp_tie",
+        "grade_only_canceled_group",
+    }
+)
+
+# The premium release specification freezes a 17-category coverage taxonomy.
+# New domain-specific fixture checks may be supported without silently moving
+# that denominator or making a "15 of 17" acceptance claim incomparable.
+RELEASE_EDGE_CASES = KNOWN_EDGE_CASES - frozenset(
+    {
+        "account_without_invoices",
+        "inactive_accounts",
+        "invoice_year_boundary",
+        "payment_reversal",
+        "payment_year_boundary",
+        "failed_payment",
+        "ticket_unresolved",
+        "sla_deadline_boundary",
+        "ticket_year_boundary",
+        "canceled_latest_revision",
+        "grade_timestamp_tie",
+        "grade_only_canceled_group",
     }
 )
 
@@ -216,6 +248,13 @@ def validate_task(task: TaskInstance) -> None:
 
 def _check_fk_consistency(task: TaskInstance) -> None:
     tables = task.tables
+    if "accounts" in tables and "invoices" in tables:
+        valid = {r["account_id"] for r in tables["accounts"]}
+        for row in tables["invoices"]:
+            if row.get("account_id") not in valid:
+                raise ValidationError(
+                    f"invoices.account_id {row.get('account_id')} has no account"
+                )
     if "customers" in tables and "orders" in tables:
         valid = {r["customer_id"] for r in tables["customers"]}
         for row in tables["orders"]:

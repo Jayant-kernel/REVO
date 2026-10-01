@@ -14,7 +14,14 @@ from verified_data_factory.production import (
     report,
     status,
 )
-from verified_data_factory.production.runner import _pause_reason, run_authorized
+from verified_data_factory.production.api import _template_diversity, policy_file_hashes
+from verified_data_factory.production.runner import (
+    _effective_audit_rate,
+    _latest_templates_for_family,
+    _pause_reason,
+    _template_catalog_id,
+    run_authorized,
+)
 from verified_data_factory.sandbox import load_config as load_sandbox_config
 
 CONFIG = Path("configs/production/production_sql_v1.yaml")
@@ -32,6 +39,85 @@ def test_material_model_change_changes_configuration_identity() -> None:
     production = load_config(CONFIG)
     changed = production.model_copy(update={"model": production.model.model_copy(update={"top_p": 0.9})})
     assert config_id(changed) != config_id(production)
+
+
+def test_premium_review_pool_mode_has_distinct_identity() -> None:
+    premium = load_config("configs/production/premium_qualification_80.yaml")
+    assert premium.review_pool_mode is True
+    assert premium.config_version == "4.3-premium-93-diversity-gate"
+    assert premium.min_distinct_templates_per_family == 4
+    without_pool = premium.model_copy(update={"review_pool_mode": False})
+    assert config_id(without_pool) != config_id(premium)
+    assert _effective_audit_rate(premium, 240) == 0.0
+    assert _effective_audit_rate(without_pool, 240) == 1.0
+
+
+def test_premium_template_diversity_gate_is_honestly_blocked() -> None:
+    from verified_data_factory.task_engine import load_builtin_registry
+
+    premium = load_config("configs/production/premium_qualification_80.yaml")
+    result = _template_diversity(premium, load_builtin_registry())
+    assert result["ok"] is False
+    assert result["required_per_family"] == 4
+    assert result["available_per_family"]["simple_joins"] == 2
+    assert result["available_per_family"]["aggregation"] == 3
+    assert result["available_per_family"]["deduplication"] == 2
+    assert result["available_per_family"]["funnel"] == 1
+    assert plan(premium)["template_diversity"] == result
+
+
+def test_family_rotation_uses_latest_version_of_each_distinct_template() -> None:
+    class Registry:
+        def list_by_family(self, family: str) -> list[SimpleNamespace]:
+            return [
+                SimpleNamespace(template_id="sql.test.beta", version=1),
+                SimpleNamespace(template_id="sql.test.alpha", version=1),
+                SimpleNamespace(template_id="sql.test.alpha", version=2),
+            ] if family == "test" else []
+
+    selected = _latest_templates_for_family(Registry(), "test")
+    assert [(item.template_id, item.version) for item in selected] == [
+        ("sql.test.alpha", 2),
+        ("sql.test.beta", 1),
+    ]
+    with pytest.raises(ProductionConfigError, match="no task templates"):
+        _latest_templates_for_family(Registry(), "missing")
+
+
+def test_catalog_identity_changes_when_template_changes() -> None:
+    from verified_data_factory.task_engine import load_builtin_registry
+
+    registry = load_builtin_registry()
+    original = _template_catalog_id(registry)
+    template = registry.get("sql.subqueries.exists", 2)
+    registry._by_key[(template.template_id, 2)] = template.model_copy(
+        update={"description": template.description + " revised"}
+    )
+    assert _template_catalog_id(registry) != original
+
+
+def test_runner_refuses_changed_template_catalog_on_resume(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = tmp_path / "frozen-run"
+    (run / "manifests").mkdir(parents=True)
+    production = load_config(CONFIG).model_copy(update={"output_dir": str(run)})
+    (run / "manifests/run-manifest.json").write_text(
+        json.dumps(
+            {
+                "production_config_id": config_id(production),
+                "policy_file_hashes": policy_file_hashes(production),
+                "template_catalog_id": "sha256:stale",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "verified_data_factory.production.api.preflight",
+        lambda config: {"ok": True, "checks": {}},
+    )
+    with pytest.raises(ProductionConfigError, match="template catalog changed"):
+        run_authorized(production, run, execute=True)
 
 
 def test_invalid_production_config_is_rejected(tmp_path: Path) -> None:
@@ -120,11 +206,36 @@ def test_historical_run_path_is_rejected() -> None:
 def test_resume_requires_identical_content_defined_config(tmp_path: Path) -> None:
     production = load_config(CONFIG)
     manifest = tmp_path / "run-manifest.json"
-    manifest.write_text(json.dumps({"production_config_id": config_id(production)}), encoding="utf-8")
+    manifest.write_text(
+        json.dumps({
+            "production_config_id": config_id(production),
+            "policy_file_hashes": policy_file_hashes(production),
+        }),
+        encoding="utf-8",
+    )
     assert_resume_config(production, manifest)
     changed = production.model_copy(update={"model": production.model.model_copy(update={"temperature": 0.5})})
     with pytest.raises(ProductionConfigError):
         assert_resume_config(changed, manifest)
+
+
+def test_resume_rejects_changed_referenced_policy_contents(tmp_path: Path) -> None:
+    original = load_config(CONFIG)
+    quality_copy = tmp_path / "quality.yaml"
+    quality_copy.write_bytes(Path(original.quality_config).read_bytes())
+    production = original.model_copy(update={"quality_config": str(quality_copy)})
+    manifest = tmp_path / "run-manifest.json"
+    manifest.write_text(
+        json.dumps({
+            "production_config_id": config_id(production),
+            "policy_file_hashes": policy_file_hashes(production),
+        }),
+        encoding="utf-8",
+    )
+    assert_resume_config(production, manifest)
+    quality_copy.write_bytes(quality_copy.read_bytes() + b"\n# changed after freeze\n")
+    with pytest.raises(ProductionConfigError, match="referenced policy content changed"):
+        assert_resume_config(production, manifest)
 
 
 def test_runner_requires_explicit_execution_authorization(tmp_path: Path) -> None:
@@ -288,8 +399,8 @@ def test_new_run_manifest_persists_exact_model_identity(
         lambda config: {"ok": True, "checks": {}},
     )
     monkeypatch.setattr(
-        "verified_data_factory.production.runner.load_builtin_registry",
-        lambda: (_ for _ in ()).throw(RuntimeError("stop after manifest")),
+        "verified_data_factory.production.runner.create_provider",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("stop after manifest")),
     )
 
     with pytest.raises(RuntimeError, match="stop after manifest"):
@@ -300,6 +411,7 @@ def test_new_run_manifest_persists_exact_model_identity(
     assert manifest["model_revision"] == production.model.model_revision
     assert manifest["provider"] == production.model.provider
     assert manifest["governance_status"] == "REVIEW_REQUIRED_NON_COMMERCIAL"
+    assert manifest["template_catalog_id"].startswith("sha256:")
 
 
 def test_all_production_configs_pin_the_sandbox_image_digest() -> None:
@@ -324,16 +436,32 @@ def test_runner_pause_conditions_are_enforced() -> None:
         execution=SimpleNamespace(status="EXECUTION_ERROR"),
         verification=SimpleNamespace(verdict="INCONCLUSIVE"),
     )
-    golden = SimpleNamespace(decision="GOLDEN", semantic_duplicate_group=None)
-    duplicate = SimpleNamespace(decision="EXCLUDED", semantic_duplicate_group="sem-1")
-    excluded = SimpleNamespace(decision="EXCLUDED", semantic_duplicate_group=None)
+    golden = SimpleNamespace(decision="GOLDEN", task_id="golden", semantic_duplicate_group=None)
+    duplicates = [
+        SimpleNamespace(decision="EXCLUDED", task_id=f"task-{i}", semantic_duplicate_group="sem-1")
+        for i in range(9)
+    ]
+    excluded = SimpleNamespace(decision="EXCLUDED", task_id="excluded", semantic_duplicate_group=None)
     assert _pause_reason(production, [succeeded] * 10, [golden] * 10) is None
     assert "execution_error_rate" in _pause_reason(
         production, [failed] * 6 + [succeeded] * 4, [golden] * 10
     )
     assert "semantic_duplicate_rate" in _pause_reason(
-        production, [succeeded] * 10, [duplicate] * 9 + [golden]
+        production, [succeeded] * 10, duplicates + [golden]
     )
     assert "zero Golden" in _pause_reason(
         production, [succeeded] * 60, [excluded] * 60
     )
+
+
+def test_sibling_candidates_do_not_trip_semantic_duplicate_stop() -> None:
+    production = load_config(CONFIG)
+    succeeded = SimpleNamespace(
+        execution=SimpleNamespace(status="SUCCEEDED"),
+        verification=SimpleNamespace(verdict="PASS"),
+    )
+    siblings = [
+        SimpleNamespace(decision="GOLDEN", task_id=f"task-{i // 3}", semantic_duplicate_group=f"sem-{i // 3}")
+        for i in range(30)
+    ]
+    assert _pause_reason(production, [succeeded] * 30, siblings) is None

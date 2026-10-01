@@ -27,13 +27,20 @@ def _mutation_ctx(template_id, backend):
 
 def test_operators_fire_on_realistic_sql():
     registry = load_builtin_registry()
-    for template in registry.list():
-        task = make_task(template.template_id)
-        operators = applicable_operators(task, CORRECT_SQL[template.template_id], 20)
-        assert operators, f"no applicable mutation for {template.template_id}"
+    assert {template.template_id for template in registry.list()} == set(CORRECT_SQL) | {
+        "sql.joins.saas_paid_invoices",
+        "sql.aggregation.payment_net_settled",
+        "sql.aggregation.support_sla_breaches",
+        "sql.dedup.education_grade_revisions",
+    }
+    for template_id, sql in CORRECT_SQL.items():
+        assert registry.get(template_id)
+        task = make_task(template_id)
+        operators = applicable_operators(task, sql, 20)
+        assert operators, f"no applicable mutation for {template_id}"
         for operator in operators:
-            mutated = operator.apply(task, CORRECT_SQL[template.template_id])
-            assert mutated is not None and mutated != CORRECT_SQL[template.template_id]
+            mutated = operator.apply(task, sql)
+            assert mutated is not None and mutated != sql
 
 
 def _mutant_labels(task, sql, max_mutations=20):

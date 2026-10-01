@@ -13,7 +13,7 @@ from verified_data_factory.products import (
     load_release,
     validate_release,
 )
-from verified_data_factory.products.errors import ProductValidationError
+from verified_data_factory.products.errors import ProductIOError, ProductValidationError
 from verified_data_factory.products.release import SAMPLE_RECORD_LIMIT
 
 
@@ -91,8 +91,12 @@ def test_train_build_is_valid_and_deterministic(tmp_path):
     assert (tmp_path / "a" / "metrics.json").exists()
 
 
-def test_public_eval_withholds_targets(tmp_path):
+def test_public_eval_withholds_targets(tmp_path, monkeypatch):
     goldens, quality_by_id, snapshot = build_product_fixture()
+    monkeypatch.setattr(
+        "verified_data_factory.quality.review_package.review_status",
+        lambda _package: {"status_by_record": {record.record_id: "PASS" for record in goldens}},
+    )
     config = ProductConfig(product_name="e", product_type="PUBLIC_EVAL", visibility="PUBLIC")
     built = build_release(
         snapshot=snapshot,
@@ -104,6 +108,7 @@ def test_public_eval_withholds_targets(tmp_path):
         provenance_version="1.0",
         quarantined_ids=set(),
         supply_chain={"commercially_cleared": True},
+        review_package=tmp_path / "review-evidence",
     )
     assert built.validation.status == "VALID"
     assert goldens[10].record_id not in [
@@ -111,6 +116,65 @@ def test_public_eval_withholds_targets(tmp_path):
     ]
     for record in _all_records(tmp_path / "e"):
         assert "sql" not in record
+
+
+def test_premium_public_release_rejects_diagnostic_review(tmp_path, monkeypatch):
+    goldens, quality_by_id, snapshot = build_product_fixture()
+    monkeypatch.setattr(
+        "verified_data_factory.quality.review_package.review_status",
+        lambda _package: {
+            "candidate_class": "DIAGNOSTIC",
+            "item_count": len(goldens),
+            "status_by_record": {record.record_id: "PASS" for record in goldens},
+        },
+    )
+    config = ProductConfig(
+        product_name="premium", product_type="PUBLIC_EVAL", visibility="PUBLIC",
+        acceptance_profile="PREMIUM_93",
+    )
+    with pytest.raises(ProductIOError, match="premium-qualified frozen review package"):
+        build_release(
+            snapshot=snapshot,
+            golden_records=goldens,
+            quality_by_id=quality_by_id,
+            config=config,
+            out_dir=tmp_path / "premium",
+            factory_version="0.7.0",
+            provenance_version="1.0",
+            quarantined_ids=set(),
+            supply_chain={"commercially_cleared": True},
+            review_package=tmp_path / "diagnostic-review",
+        )
+
+
+def test_premium_public_release_requires_bound_derived_quality(tmp_path, monkeypatch):
+    goldens, quality_by_id, snapshot = build_product_fixture()
+    monkeypatch.setattr(
+        "verified_data_factory.quality.review_package.review_status",
+        lambda _package: {
+            "package_id": "sha256:example",
+            "candidate_class": "PREMIUM_PRE_REVIEW",
+            "item_count": 80,
+            "status_by_record": {record.record_id: "PASS" for record in goldens},
+        },
+    )
+    config = ProductConfig(
+        product_name="premium-bound", product_type="PUBLIC_EVAL", visibility="PUBLIC",
+        acceptance_profile="PREMIUM_93",
+    )
+    with pytest.raises(ProductIOError, match="derived review evidence is not bound"):
+        build_release(
+            snapshot=snapshot,
+            golden_records=goldens,
+            quality_by_id=quality_by_id,
+            config=config,
+            out_dir=tmp_path / "premium-bound",
+            factory_version="0.7.0",
+            provenance_version="1.0",
+            quarantined_ids=set(),
+            supply_chain={"commercially_cleared": True},
+            review_package=tmp_path / "premium-review",
+        )
 
 
 def test_private_eval_exposes_targets(tmp_path):
@@ -156,8 +220,12 @@ def test_benchmark_ids_stable(tmp_path):
     assert len(set(ids_first)) == len(ids_first)
 
 
-def test_sample_product_capped(tmp_path):
+def test_sample_product_capped(tmp_path, monkeypatch):
     goldens, quality_by_id, snapshot = build_product_fixture()
+    monkeypatch.setattr(
+        "verified_data_factory.quality.review_package.review_status",
+        lambda _package: {"status_by_record": {record.record_id: "PASS" for record in goldens}},
+    )
     built = build_release(
         snapshot=snapshot,
         golden_records=goldens,
@@ -168,6 +236,7 @@ def test_sample_product_capped(tmp_path):
         provenance_version="1.0",
         quarantined_ids=set(),
         supply_chain={"commercially_cleared": True},
+        review_package=tmp_path / "review-evidence",
     )
     assert built.validation.status == "VALID"
     assert built.manifest.record_count <= SAMPLE_RECORD_LIMIT

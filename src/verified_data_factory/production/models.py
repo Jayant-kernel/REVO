@@ -59,6 +59,8 @@ class ProductionConfig(BaseModel):
     provenance_config: str = Field(min_length=1)
     product_config: str = Field(min_length=1)
     audit: AuditPolicy
+    review_pool_mode: bool = False
+    min_distinct_templates_per_family: int = Field(default=1, ge=1)
     pause_conditions: dict[str, float | int] = Field(default_factory=dict)
     diversity_warnings: dict[str, float] = Field(default_factory=dict)
     private_benchmark_target: int = Field(default=150, ge=100, le=200)

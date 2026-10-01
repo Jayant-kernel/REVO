@@ -145,6 +145,53 @@ def cmd_quality_audit(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_review_freeze(args: argparse.Namespace) -> int:
+    from verified_data_factory.quality.review_package import freeze_review_package
+
+    manifest = freeze_review_package(args.golden, args.out_dir, premium=args.premium)
+    print(json.dumps(manifest, indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_premium_check(args: argparse.Namespace) -> int:
+    from verified_data_factory.quality.premium_candidate import assess_premium_candidate
+
+    report = assess_premium_candidate(args.golden)
+    _write_json(args.output, report)
+    return 0 if report["automated_pre_review_gates_pass"] else 1
+
+
+def cmd_review_decide(args: argparse.Namespace) -> int:
+    from verified_data_factory.quality.review_package import append_review_decision
+
+    entry = append_review_decision(
+        args.package,
+        record_id=args.record_id,
+        reviewer_id=args.reviewer_id,
+        slot=args.slot,
+        verdict=args.verdict,
+        reason=args.reason,
+        rubric_version=args.rubric_version,
+    )
+    print(json.dumps(entry, indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_review_status(args: argparse.Namespace) -> int:
+    from verified_data_factory.quality.review_package import review_status
+
+    print(json.dumps(review_status(args.package), indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_review_export(args: argparse.Namespace) -> int:
+    from verified_data_factory.quality.review_package import export_review_evidence
+
+    summary = export_review_evidence(args.package, args.golden, args.out_dir)
+    print(json.dumps({"package_id": summary["review_package_id"], "rows": summary["row_count"]}))
+    return 0
+
+
 def _write_json(output: str | None, payload: object) -> None:
     text = json.dumps(payload, indent=2, sort_keys=True, default=str)
     if output:
@@ -196,3 +243,40 @@ def register_quality_commands(subparsers: argparse._SubParsersAction[Any]) -> No
     p_audit.add_argument("--result", default=None, choices=["PASS", "FAIL", "UNCLEAR"])
     p_audit.add_argument("--note", default="")
     p_audit.set_defaults(func=cmd_quality_audit)
+
+    p_freeze = qsub.add_parser("review-freeze", help="Freeze a new blind review package")
+    p_freeze.add_argument("--golden", required=True, help="verified Golden JSONL")
+    p_freeze.add_argument("--out-dir", required=True, help="new review package directory")
+    p_freeze.add_argument(
+        "--premium", action="store_true", help="require the automated 80-row pre-review gates"
+    )
+    p_freeze.set_defaults(func=cmd_review_freeze)
+
+    p_premium = qsub.add_parser(
+        "premium-check", help="Read-only 80-row pre-review composition screen"
+    )
+    p_premium.add_argument("--golden", required=True, help="selected Golden JSONL")
+    p_premium.add_argument("--output", default=None, help="optional JSON report path")
+    p_premium.set_defaults(func=cmd_premium_check)
+
+    p_decide = qsub.add_parser("review-decide", help="Append one independent review decision")
+    p_decide.add_argument("--package", required=True)
+    p_decide.add_argument("--record-id", required=True)
+    p_decide.add_argument("--reviewer-id", required=True)
+    p_decide.add_argument("--slot", choices=["first", "second", "adjudicator"], required=True)
+    p_decide.add_argument("--verdict", choices=["PASS", "FAIL", "UNCLEAR"], required=True)
+    p_decide.add_argument("--reason", required=True)
+    p_decide.add_argument("--rubric-version", required=True)
+    p_decide.set_defaults(func=cmd_review_decide)
+
+    p_review_status = qsub.add_parser("review-status", help="Validate and summarize a review journal")
+    p_review_status.add_argument("--package", required=True)
+    p_review_status.set_defaults(func=cmd_review_status)
+
+    p_review_export = qsub.add_parser(
+        "review-export", help="Derive product quality evidence from a fully passed review package"
+    )
+    p_review_export.add_argument("--package", required=True)
+    p_review_export.add_argument("--golden", required=True)
+    p_review_export.add_argument("--out-dir", required=True)
+    p_review_export.set_defaults(func=cmd_review_export)

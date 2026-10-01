@@ -66,26 +66,45 @@ def run_hidden_checks(
     hidden_seeds: list[int],
     policy: ComparisonPolicy,
 ) -> HiddenTestResult:
-    """Execute the candidate on each hidden fixture; compare with the oracle."""
+    """Execute derived and available independent fixtures against the oracle."""
     cases: list[HiddenCaseOutcome] = []
     passed = failed = inconclusive = 0
-    for index, seed in enumerate(hidden_seeds):
+    adversarial_provider = getattr(backend, "independent_adversarial_tables", None)
+    adversarial_rows: dict[str, list[dict[str, Any]]] | None = None
+    adversarial_error: str | None = None
+    if callable(adversarial_provider):
         try:
-            rows = hidden_tables(task, seed, backend)
+            adversarial_rows = adversarial_provider(task)
+        except Exception as exc:  # noqa: BLE001 — a broken fixture is inconclusive evidence
+            adversarial_error = f"independent adversarial fixture error: {exc}"[:300]
+    total = len(hidden_seeds) + int(adversarial_rows is not None or adversarial_error is not None)
+    for index in range(total):
+        independent = index == len(hidden_seeds)
+        seed = hidden_seeds[index] if not independent else 0
+        source = "INDEPENDENT_ADVERSARIAL" if independent else "DERIVED"
+        try:
+            if independent and adversarial_error:
+                raise BackendError(adversarial_error)
+            rows = adversarial_rows if independent else hidden_tables(task, seed, backend)
+            if rows is None:
+                raise BackendError("independent adversarial fixture is missing")
         except BackendError as exc:
             cases.append(
                 HiddenCaseOutcome(
-                    index=index, seed=seed, status="INCONCLUSIVE", detail=str(exc)[:300]
+                    index=index, seed=seed, source=source,
+                    status="INCONCLUSIVE", detail=str(exc)[:300]
                 )
             )
             inconclusive += 1
             continue
         try:
-            execution = backend.run(task, candidate, rows, f"hidden:{index}")
+            label = f"hidden:adversarial:{index}" if independent else f"hidden:{index}"
+            execution = backend.run(task, candidate, rows, label)
         except BackendError as exc:
             cases.append(
                 HiddenCaseOutcome(
-                    index=index, seed=seed, status="INCONCLUSIVE", detail=str(exc)[:300]
+                    index=index, seed=seed, source=source,
+                    status="INCONCLUSIVE", detail=str(exc)[:300]
                 )
             )
             inconclusive += 1
@@ -101,6 +120,7 @@ def run_hidden_checks(
                     HiddenCaseOutcome(
                         index=index,
                         seed=seed,
+                        source=source,
                         status="FAIL",
                         failure_code="HIDDEN_MISMATCH",
                         detail=f"hidden execution {execution.status}",
@@ -112,6 +132,7 @@ def run_hidden_checks(
                     HiddenCaseOutcome(
                         index=index,
                         seed=seed,
+                        source=source,
                         status="INCONCLUSIVE",
                         detail=f"hidden execution {execution.status}",
                     )
@@ -125,6 +146,7 @@ def run_hidden_checks(
                 HiddenCaseOutcome(
                     index=index,
                     seed=seed,
+                    source=source,
                     status="INCONCLUSIVE",
                     detail=f"oracle error: {exc}"[:300],
                 )
@@ -138,13 +160,14 @@ def run_hidden_checks(
             policy,
         )
         if comparison.match:
-            cases.append(HiddenCaseOutcome(index=index, seed=seed, status="PASS"))
+            cases.append(HiddenCaseOutcome(index=index, seed=seed, source=source, status="PASS"))
             passed += 1
         else:
             cases.append(
                 HiddenCaseOutcome(
                     index=index,
                     seed=seed,
+                    source=source,
                     status="FAIL",
                     failure_code="HIDDEN_MISMATCH",
                     detail=f"expected {comparison.expected_rows} rows, got {comparison.actual_rows}",
@@ -152,7 +175,7 @@ def run_hidden_checks(
             )
             failed += 1
     return HiddenTestResult(
-        total=len(hidden_seeds),
+        total=total,
         passed=passed,
         failed=failed,
         inconclusive=inconclusive,

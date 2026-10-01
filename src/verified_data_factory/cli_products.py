@@ -132,6 +132,7 @@ def cmd_product_build(args: argparse.Namespace) -> int:
         quarantined_ids=quarantined,
         justifications=_read_string_map(args.justifications) if args.justifications else None,
         supply_chain=_read_json_payload(args.supply_chain) if args.supply_chain else None,
+        review_package=args.review_package,
     )
     print(f"release={built.manifest.release_id} records={built.manifest.record_count}")
     print(
@@ -159,6 +160,7 @@ def cmd_product_validate(args: argparse.Namespace) -> int:
         qualities_by_id=qualities,
         justifications=justifications,
         supply_chain=supply_chain,
+        review_package=args.review_package,
         mutation_min_score=args.mutation_min_score,
     )
     print(f"status={report.status} records={report.record_count} files={report.file_count}")
@@ -335,6 +337,7 @@ def register_product_commands(subparsers: argparse._SubParsersAction[Any]) -> No
     p_build.add_argument("--duplicates", default=None)
     p_build.add_argument("--verification-summary", default=None)
     p_build.add_argument("--audit", default=None)
+    p_build.add_argument("--review-package", default=None, help="frozen two-reviewer package (required for PUBLIC)")
     p_build.add_argument("--contamination", default=None)
     p_build.add_argument(
         "--justifications", default=None, help="record_id -> mutation justification JSON object"
@@ -364,6 +367,7 @@ def register_product_commands(subparsers: argparse._SubParsersAction[Any]) -> No
         "--supply-chain", default=None, help="supply-chain report JSON (clearance gate)"
     )
     p_validate.add_argument("--mutation-min-score", type=float, default=0.9)
+    p_validate.add_argument("--review-package", default=None, help="frozen two-reviewer package (required for PUBLIC)")
     p_validate.set_defaults(func=cmd_product_validate)
 
     p_diff = psub.add_parser("diff", help="Diff two releases")

@@ -113,7 +113,7 @@ def test_validate_without_audit_inputs_warns_not_fails(tmp_path):
 
 def test_public_build_refuses_missing_governance_evidence(tmp_path):
     goldens, quality_by_id, snapshot = build_product_fixture()
-    with pytest.raises(ProductIOError, match="supply-chain clearance"):
+    with pytest.raises(ProductIOError, match="two-reviewer package"):
         build_release(
             snapshot=snapshot,
             golden_records=goldens,

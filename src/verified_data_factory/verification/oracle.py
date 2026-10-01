@@ -61,6 +61,30 @@ def oracle_simple_joins(
     )
 
 
+def oracle_saas_paid_invoices(
+    requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
+) -> ExpectedResult:
+    """Paid invoices issued in-year for currently active SaaS accounts."""
+    active_names = {
+        account["account_id"]: account["account_name"]
+        for account in tables["accounts"]
+        if account["account_status"] == requirements["account_status_filter"]
+    }
+    rows = [
+        [invoice["invoice_id"], active_names[invoice["account_id"]], invoice["amount_cents"]]
+        for invoice in tables["invoices"]
+        if invoice["account_id"] in active_names
+        and invoice["invoice_status"] == requirements["status_filter"]
+        and _in_year(invoice["issued_on"], int(requirements["year"]))
+    ]
+    rows.sort(key=lambda row: row[0])
+    return ExpectedResult(
+        columns=_out_cols(requirements),
+        rows=rows,
+        order=OrderSpec(type="ordered", keys=[("invoice_id", "asc")]),
+    )
+
+
 def oracle_multi_joins(
     requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
 ) -> ExpectedResult:
@@ -111,6 +135,51 @@ def oracle_aggregation(
         columns=_out_cols(requirements),
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("status", "asc")]),
+    )
+
+
+def oracle_payment_net_settled(
+    requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
+) -> ExpectedResult:
+    """Sum posted settlement and reversal ledger entries by merchant."""
+    totals: dict[int, int] = {}
+    for entry in tables["payment_entries"]:
+        if not _in_year(entry["posted_on"], int(requirements["year"])):
+            continue
+        if entry["entry_status"] != requirements["status_filter"]:
+            continue
+        if entry["entry_kind"] not in ("settlement", "reversal"):
+            continue
+        merchant_id = int(entry["merchant_id"])
+        totals[merchant_id] = totals.get(merchant_id, 0) + int(entry["amount_cents"])
+    rows = [[merchant_id, amount] for merchant_id, amount in sorted(totals.items())]
+    return ExpectedResult(
+        columns=_out_cols(requirements),
+        rows=rows,
+        order=OrderSpec(type="ordered", keys=[("merchant_id", "asc")]),
+    )
+
+
+def oracle_support_sla_breaches(
+    requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
+) -> ExpectedResult:
+    """Count resolved-after-deadline tickets opened in the requested year."""
+    counts: dict[tuple[str, str], int] = {}
+    year = int(requirements["year"])
+    for ticket in tables["support_tickets"]:
+        if not _in_year(ticket["opened_at"], year) or ticket["resolved_at"] is None:
+            continue
+        if _dt.datetime.fromisoformat(str(ticket["resolved_at"])) <= _dt.datetime.fromisoformat(
+            str(ticket["due_at"])
+        ):
+            continue
+        key = (str(ticket["team"]), str(ticket["priority"]))
+        counts[key] = counts.get(key, 0) + 1
+    rows = [[team, priority, counts[(team, priority)]] for team, priority in sorted(counts)]
+    return ExpectedResult(
+        columns=_out_cols(requirements),
+        rows=rows,
+        order=OrderSpec(type="ordered", keys=[("team", "asc"), ("priority", "asc")]),
     )
 
 
@@ -261,6 +330,33 @@ def oracle_dedup(
         columns=_out_cols(requirements),
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("customer_id", "asc")]),
+    )
+
+
+def oracle_education_grade_revisions(
+    requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
+) -> ExpectedResult:
+    """Choose the latest valid revision for each student-course pair."""
+    best: dict[tuple[int, int], dict[str, Any]] = {}
+    for revision in tables["grade_revisions"]:
+        if revision["revision_status"] != "valid":
+            continue
+        pair = (int(revision["student_id"]), int(revision["course_id"]))
+        ordering = (str(revision["recorded_at"]), int(revision["revision_id"]))
+        previous = best.get(pair)
+        if previous is None or ordering > (
+            str(previous["recorded_at"]), int(previous["revision_id"])
+        ):
+            best[pair] = revision
+    rows = [
+        [student, course, best[(student, course)]["grade"],
+         best[(student, course)]["recorded_at"], best[(student, course)]["revision_id"]]
+        for student, course in sorted(best)
+    ]
+    return ExpectedResult(
+        columns=_out_cols(requirements),
+        rows=rows,
+        order=OrderSpec(type="ordered", keys=[("student_id", "asc"), ("course_id", "asc")]),
     )
 
 

@@ -1,6 +1,7 @@
 """Read-only production planning, preflight, status, and report operations."""
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -31,6 +32,23 @@ def config_id(config: ProductionConfig) -> str:
     return content_id("PRODUCTION_CONFIG", config.config_version, config.model_dump(mode="json"))
 
 
+def policy_file_hashes(config: ProductionConfig) -> dict[str, str]:
+    """Pin referenced policy contents, not merely their path strings."""
+    policies = {
+        "quality": config.quality_config,
+        "sandbox": config.sandbox_config,
+        "provenance": config.provenance_config,
+        "product": config.product_config,
+    }
+    try:
+        return {
+            name: "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            for name, path in sorted(policies.items())
+        }
+    except OSError as exc:
+        raise ProductionConfigError(f"referenced policy cannot be hashed: {exc}") from exc
+
+
 def assert_resume_config(config: ProductionConfig, manifest_path: str | Path) -> None:
     """Reject resume if any identity-bearing configuration field changed."""
     try:
@@ -40,6 +58,8 @@ def assert_resume_config(config: ProductionConfig, manifest_path: str | Path) ->
         raise ProductionConfigError(f"resume manifest is unreadable: {exc}") from exc
     if recorded != config_id(config):
         raise ProductionConfigError("configuration identity mismatch; start a new production run")
+    if manifest.get("policy_file_hashes") != policy_file_hashes(config):
+        raise ProductionConfigError("referenced policy content changed; start a new production run")
 
 
 def requests_made() -> int:
@@ -48,9 +68,18 @@ def requests_made() -> int:
 
 
 def plan(config: ProductionConfig) -> dict[str, Any]:
+    from verified_data_factory.task_engine import load_builtin_registry
+
+    from .runner import _template_catalog_id
+
     initial_candidates = config.initial_task_batch * config.candidates_per_task
+    registry = load_builtin_registry()
     return {
-        "dry_run": True, "production_config_id": config_id(config), "model": config.model.model_id,
+        "dry_run": True, "production_config_id": config_id(config),
+        "policy_file_hashes": policy_file_hashes(config),
+        "template_catalog_id": _template_catalog_id(registry),
+        "template_diversity": _template_diversity(config, registry),
+        "model": config.model.model_id,
         "model_revision": config.model.model_revision, "endpoint": config.model.endpoint,
         "governance_status": config.model.governance_status,
         "prompt_version": config.model.prompt_version, "generation": {"temperature": config.model.temperature, "top_p": config.model.top_p, "max_tokens": config.model.max_tokens},
@@ -61,6 +90,7 @@ def plan(config: ProductionConfig) -> dict[str, Any]:
         "max_budget": config.budget.model_dump(),
         "family_distribution": config.family_distribution, "output_dir": config.output_dir,
         "quality_policy": config.quality_config, "audit_policy": config.audit.model_dump(),
+        "review_pool_mode": config.review_pool_mode,
         "release_policy": config.product_config, "estimated_batches": "ESTIMATE: determined from measured Golden yield after Batch 1",
         "model_calls": 0, "docker_executions": 0, "candidates_generated": 0,
     }
@@ -74,9 +104,31 @@ def _docker(args: list[str]) -> tuple[bool, str]:
         return False, str(exc)
 
 
+def _template_diversity(config: ProductionConfig, registry: Any) -> dict[str, Any]:
+    from .runner import _latest_templates_for_family
+
+    counts = {
+        family: len(_latest_templates_for_family(registry, family))
+        for family in config.family_distribution
+    }
+    return {
+        "ok": all(
+            count >= config.min_distinct_templates_per_family
+            for count in counts.values()
+        ),
+        "required_per_family": config.min_distinct_templates_per_family,
+        "available_per_family": counts,
+    }
+
+
 def preflight(config: ProductionConfig, root: str | Path = ".") -> dict[str, Any]:
     root = Path(root)
     results: dict[str, Any] = {"production_config_id": config_id(config), "checks": {}}
+    from verified_data_factory.task_engine import load_builtin_registry
+
+    results["checks"]["template_diversity"] = _template_diversity(
+        config, load_builtin_registry()
+    )
     sandbox_settings: Any | None = None
     try:
         from verified_data_factory.products import load_product_config

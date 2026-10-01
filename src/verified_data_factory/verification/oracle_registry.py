@@ -40,6 +40,9 @@ ORACLES: dict[tuple[str, int], OracleEntry] = {
     ("sql.joins.simple", 1): OracleEntry(
         oracle_fns.oracle_simple_joins, 1, "independent_join_aggregation"
     ),
+    ("sql.joins.saas_paid_invoices", 1): OracleEntry(
+        oracle_fns.oracle_saas_paid_invoices, 1, "independent_saas_invoice_selection"
+    ),
     ("sql.joins.multi", 1): OracleEntry(
         oracle_fns.oracle_multi_joins, 1, "independent_multi_join_aggregation"
     ),
@@ -49,11 +52,20 @@ ORACLES: dict[tuple[str, int], OracleEntry] = {
     ("sql.aggregation.grouped", 2): OracleEntry(
         oracle_fns.oracle_aggregation, 1, "independent_grouped_aggregation"
     ),
+    ("sql.aggregation.payment_net_settled", 1): OracleEntry(
+        oracle_fns.oracle_payment_net_settled, 1, "independent_payment_ledger_aggregation"
+    ),
+    ("sql.aggregation.support_sla_breaches", 1): OracleEntry(
+        oracle_fns.oracle_support_sla_breaches, 1, "independent_support_sla_count"
+    ),
     ("sql.cte.monthly", 1): OracleEntry(oracle_fns.oracle_cte, 1, "independent_cte_aggregation"),
     ("sql.cte.monthly", 2): OracleEntry(oracle_fns.oracle_cte, 1, "independent_cte_aggregation"),
     ("sql.cte.monthly", 3): OracleEntry(oracle_fns.oracle_cte, 1, "independent_cte_aggregation"),
     ("sql.cte.monthly", 4): OracleEntry(oracle_fns.oracle_cte, 1, "independent_cte_aggregation"),
     ("sql.subqueries.exists", 1): OracleEntry(
+        oracle_fns.oracle_subqueries, 1, "independent_exists_subquery"
+    ),
+    ("sql.subqueries.exists", 2): OracleEntry(
         oracle_fns.oracle_subqueries, 1, "independent_exists_subquery"
     ),
     ("sql.windows.ranked", 1): OracleEntry(
@@ -79,6 +91,11 @@ ORACLES: dict[tuple[str, int], OracleEntry] = {
     ),
     ("sql.dedup.latest", 1): OracleEntry(oracle_fns.oracle_dedup, 1, "independent_dedup_selection"),
     ("sql.dedup.latest", 2): OracleEntry(oracle_fns.oracle_dedup, 1, "independent_dedup_selection"),
+    ("sql.dedup.education_grade_revisions", 1): OracleEntry(
+        oracle_fns.oracle_education_grade_revisions,
+        1,
+        "independent_valid_grade_revision_selection",
+    ),
     ("sql.retention.30_day", 1): OracleEntry(
         oracle_fns.oracle_retention, 1, "independent_aggregation"
     ),

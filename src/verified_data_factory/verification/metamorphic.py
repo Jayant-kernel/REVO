@@ -118,6 +118,27 @@ def relate_add_irrelevant_customer(ctx: MetamorphicContext) -> MetamorphicOutcom
     )
 
 
+def relate_add_irrelevant_account(ctx: MetamorphicContext) -> MetamorphicOutcome:
+    accounts = ctx.tables.get("accounts")
+    if not accounts:
+        return MetamorphicOutcome(
+            relation_id="ADD_IRRELEVANT_ACCOUNT",
+            applicable=False,
+            passed=False,
+            detail="no accounts table",
+        )
+    ghost = {
+        "account_id": max(a["account_id"] for a in accounts) + 1,
+        "account_name": "Unused workspace",
+        "account_status": "active",
+    }
+    tables = {**ctx.tables, "accounts": [*accounts, ghost]}
+    passed, detail = _compare_against_original(ctx, tables, "metamorphic:add_irrelevant_account")
+    return MetamorphicOutcome(
+        relation_id="ADD_IRRELEVANT_ACCOUNT", applicable=True, passed=passed, detail=detail
+    )
+
+
 def relate_add_duplicate_event(ctx: MetamorphicContext) -> MetamorphicOutcome:
     rows = ctx.tables.get("events", [])
     if not rows:
@@ -153,6 +174,10 @@ RELATION_REGISTRY: dict[str, list[RelationFn]] = {
 
 RELATION_VERSION = 1
 
+TEMPLATE_RELATION_OVERRIDES: dict[str, list[RelationFn]] = {
+    "sql.joins.saas_paid_invoices": [relate_row_permutation, relate_add_irrelevant_account],
+}
+
 
 def relations_for_family(family: str) -> list[RelationFn]:
     try:
@@ -163,7 +188,10 @@ def relations_for_family(family: str) -> list[RelationFn]:
 
 def run_metamorphic_checks(ctx: MetamorphicContext) -> MetamorphicResult:
     outcomes: list[MetamorphicOutcome] = []
-    for fn in relations_for_family(ctx.task.family):
+    relations = TEMPLATE_RELATION_OVERRIDES.get(ctx.task.template_id)
+    if relations is None:
+        relations = relations_for_family(ctx.task.family)
+    for fn in relations:
         try:
             outcome = fn(ctx)
         except BackendError:

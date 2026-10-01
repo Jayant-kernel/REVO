@@ -1,0 +1,43 @@
+template_id: sql.aggregation.payment_net_settled
+version: 1
+family: aggregation
+difficulty: 2
+description: Net posted settlement ledger value by merchant in 2025.
+tables:
+  - name: payment_entries
+    row_kind: payment_entries
+    row_count: 48
+    columns:
+      - {name: entry_id, type: INTEGER, nullable: false}
+      - {name: merchant_id, type: INTEGER, nullable: false}
+      - {name: posted_on, type: DATE, nullable: false}
+      - {name: entry_kind, type: VARCHAR, nullable: false}
+      - {name: entry_status, type: VARCHAR, nullable: false}
+      - {name: amount_cents, type: INTEGER, nullable: false}
+generation_config:
+  domain: payments
+requirements:
+  objective: net_posted_settlement_value_by_merchant
+  year: 2025
+  status_filter: posted
+  group_by: [payment_entries.merchant_id]
+  null_handling: amounts_are_non_null
+  count_semantics: only_posted_settlement_and_reversal_entries_are_eligible
+  empty_group_behavior: merchants_without_eligible_entries_have_no_row
+  output_columns: [payment_entries.merchant_id, net_settled_cents]
+  order_by: [payment_entries.merchant_id]
+edge_cases:
+  - negative_values
+  - payment_reversal
+  - payment_year_boundary
+  - failed_payment
+oracle:
+  type: reference_query
+  strategy: independent_payment_ledger_aggregation
+instruction_template: >-
+  For each merchant, show the net value of posted settlement and reversal
+  ledger entries dated in {year}. Amounts are signed integer minor units:
+  settlements are positive and reversals are negative. Include both in the
+  sum. Exclude failed entries and other years. Return merchant_id and
+  net_settled_cents, ordered by
+  merchant_id. Include a merchant if its eligible entries net to zero.

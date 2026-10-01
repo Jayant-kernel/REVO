@@ -57,7 +57,7 @@ def test_evidence_bounded_on_mismatch():
 def test_output_carries_versions_and_no_secrets_or_fixtures():
     result = _passing_result()
     data = json.loads(verification_to_json(result))
-    assert data["verification_config_version"] == "1.0"
+    assert data["verification_config_version"] == "1.1-adversarial"
     assert data["oracle_version"] == 1
     assert data["oracle"]["strategy"]
     blob = verification_to_json(result).lower()

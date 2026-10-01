@@ -5,6 +5,7 @@ or quality implementation. Calling it requires an explicit execution flag.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from collections.abc import Sequence
@@ -55,9 +56,13 @@ def _pause_reason(
     total = len(records)
     execution_error_rate = sum(r.execution.status != "SUCCEEDED" for r in records) / total
     inconclusive_rate = sum(r.verification.verdict == "INCONCLUSIVE" for r in records) / total
-    semantic_duplicate_rate = sum(
-        getattr(q, "semantic_duplicate_group", None) is not None for q in qualities
-    ) / max(1, len(qualities))
+    from verified_data_factory.quality.population_metrics import (
+        cross_task_semantic_duplicate_rate,
+    )
+
+    # The stop monitors repeated *tasks* across semantic groups. Multiple
+    # generated candidates for one task are expected and must not stop a batch.
+    semantic_duplicate_rate = cross_task_semantic_duplicate_rate(qualities)
     measured = {
         "execution_error_rate": execution_error_rate,
         "inconclusive_rate": inconclusive_rate,
@@ -72,6 +77,35 @@ def _pause_reason(
         if all(getattr(q, "decision", None) != "GOLDEN" for q in recent):
             return f"zero Golden records in the latest {zero_limit} attempts"
     return None
+
+
+def _effective_audit_rate(config: ProductionConfig, record_count: int) -> float:
+    """Full review pools select automated survivors before human decisions."""
+    if config.review_pool_mode:
+        return 0.0
+    return min(1.0, config.audit.sample_size / max(1, record_count))
+
+
+def _latest_templates_for_family(registry: Any, family: str) -> list[Any]:
+    """One current version per distinct business template, in stable order."""
+    latest: dict[str, Any] = {}
+    for template in registry.list_by_family(family):
+        previous = latest.get(template.template_id)
+        if previous is None or template.version > previous.version:
+            latest[template.template_id] = template
+    if not latest:
+        raise ProductionConfigError(f"no task templates registered for family {family}")
+    return [latest[template_id] for template_id in sorted(latest)]
+
+
+def _template_catalog_id(registry: Any) -> str:
+    """Bind a run to the full content of every selectable template."""
+    payload = {
+        family: [template.model_dump(mode="json") for template in _latest_templates_for_family(registry, family)]
+        for family in FAMILIES
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return "sha256:" + hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
 def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bool = False) -> None:
@@ -98,15 +132,22 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
             "production preflight failed: " + ", ".join(failed or ["unknown check"])
         )
     started = time.monotonic()
+    registry = load_builtin_registry()
+    template_catalog_id = _template_catalog_id(registry)
     manifest_path = root / "manifests/run-manifest.json"
     if manifest_path.exists():
         assert_resume_config(config, manifest_path)
+        frozen_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if frozen_manifest.get("template_catalog_id") != template_catalog_id:
+            raise ProductionConfigError("task template catalog changed; use a new run identity")
     else:
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(
             json.dumps(
                 {
                     "production_config_id": config_id(config),
+                    "policy_file_hashes": production_api.policy_file_hashes(config),
+                    "template_catalog_id": template_catalog_id,
                     "run_name": config.run_name,
                     "config_version": config.config_version,
                     "model_id": config.model.model_id,
@@ -123,7 +164,6 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
             encoding="utf-8",
         )
     task_path, candidate_path = root / "tasks/tasks.jsonl", root / "candidates/candidates.jsonl"
-    registry = load_builtin_registry()
     provider = create_provider(
         config.model.provider,
         base_url=config.model.endpoint,
@@ -172,9 +212,10 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
                 return
             new_tasks = []
             for family_index, family in enumerate(FAMILIES):
-                template = max(registry.list_by_family(family), key=lambda item: item.version)
+                templates = _latest_templates_for_family(registry, family)
                 for index in range(config.family_distribution[family]):
                     seed = config.seed + batch_index * 1_000_000 + family_index * 100_000 + index
+                    template = templates[(batch_index * config.family_distribution[family] + index) % len(templates)]
                     new_tasks.append(generate_task(template, seed))
             task_path.parent.mkdir(parents=True, exist_ok=True)
             with task_path.open("a", encoding="utf-8") as handle:
@@ -216,14 +257,43 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
         quality_config = load_quality_config(config.quality_config)
         quality_config = quality_config.model_copy(
             update={
-                "audit_rate": min(1.0, config.audit.sample_size / max(1, len(records))),
+                "audit_rate": _effective_audit_rate(config, len(records)),
                 "audit_seed": config.audit.seed,
             }
         )
         analysis = analyze_dataset(records, quality_config)
         export_dataset(analysis.qualities, {record.candidate.candidate_id: record for record in records}, analysis.health.model_dump(mode="json"), [item.model_dump(mode="json") for item in analysis.audit_sample.items], root / "quality/export")
+        from verified_data_factory.quality.population_metrics import population_duplicate_report
+
+        (root / "quality/export/population_metrics.json").write_text(
+            json.dumps(population_duplicate_report(analysis.qualities, records), indent=2, sort_keys=True)
+            + "\n",
+            encoding="utf-8",
+        )
+        if config.review_pool_mode:
+            # Automated survivors are review candidates. The human audit
+            # remains pending and PUBLIC release validation requires its
+            # separate frozen, independent-review package.
+            golden_rows = _jsonl(root / "quality/export/golden.jsonl")
+            queue_path = root / "quality/export/review_queue.jsonl"
+            with queue_path.open("w", encoding="utf-8") as handle:
+                for row in golden_rows:
+                    handle.write(
+                        json.dumps(
+                            {
+                                "record_id": row["record_id"],
+                                "candidate_id": row["candidate_id"],
+                                "family": row["quality"]["family"],
+                                "status": "PENDING",
+                            },
+                            sort_keys=True,
+                        )
+                        + "\n"
+                    )
         golden_count = sum(q.decision == "GOLDEN" for q in analysis.qualities)
         state = {"status": "RUNNING", "batch": batch_index + 1, "tasks": len(tasks), "candidates": len(candidates), "golden": golden_count, "target": config.target_golden_records}
+        if config.review_pool_mode:
+            state["human_review_status"] = "PENDING"
         _write_state(root, state)
         if golden_count >= config.target_golden_records:
             _write_state(root, {**state, "status": "TARGET_REACHED"})

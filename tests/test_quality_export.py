@@ -158,7 +158,7 @@ def test_config_defaults_yaml_and_invalid(tmp_path):
     config = QualityConfig()
     assert config.mutation_min_score == 0.9
     assert config.audit_rate == 0.2
-    assert config.config_version == "1.0"
+    assert config.config_version == "1.1-scoped-overlap"
     path = tmp_path / "q.yaml"
     path.write_text("quality:\n  mutation_min_score: 0.5\n  audit_rate: 0.1\n", encoding="utf-8")
     loaded = load_quality_config(path)

@@ -121,6 +121,7 @@ def build_release(
     quarantined_ids: set[str] | None = None,
     justifications: dict[str, str] | None = None,
     supply_chain: dict[str, Any] | None = None,
+    review_package: str | Path | None = None,
 ) -> BuiltRelease:
     """Build, persist, and self-validate one product release.
 
@@ -293,6 +294,7 @@ def build_release(
         qualities_by_id=shipped_quality,
         justifications=justifications,
         supply_chain=supply_chain,
+        review_package=review_package,
     )
     if report.status != "VALID":
         first = report.errors[0].detail if report.errors else "unknown failure"
