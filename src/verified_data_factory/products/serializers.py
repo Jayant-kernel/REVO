@@ -15,6 +15,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from verified_data_factory.local_paths import io_path
+
 from .errors import ProductIOError
 
 JSONL_MEDIA_TYPE = "application/x-ndjson"
@@ -41,7 +43,7 @@ def decode_record_line(line: bytes, *, lineno: int = 0) -> dict[str, Any]:
 
 def write_jsonl(records: list[dict[str, Any]], path: str | Path) -> tuple[int, str]:
     """Write records in given order; returns (byte_size, sha256)."""
-    path = Path(path)
+    path = io_path(Path(path))
     digest = hashlib.sha256()
     size = 0
     with open(path, "wb") as fh:
@@ -56,7 +58,7 @@ def write_jsonl(records: list[dict[str, Any]], path: str | Path) -> tuple[int, s
 def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
     """Read a JSONL shard strictly (blank lines skipped, order preserved)."""
     records: list[dict[str, Any]] = []
-    with open(path, "rb") as fh:
+    with open(io_path(Path(path)), "rb") as fh:
         for lineno, raw in enumerate(fh, 1):
             if not raw.strip():
                 continue
@@ -68,7 +70,7 @@ def hash_file(path: str | Path) -> tuple[int, str]:
     """Streaming SHA-256 of a file; returns (byte_size, hex)."""
     digest = hashlib.sha256()
     size = 0
-    with open(path, "rb") as fh:
+    with open(io_path(Path(path)), "rb") as fh:
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             digest.update(chunk)
             size += len(chunk)
@@ -117,7 +119,8 @@ def write_parquet(records: list[dict[str, Any]], path: str | Path) -> tuple[int,
 
     columns = column_names(records)
     table = pa.table(_parquet_arrays(records, columns))
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    path = io_path(Path(path))
+    path.parent.mkdir(parents=True, exist_ok=True)
     pq.write_table(table, path, version="2.6", use_dictionary=True)
     return hash_file(path)
 
@@ -126,7 +129,7 @@ def read_parquet(path: str | Path) -> list[dict[str, Any]]:
     """Read a Parquet shard back into record dicts (typed columns)."""
     import pyarrow.parquet as pq
 
-    table = pq.read_table(path)
+    table = pq.read_table(io_path(Path(path)))
     columns = table.schema.names
     rows = table.to_pylist()
     return [{name: row.get(name) for name in columns} for row in rows]
