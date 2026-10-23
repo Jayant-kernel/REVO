@@ -1,0 +1,60 @@
+{
+  "example_id": "05",
+  "candidate_id": "sql.joins.requested_language_titles.v1.0d54c5975c5a.qwen3-8b.00.49d13f9284e6",
+  "task_id": "sql.joins.requested_language_titles.v1.0d54c5975c5a",
+  "fixture_scope": "retained public base fixture",
+  "instruction": "For requested_language_titles, left join each request to translations on both item_id and exact case-sensitive language equality. Each request row emits one row per matching translation row, or exactly one row with NULL title if none matches. Any NULL key component prevents matching, including NULL to NULL. A matched NULL title remains NULL; it is not replaced. No language fallback, status/year filter or deduplication. Translation-only rows emit nothing. Inputs are bags; request_id/item_id/language are not unique. Return request_id INTEGER, title nullable VARCHAR as an unordered bag with all multiplicities, no tie/winner selection. Units are categorical text. JSON INTEGER is bounded signed32 integer excluding bool/string; VARCHAR is text; NULL only nullable columns. Exact declared table/column sets required; no other domain restrictions.",
+  "schema": [{"columns":[{"name":"request_id","nullable":false,"type":"INTEGER"},{"name":"item_id","nullable":true,"type":"INTEGER"},{"name":"language","nullable":true,"type":"VARCHAR"}],"name":"requests","row_count":5,"row_kind":"generic"},{"columns":[{"name":"item_id","nullable":true,"type":"INTEGER"},{"name":"language","nullable":true,"type":"VARCHAR"},{"name":"title","nullable":true,"type":"VARCHAR"}],"name":"translations","row_count":5,"row_kind":"generic"}],
+  "tables": {
+    "requests": [
+      {"item_id":13,"language":"en","request_id":1},
+      {"item_id":null,"language":null,"request_id":8},
+      {"item_id":2147483647,"language":"en","request_id":2147483647},
+      {"item_id":null,"language":"en","request_id":3},
+      {"item_id":10,"language":"en","request_id":1},
+      {"item_id":1001,"language":"frame:101010:0:1:é","request_id":105808409},
+      {"item_id":-2147483648,"language":"en","request_id":-2147483648},
+      {"item_id":10,"language":null,"request_id":4},
+      {"item_id":1002,"language":"frame:101010:0:2:","request_id":1246072600},
+      {"item_id":10,"language":"en","request_id":1},
+      {"item_id":1002,"language":"frame:101010:0:2:","request_id":-812412271},
+      {"item_id":1001,"language":"frame:101010:0:1:é","request_id":-1554236575},
+      {"item_id":11,"language":"en","request_id":6},
+      {"item_id":1000,"language":"frame:101010:0:0:EN","request_id":1770174249},
+      {"item_id":1000,"language":"frame:101010:0:0:EN","request_id":-1791047232},
+      {"item_id":1002,"language":"frame:101010:0:2:","request_id":-1619429116},
+      {"item_id":10,"language":"EN","request_id":5},
+      {"item_id":12,"language":"","request_id":7},
+      {"item_id":10,"language":"fr","request_id":2},
+      {"item_id":-1,"language":" en ","request_id":-1}
+    ],
+    "translations": [
+      {"item_id":1000,"language":"frame:101010:0:0:EN","title":null},
+      {"item_id":-1,"language":"en","title":"trim trap"},
+      {"item_id":13,"language":"en","title":"Other"},
+      {"item_id":11,"language":"en","title":null},
+      {"item_id":99,"language":"de","title":"orphan"},
+      {"item_id":2147483647,"language":"en","title":"maximum"},
+      {"item_id":10,"language":null,"title":"null language"},
+      {"item_id":null,"language":"en","title":"null item"},
+      {"item_id":-1,"language":" en ","title":"literal"},
+      {"item_id":12,"language":"","title":""},
+      {"item_id":1000,"language":"frame:101010:0:0:EN","title":""},
+      {"item_id":10,"language":"en","title":"Book"},
+      {"item_id":null,"language":null,"title":"both null"},
+      {"item_id":1000,"language":"frame:101010:0:0:EN","title":""},
+      {"item_id":10,"language":"en","title":"Book"},
+      {"item_id":10,"language":"en","title":"Volume"},
+      {"item_id":-2147483648,"language":"en","title":"minimum"},
+      {"item_id":1000,"language":"frame:101010:0:0:EN","title":"Title"}
+    ]
+  },
+  "sql": "SELECT requests.request_id, translations.title\nFROM requests\nLEFT JOIN translations\nON requests.item_id = translations.item_id\nAND requests.language = translations.language",
+  "expected": {"columns":[{"name":"request_id","type":"INTEGER"},{"name":"title","type":"VARCHAR"}],"rows":[[-1791047232,null],[1,"Other"],[6,null],[2147483647,"maximum"],[-1,"literal"],[7,""],[-1791047232,""],[1,"Book"],[-1791047232,""],[1,"Book"],[1,"Volume"],[-2147483648,"minimum"],[-1791047232,"Title"],[1770174249,null],[1770174249,""],[1,"Book"],[1770174249,""],[1,"Book"],[1,"Volume"],[1770174249,"Title"],[2,null],[4,null],[3,null],[8,null],[1246072600,null],[-812412271,null],[-1619429116,null],[105808409,null],[-1554236575,null],[5,null]],"rows_returned":30,"truncated":false},
+  "source_bindings": {
+    "membership": {"path":"artifacts/internal-deliveries/v37-original8-001/original8/packet/membership.json","sha256":"185febd3055e02f677370dcd084df380aba506a14e11d80aba508fc94e10c062"},
+    "initial_execution": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/004-execution.json","sha256":"e85732302552253130873fe82dc3fdc6431c0755f87a5bc15217581bddffc9b7"},
+    "candidate_verification": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/004-verification.json","sha256":"d02c196babf2668447b5154d0030432f05f348bcc59902617a87b70e1dc5e572"},
+    "final_result": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/FINAL-RESULT.json","sha256":"2225104c918834d283d46eeba141fb38fed867f6bba852cd4cd6ffc11eb1109b"}
+  }
+}

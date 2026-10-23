@@ -1,0 +1,25 @@
+{
+  "example_id": "01",
+  "candidate_id": "sql.aggregation.fulfillment_sla_dashboard.v1.ee6cf26ee225.qwen3-8b.00.b8142874a73f",
+  "task_id": "sql.aggregation.fulfillment_sla_dashboard.v1.ee6cf26ee225",
+  "fixture_scope": "retained public base fixture",
+  "instruction": "For 2025, build a warehouse fulfillment SLA dashboard from fulfillments. Include only 'delivered' fulfillments shipped in the year with a non-null delivery timestamp. Return warehouse, delivered_fulfillments, and on_time_fulfillments, where on time means delivered_at is no later than promised_at. Order by warehouse. Exclude cancelled, unresolved, and out-of-year fulfillments (ineligible_rows, null_values, year_boundary).",
+  "schema": [{"columns":[{"name":"fulfillment_id","nullable":false,"type":"INTEGER"},{"name":"warehouse","nullable":false,"type":"VARCHAR"},{"name":"shipped_at","nullable":false,"type":"TIMESTAMP"},{"name":"promised_at","nullable":false,"type":"TIMESTAMP"},{"name":"delivered_at","nullable":true,"type":"TIMESTAMP"},{"name":"fulfillment_status","nullable":false,"type":"VARCHAR"}],"name":"fulfillments","row_count":8,"row_kind":"generic"}],
+  "tables": {"fulfillments": [
+    {"delivered_at":"2025-01-01 00:00:00","fulfillment_id":5,"fulfillment_status":"delivered","promised_at":"2025-01-02 00:00:00","shipped_at":"2024-12-31 23:59:59","warehouse":"north"},
+    {"delivered_at":"2025-02-02 12:00:00","fulfillment_id":4,"fulfillment_status":"delivered","promised_at":"2025-02-03 08:00:00","shipped_at":"2025-02-02 08:00:00","warehouse":"west"},
+    {"delivered_at":"2025-01-03 08:00:01","fulfillment_id":2,"fulfillment_status":"delivered","promised_at":"2025-01-03 08:00:00","shipped_at":"2025-01-02 08:00:00","warehouse":"east"},
+    {"delivered_at":null,"fulfillment_id":3,"fulfillment_status":"in_transit","promised_at":"2025-02-02 08:00:00","shipped_at":"2025-02-01 08:00:00","warehouse":"west"},
+    {"delivered_at":"2025-06-01 10:00:00","fulfillment_id":6,"fulfillment_status":"cancelled","promised_at":"2025-06-02 08:00:00","shipped_at":"2025-06-01 08:00:00","warehouse":"north"},
+    {"delivered_at":"2025-01-03 08:00:00","fulfillment_id":1,"fulfillment_status":"delivered","promised_at":"2025-01-03 08:00:00","shipped_at":"2025-01-01 08:00:00","warehouse":"east"},
+    {"delivered_at":"2026-01-01 08:00:00","fulfillment_id":7,"fulfillment_status":"delivered","promised_at":"2026-01-01 08:00:00","shipped_at":"2025-12-31 08:00:00","warehouse":"east"}
+  ]},
+  "sql": "SELECT \n    warehouse, \n    COUNT(*) AS delivered_fulfillments, \n    SUM(CASE WHEN delivered_at <= promised_at THEN 1 ELSE 0 END) AS on_time_fulfillments\nFROM \n    fulfillments\nWHERE \n    fulfillment_status = 'delivered'\n    AND shipped_at >= DATE '2025-01-01'\n    AND shipped_at < DATE '2026-01-01'\n    AND delivered_at IS NOT NULL\nGROUP BY \n    warehouse\nORDER BY \n    warehouse",
+  "expected": {"columns":[{"name":"warehouse","type":"VARCHAR"},{"name":"delivered_fulfillments","type":"BIGINT"},{"name":"on_time_fulfillments","type":"HUGEINT"}],"rows":[["east",3,2],["west",1,1]],"rows_returned":2,"truncated":false},
+  "source_bindings": {
+    "membership": {"path":"artifacts/internal-deliveries/v37-original8-001/original8/packet/membership.json","sha256":"185febd3055e02f677370dcd084df380aba506a14e11d80aba508fc94e10c062"},
+    "initial_execution": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/000-execution.json","sha256":"383e1622cb0aa175f59ac284f764810b442fd911236addf4773b5a06732dad03"},
+    "candidate_verification": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/000-verification.json","sha256":"0a583a89c8b6ab3f2dc54a009e946c302e02153e6251279f6210d62c5fdcb9a2"},
+    "final_result": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/FINAL-RESULT.json","sha256":"2225104c918834d283d46eeba141fb38fed867f6bba852cd4cd6ffc11eb1109b"}
+  }
+}

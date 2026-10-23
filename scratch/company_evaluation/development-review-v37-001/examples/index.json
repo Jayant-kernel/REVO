@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {"example_id":"01","candidate_id":"sql.aggregation.fulfillment_sla_dashboard.v1.ee6cf26ee225.qwen3-8b.00.b8142874a73f","page":"01-fulfillment-sla.md","fixture":"01-fulfillment-sla.json"},
+    {"example_id":"02","candidate_id":"sql.dedup.education_grade_revisions.v2.78bb3766bf95.qwen3-8b.04.1e77446511d8","page":"02-grade-revisions.md","fixture":"02-grade-revisions.json"},
+    {"example_id":"03","candidate_id":"sql.windows.media_previous_play.v1.cd1ead8f4849.qwen3-8b.11.a9e4c8f9f042","page":"03-previous-play.md","fixture":"03-previous-play.json"},
+    {"example_id":"04","candidate_id":"sql.dedup.lowest_quote.v1.c5a5d681007c.qwen3-8b.00.f5fcd4f8535f","page":"04-lowest-quote.md","fixture":"04-lowest-quote.json"},
+    {"example_id":"05","candidate_id":"sql.joins.requested_language_titles.v1.0d54c5975c5a.qwen3-8b.00.49d13f9284e6","page":"05-language-titles.md","fixture":"05-language-titles.json"},
+    {"example_id":"06","candidate_id":"sql.subqueries.pareto_shipping.v1.5505da8aaef5.qwen3-8b.00.02876080a37c","page":"06-pareto-shipping.md","fixture":"06-pareto-shipping.json"},
+    {"example_id":"07","candidate_id":"sql.retention.renewal_coverage.v1.63a1c0fefc7c.qwen3-8b.00.b9dbae6d29b5","page":"07-renewal-coverage.md","fixture":"07-renewal-coverage.json"},
+    {"example_id":"08","candidate_id":"sql.windows.queue_batches.v1.11f188ba5320.qwen3-8b.00.dfda1f1b90f0","page":"08-queue-batches.md","fixture":"08-queue-batches.json"}
+  ]
+}

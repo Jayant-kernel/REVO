@@ -1,0 +1,55 @@
+{
+  "example_id": "07",
+  "candidate_id": "sql.retention.renewal_coverage.v1.63a1c0fefc7c.qwen3-8b.00.b9dbae6d29b5",
+  "task_id": "sql.retention.renewal_coverage.v1.63a1c0fefc7c",
+  "fixture_scope": "retained public base fixture",
+  "instruction": "For each supplied membership episode expiring in calendar 2025, return episode_id INTEGER and covered BOOLEAN ordered by episode_id ascending. One confirmed renewal for that member must begin at or before expiry and end at or after expiry plus 14 elapsed 24-hour days. These endpoint comparisons are inclusive even though no activity interval union is computed. Multiple adjacent renewals cannot be stitched. All renewal years participate; other statuses do not. An episode is the supplied unique episode_id, not the member's first purchase; multiple episodes per member are independently tested and one renewal may cover multiple episodes. No renewal gives FALSE. Renewal rows are arbitrary bags: repeated and conflicting intervals are separate evidence and existence prevents multiplication. Empty episodes produce no rows. All times are naive, timezone-free, microsecond-resolution timestamps; no calendar-date cast or rounding. All input columns are nonnull, episodes.episode_id must be unique and every renewal ends_at must be >= begins_at. No other uniqueness, foreign-key or status-enum restriction; orphan renewals are ignored. No tie selection or NULL ordering is applicable.",
+  "schema": [{"columns":[{"name":"episode_id","nullable":false,"type":"INTEGER"},{"name":"member_id","nullable":false,"type":"INTEGER"},{"name":"expires_at","nullable":false,"type":"TIMESTAMP"}],"name":"episodes","row_count":4,"row_kind":"generic"},{"columns":[{"name":"member_id","nullable":false,"type":"INTEGER"},{"name":"begins_at","nullable":false,"type":"TIMESTAMP"},{"name":"ends_at","nullable":false,"type":"TIMESTAMP"},{"name":"status","nullable":false,"type":"VARCHAR"}],"name":"renewals","row_count":8,"row_kind":"generic"}],
+  "tables": {
+    "episodes": [
+      {"episode_id":4,"expires_at":"2025-01-01T00:00:00","member_id":4},
+      {"episode_id":6,"expires_at":"2025-01-01T00:00:00","member_id":6},
+      {"episode_id":-2147483648,"expires_at":"2025-01-01T00:00:00","member_id":-1},
+      {"episode_id":5,"expires_at":"2025-01-01T00:00:00","member_id":5},
+      {"episode_id":13,"expires_at":"2024-12-31T23:59:59.999999","member_id":7},
+      {"episode_id":1,"expires_at":"2025-01-01T00:00:00","member_id":1},
+      {"episode_id":9,"expires_at":"2025-01-01T12:00:00.000001","member_id":9},
+      {"episode_id":7,"expires_at":"2025-01-01T00:00:00","member_id":7},
+      {"episode_id":102,"expires_at":"2025-09-03T06:37:23.383679","member_id":102},
+      {"episode_id":101,"expires_at":"2025-09-04T06:43:50.432267","member_id":101},
+      {"episode_id":12,"expires_at":"2026-01-01T00:00:00","member_id":7},
+      {"episode_id":11,"expires_at":"2025-12-30T23:59:59.999999","member_id":7},
+      {"episode_id":2147483647,"expires_at":"2025-01-01T00:00:00","member_id":8},
+      {"episode_id":100,"expires_at":"2025-03-23T16:37:26.699334","member_id":100},
+      {"episode_id":10,"expires_at":"2025-12-31T23:59:59.999999","member_id":7},
+      {"episode_id":3,"expires_at":"2025-01-01T00:00:00","member_id":3},
+      {"episode_id":8,"expires_at":"2025-01-01T00:00:00","member_id":8},
+      {"episode_id":2,"expires_at":"2025-01-01T00:00:00","member_id":2}
+    ],
+    "renewals": [
+      {"begins_at":"2025-01-01T00:00:00","ends_at":"2025-01-15T00:00:00","member_id":1,"status":"pending"},
+      {"begins_at":"2025-01-01T00:00:00","ends_at":"2025-01-15T12:00:00","member_id":9,"status":"confirmed"},
+      {"begins_at":"2025-09-03T06:37:23.383679","ends_at":"2025-09-17T06:37:23.383680","member_id":102,"status":"pending"},
+      {"begins_at":"2024-12-01T00:00:00","ends_at":"2025-01-14T23:59:59.999999","member_id":3,"status":"confirmed"},
+      {"begins_at":"2025-01-01T00:00:00","ends_at":"2025-01-08T00:00:00","member_id":4,"status":"confirmed"},
+      {"begins_at":"2025-01-08T00:00:00","ends_at":"2025-02-01T00:00:00","member_id":4,"status":"confirmed"},
+      {"begins_at":"2024-12-01T00:00:00","ends_at":"2025-01-15T00:00:00","member_id":8,"status":"confirmed"},
+      {"begins_at":"2025-03-23T16:37:26.699333","ends_at":"2025-04-06T16:37:26.699334","member_id":100,"status":"pending"},
+      {"begins_at":"2025-09-04T06:43:50.432266","ends_at":"2025-09-18T06:43:50.432268","member_id":101,"status":"confirmed"},
+      {"begins_at":"2025-01-01T00:00:00","ends_at":"2025-01-15T00:00:00","member_id":1,"status":"confirmed"},
+      {"begins_at":"2020-01-01T00:00:00","ends_at":"2030-01-01T00:00:00","member_id":99,"status":"confirmed"},
+      {"begins_at":"2025-01-01T00:00:00","ends_at":"2025-01-15T00:00:00","member_id":1,"status":"confirmed"},
+      {"begins_at":"2025-12-30T23:59:59.999999","ends_at":"2026-01-14T23:59:59.999999","member_id":7,"status":"confirmed"},
+      {"begins_at":"2025-01-01T00:00:00.000001","ends_at":"2025-01-15T00:00:00","member_id":2,"status":"confirmed"},
+      {"begins_at":"2025-01-01T00:00:00","ends_at":"2025-01-15T00:00:00","member_id":5,"status":"unknown"}
+    ]
+  },
+  "sql": "SELECT episodes.episode_id, \n       CASE WHEN EXISTS (\n           SELECT 1\n           FROM renewals\n           WHERE renewals.member_id = episodes.member_id\n             AND renewals.status = 'confirmed'\n             AND renewals.begins_at <= episodes.expires_at\n             AND renewals.ends_at >= episodes.expires_at + INTERVAL '14 days'\n       ) THEN TRUE ELSE FALSE END AS covered\nFROM episodes\nWHERE EXTRACT(YEAR FROM episodes.expires_at) = 2025\nORDER BY episodes.episode_id ASC",
+  "expected": {"columns":[{"name":"episode_id","type":"INTEGER"},{"name":"covered","type":"BOOLEAN"}],"rows":[[-2147483648,false],[1,true],[2,false],[3,false],[4,false],[5,false],[6,false],[7,false],[8,true],[9,false],[10,true],[11,true],[100,false],[101,true],[102,false],[2147483647,true]],"rows_returned":16,"truncated":false},
+  "source_bindings": {
+    "membership": {"path":"artifacts/internal-deliveries/v37-original8-001/original8/packet/membership.json","sha256":"185febd3055e02f677370dcd084df380aba506a14e11d80aba508fc94e10c062"},
+    "initial_execution": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/006-execution.json","sha256":"8f292d89f96b53bf1ddefbc3ab63dd590d6f00e9be7279ebd83f61f29f98946d"},
+    "candidate_verification": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/006-verification.json","sha256":"cf063834035edbcdfb01b474d0b4889dc68ad20339edba6ec8b707cdc1f4efed"},
+    "final_result": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/FINAL-RESULT.json","sha256":"2225104c918834d283d46eeba141fb38fed867f6bba852cd4cd6ffc11eb1109b"}
+  }
+}
