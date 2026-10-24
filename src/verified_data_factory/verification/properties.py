@@ -68,6 +68,7 @@ def _run_and_compare(
         [c.name for c in execution.result_data.columns],
         execution.result_data.rows,
         ctx.policy,
+        column_types=[c.type for c in execution.result_data.columns],
     )
     if comparison.match:
         return True, ""
@@ -90,6 +91,13 @@ def _with_new_pk(rows: list[dict[str, Any]], pk: str) -> int:
 
 
 def check_duplicate_invariance(ctx: PropertyContext) -> PropertyOutcome:
+    if (ctx.task.template_id, ctx.task.template_version) == ("sql.funnel.saas_activation_payment", 2):
+        from .metamorphic import contract_relation_tables
+        tables, reason = contract_relation_tables(ctx.task, ctx.tables, "SAAS_LATER_PAYMENT")
+        if tables is None:
+            return PropertyOutcome(property_id="LATER_PAYMENT_INVARIANCE", applicable=False, passed=False, detail=reason)
+        passed, detail = _run_and_compare(ctx, tables, "property:later_payment_invariance")
+        return PropertyOutcome(property_id="LATER_PAYMENT_INVARIANCE", applicable=True, passed=passed, detail=detail or reason)
     rows = ctx.tables.get("events", [])
     if not rows:
         return PropertyOutcome(

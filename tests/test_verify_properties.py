@@ -83,6 +83,7 @@ def test_metamorphic_relations_pass_for_correct_behavior():
             backend,
             ComparisonPolicy(),
             task.seed,
+            candidate_types=expected.column_types,
         )
         for fn in relations_for_family(task.family):
             outcome = fn(ctx)
@@ -115,6 +116,7 @@ def test_metamorphic_failure_detected():
         backend,
         ComparisonPolicy(),
         task.seed,
+        candidate_types=expected.column_types,
     )
     result = run_metamorphic_checks(ctx)
     assert result.failed == 1

@@ -5,6 +5,8 @@ handling, hidden-seed determinism/distinctness, and metamorphic shuffle
 determinism. Strategies stay small and fast.
 """
 
+import json
+
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
@@ -29,7 +31,10 @@ _atoms = st.one_of(
 def test_unordered_permutation_invariance(rows):
     cols = ["c0", "c1", "c2"][: max(1, max((len(r) for r in rows), default=1))]
     norm = [list(r) + [None] * (len(cols) - len(r)) for r in rows]
-    expected = ExpectedResult(columns=cols, rows=norm, order=OrderSpec())
+    # Arbitrary heterogeneous atoms are transported losslessly in VARCHAR
+    # columns; unlike Python lists, a SQL column has one declared type.
+    norm = [[None if value is None else json.dumps(value) for value in row] for row in norm]
+    expected = ExpectedResult(columns=cols, column_types=["VARCHAR"] * len(cols), rows=norm, order=OrderSpec())
     import random
 
     shuffled = list(norm)
@@ -67,7 +72,7 @@ def test_hidden_seeds_deterministic_and_distinct(seed, index):
 def test_ordered_keys_detect_permutation(values):
     order = OrderSpec(type="ordered", keys=[("v", "asc")])
     rows = [[v] for v in sorted(values)]
-    expected = ExpectedResult(columns=["v"], rows=rows, order=order)
+    expected = ExpectedResult(columns=["v"], column_types=["BIGINT"], rows=rows, order=order)
     assert compare(expected, ["v"], rows, POLICY).match
     if len(set(values)) == len(values) and len(values) > 1:
         rev = rows[::-1]
