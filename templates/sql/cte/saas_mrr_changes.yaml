@@ -1,0 +1,12 @@
+template_id: sql.cte.saas_mrr_changes
+version: 1
+family: cte
+difficulty: 3
+description: Eligible SaaS plan-change MRR movement by plan.
+tables: [{name: plan_changes, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: saas_mrr_changes}
+requirements: {objective: eligible_mrr_movement_by_plan, year: 2025, status_filter: eligible, top_tie_break: group_key_ascending, unmatched_behavior: omit_groups_without_eligible_rows, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [negative_values, ineligible_rows, year_boundary]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Use a CTE to return eligible MRR movement by plan in {year}, ordered by plan.

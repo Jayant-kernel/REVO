@@ -1,0 +1,37 @@
+template_id: sql.cte.order_line_reconciliation
+version: 1
+family: cte
+difficulty: 3
+description: Reconcile completed order headers against summed order lines.
+tables:
+  - name: orders
+    row_count: 6
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: ordered_on, type: DATE, nullable: false}
+      - {name: header_total_cents, type: INTEGER, nullable: false}
+      - {name: order_status, type: VARCHAR, nullable: false}
+  - name: order_lines
+    row_count: 8
+    columns:
+      - {name: line_id, type: INTEGER, nullable: false}
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: quantity, type: INTEGER, nullable: false}
+      - {name: unit_price_cents, type: INTEGER, nullable: false}
+generation_config: {business_fixture: order_line_reconciliation}
+requirements:
+  objective: completed_order_header_line_reconciliation
+  year: 2025
+  status_filter: completed
+  top_tie_break: order_id_ascending
+  unmatched_behavior: include_completed_orders_without_lines_as_zero_line_total
+  output_columns: [order_id, header_total_cents, line_total_cents]
+  order_by: [order_id]
+edge_cases: [missing_relationships, duplicates, year_boundary]
+oracle: {type: reference_query, strategy: independent_order_line_reconciliation}
+instruction_template: >-
+  Use a CTE to sum quantity * unit_price_cents per order line. For completed orders in
+  {year}, return only orders whose header_total_cents differs from their line total,
+  with order_id, header_total_cents, and line_total_cents ordered by order_id. Treat a
+  completed order with no lines as line_total_cents zero; exclude other statuses and
+  out-of-year orders ({edge_cases}).

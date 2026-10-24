@@ -1,0 +1,33 @@
+template_id: sql.cte.inventory_net_flow
+version: 2
+family: cte
+difficulty: 3
+description: Reconcile posted input-row bags into signed net warehouse flow.
+tables:
+  - name: receipts
+    row_count: 6
+    columns: [{name: movement_id, type: INTEGER, nullable: false}, {name: warehouse, type: VARCHAR, nullable: false}, {name: occurred_on, type: DATE, nullable: false}, {name: units, type: INTEGER, nullable: false}, {name: status, type: VARCHAR, nullable: false}]
+  - name: issues
+    row_count: 6
+    columns: [{name: movement_id, type: INTEGER, nullable: false}, {name: warehouse, type: VARCHAR, nullable: false}, {name: occurred_on, type: DATE, nullable: false}, {name: units, type: INTEGER, nullable: false}, {name: status, type: VARCHAR, nullable: false}]
+generation_config: {domain: inventory, business_fixture: inventory_net_flow}
+requirements:
+  objective: receipts_minus_issues
+  year: 2025
+  status_filter: posted
+  top_tie_break: not_applicable_all_warehouses
+  unmatched_behavior: include_receipt_only_and_issue_only_warehouses
+  count_semantics: each_posted_input_row_contributes_once_even_when_ids_or_payloads_repeat
+  signed_units: receipt_signed_add_and_issue_signed_subtract
+  empty_group_behavior: include_zero_net_flow_for_qualifying_input_groups
+  output_columns: [warehouse, net_units]
+  order_by: [warehouse]
+edge_cases: [zero_values, negative_values, duplicates, window_end_boundary]
+oracle: {type: reference_query, strategy: independent_inventory_reconciliation}
+instruction_template: >-
+  Reconcile warehouse stock movement for {year}: posted receipts add units and
+  posted issues subtract units. Signed negative units are corrections. Each
+  posted input row contributes once, even when movement_id or the entire payload
+  repeats; movement_id does not imply uniqueness or de-duplication. Return
+  warehouse and net_units ordered by warehouse, including zero net flow and
+  warehouses appearing on only one side. Exclude unposted and out-of-year movements.

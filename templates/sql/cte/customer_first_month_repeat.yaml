@@ -1,0 +1,30 @@
+template_id: sql.cte.customer_first_month_repeat
+version: 1
+family: cte
+difficulty: 3
+description: Customers who repeat a completed purchase in their first purchase month.
+tables:
+  - name: customer_orders
+    row_count: 9
+    columns:
+      - {name: order_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: ordered_at, type: TIMESTAMP, nullable: false}
+      - {name: order_status, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: customer_first_month_repeat}
+requirements:
+  objective: first_completed_purchase_month_repeat_customers
+  year: 2025
+  status_filter: completed
+  top_tie_break: customer_id_ascending
+  unmatched_behavior: omit_customers_without_first_month_repeat
+  output_columns: [customer_id, first_purchase_month]
+  order_by: [customer_id]
+edge_cases: [duplicates, same_timestamp_steps, year_boundary]
+oracle: {type: reference_query, strategy: independent_first_month_repeat}
+instruction_template: >-
+  Use CTEs to find customers whose first completed purchase occurs in {year} and who
+  make at least one later completed order in that same calendar month. Break equal-time
+  first-purchase ties by order_id, and compare later orders using (ordered_at, order_id).
+  Return customer_id and first_purchase_month ordered by customer_id; ignore other
+  statuses and customers whose first completed order is outside {year} ({edge_cases}).

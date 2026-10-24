@@ -1,0 +1,36 @@
+template_id: sql.cte.category_descendant_sales
+version: 1
+family: cte
+difficulty: 4
+description: Recursive category-tree sales rolled up to every ancestor.
+tables:
+  - name: categories
+    row_count: 6
+    columns:
+      - {name: category_id, type: INTEGER, nullable: false}
+      - {name: parent_category_id, type: INTEGER, nullable: true}
+      - {name: category_name, type: VARCHAR, nullable: false}
+  - name: category_orders
+    row_count: 7
+    columns:
+      - {name: sale_id, type: INTEGER, nullable: false}
+      - {name: category_id, type: INTEGER, nullable: false}
+      - {name: sold_on, type: DATE, nullable: false}
+      - {name: amount_cents, type: INTEGER, nullable: false}
+      - {name: sale_status, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: category_descendant_sales}
+requirements:
+  objective: recursive_descendant_completed_sales
+  year: 2025
+  status_filter: completed
+  top_tie_break: category_id_ascending
+  unmatched_behavior: include_categories_without_qualifying_descendant_sales_as_zero
+  output_columns: [category_id, category_name, descendant_sales_cents]
+  order_by: [category_id]
+edge_cases: [missing_relationships, zero_values, year_boundary]
+oracle: {type: reference_query, strategy: independent_category_descendant_sales}
+instruction_template: >-
+  Use a recursive CTE over {tables} to return every category's own-and-descendant
+  '{status_filter}' sales in {year}. Return category_id, category_name, and
+  descendant_sales_cents ordered by category_id. A category with no qualifying sales
+  contributes zero; exclude cancelled and out-of-year sales ({edge_cases}).

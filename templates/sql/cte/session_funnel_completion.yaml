@@ -1,0 +1,37 @@
+template_id: sql.cte.session_funnel_completion
+version: 1
+family: cte
+difficulty: 4
+description: Completed session-local checkout funnels by acquisition channel.
+tables:
+  - name: sessions
+    row_count: 5
+    columns:
+      - {name: session_id, type: INTEGER, nullable: false}
+      - {name: channel, type: VARCHAR, nullable: false}
+      - {name: started_at, type: TIMESTAMP, nullable: false}
+  - name: session_events
+    row_count: 12
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: session_id, type: INTEGER, nullable: false}
+      - {name: occurred_at, type: TIMESTAMP, nullable: false}
+      - {name: event_name, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: session_funnel_completion}
+requirements:
+  objective: ordered_session_funnel_completion_by_channel
+  year: 2025
+  status_filter: not_applicable_events_define_eligibility
+  top_tie_break: channel_ascending
+  unmatched_behavior: include_in_year_channels_with_zero_completed_sessions
+  funnel_steps: [view, add_to_cart, checkout]
+  output_columns: [channel, started_sessions, completed_sessions]
+  order_by: [channel]
+edge_cases: [out_of_order_timestamps, same_timestamp_steps, year_boundary]
+oracle: {type: reference_query, strategy: independent_session_funnel_completion}
+instruction_template: >-
+  Use CTEs to count in-year sessions and completed session-local funnels by channel from
+  {tables}. A completion requires {funnel_steps} in strict order using
+  (occurred_at, event_id); events cannot be shared across sessions. Return channel,
+  started_sessions, and completed_sessions for every in-year channel, ordered by channel
+  ({edge_cases}).
