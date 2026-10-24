@@ -25,7 +25,8 @@ def test_overfit_candidate_fails_on_hidden():
     assert len(expected.rows) > 1
     values = ", ".join(f"({r[0]}, {r[1]})" for r in expected.rows)
     overfit_sql = (
-        "SELECT * FROM (VALUES "
+        "SELECT CAST(customer_id AS INTEGER) AS customer_id, "
+        "CAST(total_revenue AS DOUBLE) AS total_revenue FROM (VALUES "
         + values
         + ") AS t(customer_id, total_revenue) ORDER BY total_revenue DESC;"
     )

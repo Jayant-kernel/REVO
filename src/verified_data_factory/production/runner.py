@@ -22,9 +22,10 @@ from verified_data_factory.sandbox.models import ExecutionResult
 from verified_data_factory.task_engine import generate_task, load_builtin_registry
 from verified_data_factory.task_engine.export import read_jsonl
 from verified_data_factory.verification import verification_from_dict, verify_candidate
+from verified_data_factory.verification.backend import DerivedTaskBackend
 
 from . import api as production_api
-from .api import assert_resume_config, config_id
+from .api import ContractReadiness, assert_resume_config, config_id
 from .errors import ProductionConfigError
 from .models import FAMILIES, ProductionConfig
 
@@ -42,7 +43,54 @@ def _append(path: Path, row: dict[str, object]) -> None:
 def _write_state(root: Path, payload: dict[str, object]) -> None:
     path = root / "manifests/run-state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.replace(path)
+
+
+_CHECKPOINT_FILES = ("tasks/tasks.jsonl", "candidates/attempt-reservations.jsonl", "candidates/candidates.jsonl",
+                     "execution/triples.jsonl", "verification/verification.jsonl")
+
+
+def _artifact_hashes(root: Path) -> dict[str, str]:
+    return {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+            for name in _CHECKPOINT_FILES if (root / name).exists()}
+
+
+def _checkpoint(root: Path, payload: dict[str, object]) -> None:
+    _write_state(root, {**payload, "artifact_hashes": _artifact_hashes(root)})
+
+
+def _assert_checkpoint_integrity(root: Path, state: dict[str, Any]) -> None:
+    if "artifact_hashes" not in state or state["artifact_hashes"] != _artifact_hashes(root):
+        raise ProductionConfigError("checkpoint artifacts changed or are unpinned; preserve evidence and use a new run identity")
+
+
+def _reserve_attempts(root: Path, task_id: str, config: ProductionConfig) -> bool:
+    """Charge interrupted generation too, before invoking the provider.
+
+    A reservation is a conservative bound on logical candidate attempts, not
+    an assertion that an interrupted request actually produced a response.
+    Transport retries remain separately governed by the provider's limits.
+    """
+    path = root / "candidates/attempt-reservations.jsonl"
+    reserved = sum(int(row["attempts"]) for row in _jsonl(path))
+    if reserved + config.candidates_per_task > config.budget.max_total_candidates:
+        return False
+    _append(path, {"task_id": task_id, "attempts": config.candidates_per_task})
+    return True
+
+
+def _check_budget(root: Path, started: float, prior_seconds: float, config: ProductionConfig) -> bool:
+    """Check between bounded calls in every expensive phase, also across resume."""
+    elapsed = prior_seconds + time.monotonic() - started
+    if elapsed < config.budget.max_wall_time_minutes * 60:
+        return True
+    state_path = root / "manifests/run-state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
+    _checkpoint(root, {**state, "status": "PAUSED", "reason": "wall-time budget reached",
+                        "elapsed_seconds": elapsed})
+    return False
 
 
 def _pause_reason(
@@ -108,7 +156,30 @@ def _template_catalog_id(registry: Any) -> str:
     return "sha256:" + hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
-def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bool = False) -> None:
+def _scheduled_templates(
+    config: ProductionConfig, registry: Any, family: str, batch_index: int
+) -> list[Any]:
+    """Select each family's templates while retaining the frozen legacy path."""
+    count = config.family_distribution[family]
+    templates = _latest_templates_for_family(registry, family)
+    if config.schedule_mode == "legacy":
+        return [
+            templates[(batch_index * count + index) % len(templates)]
+            for index in range(count)
+        ]
+    selected = {template.template_id: template for template in templates}
+    contract_ids = sorted(config.selected_contract_ids[family])
+    return [selected[contract_id] for contract_id in contract_ids[:count]]
+
+
+def run_authorized(
+    config: ProductionConfig,
+    run_dir: str | Path,
+    *,
+    execute: bool = False,
+    contract_readiness: ContractReadiness | None = None,
+    readiness_manifest: str | Path | None = None,
+) -> None:
     """Run/resume one frozen configuration only after explicit authorization."""
     if not execute:
         raise ProductionConfigError("production execution requires explicit authorization")
@@ -121,7 +192,11 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
         )
     if sum(config.family_distribution.values()) != config.initial_task_batch:
         raise ProductionConfigError("family distribution does not match initial_task_batch")
-    readiness = production_api.preflight(config)
+    readiness = production_api.preflight(
+        config,
+        contract_readiness=contract_readiness,
+        readiness_manifest=readiness_manifest,
+    )
     if not readiness["ok"]:
         failed = sorted(
             name
@@ -135,12 +210,17 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
     registry = load_builtin_registry()
     template_catalog_id = _template_catalog_id(registry)
     manifest_path = root / "manifests/run-manifest.json"
+    source_id = production_api.implementation_id()
     if manifest_path.exists():
         assert_resume_config(config, manifest_path)
         frozen_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if frozen_manifest.get("template_catalog_id") != template_catalog_id:
             raise ProductionConfigError("task template catalog changed; use a new run identity")
+        if frozen_manifest.get("implementation_id") != source_id:
+            raise ProductionConfigError("executable source changed or unpinned; use a new run identity")
     else:
+        if root.exists() and any(root.iterdir()):
+            raise ProductionConfigError("nonempty run directory has no frozen manifest; use a new run identity")
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(
             json.dumps(
@@ -148,6 +228,7 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
                     "production_config_id": config_id(config),
                     "policy_file_hashes": production_api.policy_file_hashes(config),
                     "template_catalog_id": template_catalog_id,
+                    "implementation_id": source_id,
                     "run_name": config.run_name,
                     "config_version": config.config_version,
                     "model_id": config.model.model_id,
@@ -172,12 +253,17 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
     )
     sampling = GenerationConfig(temperature=config.model.temperature, top_p=config.model.top_p, max_tokens=config.model.max_tokens)
     triple_path = root / "execution/triples.jsonl"
-    executor = SandboxExecutor(load_sandbox_config(config.sandbox_config))
+    sandbox_config = load_sandbox_config(config.sandbox_config)
+    executor = SandboxExecutor(sandbox_config)
+    verification_backend = DerivedTaskBackend(sandbox_config)
     verification_path = root / "verification/verification.jsonl"
     state_path = root / "manifests/run-state.json"
     start_batch_index = 0
+    prior_seconds = 0.0
     if state_path.exists():
         previous_state = json.loads(state_path.read_text(encoding="utf-8"))
+        _assert_checkpoint_integrity(root, previous_state)
+        prior_seconds = float(previous_state.get("elapsed_seconds", 0))
         previous_status = previous_state.get("status")
         previous_batch = int(previous_state.get("batch", 0))
         if previous_status == "AWAITING_BATCH_AUTHORIZATION":
@@ -196,7 +282,8 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
         start_batch_index,
         min(start_batch_index + config.batches_per_authorization, config.max_batches),
     ):
-        _write_state(root, {"status": "RUNNING", "batch": batch_index + 1})
+        _checkpoint(root, {"status": "RUNNING", "batch": batch_index + 1,
+                            "elapsed_seconds": prior_seconds})
         elapsed_minutes = (time.monotonic() - started) / 60
         if elapsed_minutes >= config.budget.max_wall_time_minutes:
             _write_state(root, {"status": "PAUSED", "reason": "wall-time budget reached", "batch": batch_index})
@@ -212,24 +299,39 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
                 return
             new_tasks = []
             for family_index, family in enumerate(FAMILIES):
-                templates = _latest_templates_for_family(registry, family)
-                for index in range(config.family_distribution[family]):
+                for index, template in enumerate(_scheduled_templates(config, registry, family, batch_index)):
                     seed = config.seed + batch_index * 1_000_000 + family_index * 100_000 + index
-                    template = templates[(batch_index * config.family_distribution[family] + index) % len(templates)]
                     new_tasks.append(generate_task(template, seed))
             task_path.parent.mkdir(parents=True, exist_ok=True)
-            with task_path.open("a", encoding="utf-8") as handle:
-                for task in new_tasks:
+            # Publish the whole deterministic task batch atomically; interrupted
+            # append previously allowed partial batches to be duplicated on resume.
+            temporary = task_path.with_suffix(".tmp")
+            with temporary.open("w", encoding="utf-8") as handle:
+                for task in [*tasks, *new_tasks]:
                     handle.write(task.model_dump_json(by_alias=True) + "\n")
+            temporary.replace(task_path)
             tasks.extend(new_tasks)
+            _checkpoint(root, {"status": "RUNNING", "batch": batch_index + 1,
+                               "elapsed_seconds": prior_seconds + time.monotonic() - started})
         task_by_id = {task.task_id: task for task in tasks}
         batch_tasks = tasks[batch_index * config.initial_task_batch : (batch_index + 1) * config.initial_task_batch]
         completed_tasks = {row["task_id"] for row in _jsonl(candidate_path)}
         for task in batch_tasks:
             if task.task_id in completed_tasks:
                 continue
+            if not _check_budget(root, started, prior_seconds, config):
+                return
+            if not _reserve_attempts(root, task.task_id, config):
+                _checkpoint(root, {"status": "PAUSED", "batch": batch_index + 1,
+                                   "reason": "candidate attempt reservation budget reached",
+                                   "elapsed_seconds": prior_seconds + time.monotonic() - started})
+                return
+            _checkpoint(root, {"status": "RUNNING", "batch": batch_index + 1,
+                               "elapsed_seconds": prior_seconds + time.monotonic() - started})
             results = generate_candidates(task, [provider], sampling, config.candidates_per_task)
             _append(candidate_path, {"task_id": task.task_id, "family": task.family, "batch": batch_index + 1, "results": [result.model_dump(mode="json") for result in results]})
+            _checkpoint(root, {"status": "RUNNING", "batch": batch_index + 1,
+                                "elapsed_seconds": prior_seconds + time.monotonic() - started})
         bundles = _jsonl(candidate_path)
         candidates = [item for bundle in bundles for item in bundle["results"] if item.get("candidate_solution")]
         if len(candidates) > config.budget.max_total_candidates:
@@ -239,15 +341,23 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
             candidate = CandidateSolution.model_validate(item["candidate_solution"])
             if candidate.candidate_id in executed:
                 continue
+            if not _check_budget(root, started, prior_seconds, config):
+                return
             execution = executor.execute(task_by_id[candidate.task_id], candidate)
             _append(triple_path, {"task": task_by_id[candidate.task_id].model_dump(mode="json", by_alias=True), "candidate": candidate.model_dump(mode="json", by_alias=True), "execution": execution.model_dump(mode="json")})
+            _checkpoint(root, {"status": "RUNNING", "batch": batch_index + 1,
+                               "elapsed_seconds": prior_seconds + time.monotonic() - started})
         existing = {row["candidate_id"] for row in _jsonl(verification_path)}
         for triple in _jsonl(triple_path):
             candidate = CandidateSolution.model_validate(triple["candidate"])
             if candidate.candidate_id in existing:
                 continue
-            verdict = verify_candidate(task_by_id[candidate.task_id], candidate, ExecutionResult.model_validate(triple["execution"]))
+            if not _check_budget(root, started, prior_seconds, config):
+                return
+            verdict = verify_candidate(task_by_id[candidate.task_id], candidate, ExecutionResult.model_validate(triple["execution"]), backend=verification_backend)
             _append(verification_path, verdict.model_dump(mode="json"))
+            _checkpoint(root, {"status": "RUNNING", "batch": batch_index + 1,
+                               "elapsed_seconds": prior_seconds + time.monotonic() - started})
         verdicts = {row["candidate_id"]: row for row in _jsonl(verification_path)}
         records = [
             VerifiedRecord(task=task_by_id[row["candidate"]["task_id"]], candidate=CandidateSolution.model_validate(row["candidate"]), execution=ExecutionResult.model_validate(row["execution"]), verification=verification_from_dict(verdicts[row["candidate"]["candidate_id"]]))
@@ -291,21 +401,22 @@ def run_authorized(config: ProductionConfig, run_dir: str | Path, *, execute: bo
                         + "\n"
                     )
         golden_count = sum(q.decision == "GOLDEN" for q in analysis.qualities)
-        state = {"status": "RUNNING", "batch": batch_index + 1, "tasks": len(tasks), "candidates": len(candidates), "golden": golden_count, "target": config.target_golden_records}
+        state = {"status": "RUNNING", "batch": batch_index + 1, "tasks": len(tasks), "candidates": len(candidates), "golden": golden_count, "target": config.target_golden_records,
+                 "elapsed_seconds": prior_seconds + time.monotonic() - started}
         if config.review_pool_mode:
             state["human_review_status"] = "PENDING"
-        _write_state(root, state)
-        if golden_count >= config.target_golden_records:
-            _write_state(root, {**state, "status": "TARGET_REACHED"})
-            return
+        _checkpoint(root, state)
         reason = _pause_reason(config, records, analysis.qualities)
         if reason:
-            _write_state(root, {**state, "status": "PAUSED", "reason": reason})
+            _checkpoint(root, {**state, "status": "PAUSED", "reason": reason})
+            return
+        if golden_count >= config.target_golden_records:
+            _checkpoint(root, {**state, "status": "TARGET_REACHED"})
             return
         if batch_index + 1 >= config.max_batches:
-            _write_state(root, {**state, "status": "MAX_BATCHES_REACHED"})
+            _checkpoint(root, {**state, "status": "MAX_BATCHES_REACHED"})
             return
-        _write_state(
+        _checkpoint(
             root,
             {
                 **state,

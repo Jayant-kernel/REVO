@@ -37,6 +37,7 @@ def _run_and_match(template_id, tables, sql):
         expected,
         [c.name for c in execution.result_data.columns],
         execution.result_data.rows,
+        column_types=[c.type for c in execution.result_data.columns],
     )
     return comparison, expected
 
