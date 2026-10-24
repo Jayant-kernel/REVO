@@ -1,0 +1,33 @@
+template_id: sql.funnel.kyc_document_approval
+version: 1
+family: funnel
+difficulty: 5
+description: Country-specific KYC approval requires identity, every required document, and a final decision in order.
+tables:
+  - name: applications
+    row_count: 8
+    columns: [{name: application_id, type: INTEGER, nullable: false}, {name: applicant_id, type: INTEGER, nullable: false}, {name: country, type: VARCHAR, nullable: false}, {name: submitted_at, type: TIMESTAMP, nullable: false}]
+  - name: country_document_requirements
+    row_count: 8
+    columns: [{name: country, type: VARCHAR, nullable: false}, {name: document_type, type: VARCHAR, nullable: false}]
+  - name: identity_checks
+    row_count: 12
+    columns: [{name: check_id, type: INTEGER, nullable: false}, {name: application_id, type: INTEGER, nullable: false}, {name: checked_at, type: TIMESTAMP, nullable: false}, {name: result, type: VARCHAR, nullable: false}]
+  - name: document_reviews
+    row_count: 20
+    columns: [{name: review_id, type: INTEGER, nullable: false}, {name: application_id, type: INTEGER, nullable: false}, {name: document_type, type: VARCHAR, nullable: false}, {name: reviewed_at, type: TIMESTAMP, nullable: false}, {name: result, type: VARCHAR, nullable: false}]
+  - name: approval_decisions
+    row_count: 10
+    columns: [{name: decision_id, type: INTEGER, nullable: false}, {name: application_id, type: INTEGER, nullable: false}, {name: decided_at, type: TIMESTAMP, nullable: false}, {name: result, type: VARCHAR, nullable: false}]
+generation_config: {domain: payments_compliance, business_fixture: kyc_document_approval}
+requirements: {objective: kyc_document_approval, year: 2025, funnel_steps: [identity_passed, required_documents_approved, decision_approved], session_gap_minutes: application_lifetime, consecutiveness: ordered_state_gates, cross_session_policy: checks_reviews_and_decisions_must_match_application_id, repeat_policy: latest_document_review_by_reviewed_at_then_review_id, approval_window_days: 14, decision_deadline: submission_plus_window_inclusive, output_columns: [application_id], order_by: [application_id]}
+edge_cases: [same_timestamp_steps, duplicate_events, out_of_order_timestamps, missing_relationships]
+oracle: {type: reference_query, strategy: independent_kyc_requirement_state_machine}
+instruction_template: >-
+   Return applications submitted in {year} that pass identity, approve every document
+    required for their country after identity, and receive an approved decision for
+    that same application after the last required document within
+    {approval_window_days} days of submission. For each required document, its
+    latest review by reviewed_at then review_id must be approved. A decision exactly
+    at the submission-plus-window deadline qualifies. Order equal timestamps by each
+    record's ID and return application_id ascending.

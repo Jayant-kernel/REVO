@@ -1,0 +1,21 @@
+template_id: sql.funnel.parcel_exception_recovery
+version: 1
+family: funnel
+difficulty: 5
+description: Parcel recovery uses the latest exception, then recovered and delivered scans within an SLA.
+tables:
+  - name: parcels
+    row_count: 10
+    columns: [{name: parcel_id, type: INTEGER, nullable: false}, {name: depot, type: VARCHAR, nullable: false}, {name: accepted_at, type: TIMESTAMP, nullable: false}]
+  - name: parcel_scans
+    row_count: 32
+    columns: [{name: scan_id, type: INTEGER, nullable: false}, {name: parcel_id, type: INTEGER, nullable: false}, {name: scanned_at, type: TIMESTAMP, nullable: false}, {name: scan_state, type: VARCHAR, nullable: false}]
+generation_config: {domain: logistics, business_fixture: parcel_exception_recovery}
+requirements: {objective: exception_recovery_sla, year: 2025, funnel_steps: [exception, recovered, delivered], session_gap_minutes: parcel_lifetime, consecutiveness: ordered_subsequence_after_latest_exception, cross_session_policy: scans_must_match_parcel_id, repeat_policy: latest_exception_by_scanned_at_then_scan_id, recovery_sla_hours: 72, sla_deadline: latest_exception_plus_hours_inclusive, output_columns: [depot, recovered_parcels, total_exception_to_delivery_minutes], order_by: [depot]}
+edge_cases: [same_timestamp_steps, duplicate_events, out_of_order_timestamps, window_end_boundary]
+oracle: {type: reference_query, strategy: independent_latest_exception_recovery}
+instruction_template: >-
+  For parcels accepted in {year}, find recovery funnels where the latest exception
+  is followed by recovered and delivered scans in event-time then scan-ID order.
+   Delivery at exactly {recovery_sla_hours} hours qualifies. Return each depot's
+   recovered parcel count and total exception-to-delivery minutes.

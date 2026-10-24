@@ -1,0 +1,22 @@
+template_id: sql.funnel.saas_activation_payment
+version: 2
+family: funnel
+difficulty: 4
+description: Eligible SaaS activation-to-payment funnel value by segment.
+tables: [{name: account_funnel, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: saas_activation_payment}
+requirements: {objective: activation_payment_value_by_segment, year: 2025, funnel_steps: [signup, trial, activation, payment], in_scope_statuses: funnel_steps, session_gap_minutes: not_applicable_entity_lifetime, cross_session_policy: all_events_in_year_for_same_entity, consecutiveness: steps_in_sequence_order, repeat_policy: first_matching_step_advances, same_timestamp_policy: sequence_ascending, tie_uniqueness: occurred_at_sequence_per_entity, completion_amount: matched_final_step_amount, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [ties, duplicates, ineligible_rows]
+oracle: {type: contract_specific, strategy: differential_saas_activation_state_machine}
+instruction_template: >-
+  Return eligible completed SaaS activation-payment funnel value by segment in {year}.
+  For each entity, order records by occurred_at then sequence ascending; a funnel
+  completes when signup, trial, activation, and payment occur in that order,
+  with the first matching record advancing each step. Only rows whose status is
+  one of those four funnel steps in {year} are in scope. For each completed entity, use the amount on
+   its matched payment event; sum those amounts by segment. Include every segment
+   with in-scope rows, returning zero total_amount when none completes, and order
+  segments ascending. Rows that do not match the next expected step are ignored:
+   they neither advance nor reset progress. Each entity keeps one segment across
+   all its rows, so a completion counts toward that entity's segment. No two rows
+   of the same entity share both occurred_at and sequence.

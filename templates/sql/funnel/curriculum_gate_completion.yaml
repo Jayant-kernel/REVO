@@ -1,0 +1,27 @@
+template_id: sql.funnel.curriculum_gate_completion
+version: 1
+family: funnel
+difficulty: 5
+description: Program completion requires every lesson and ordered module-stage completion.
+tables:
+  - name: enrollments
+    row_count: 10
+    columns: [{name: enrollment_id, type: INTEGER, nullable: false}, {name: learner_id, type: INTEGER, nullable: false}, {name: cohort, type: VARCHAR, nullable: false}, {name: program_id, type: INTEGER, nullable: false}, {name: enrolled_at, type: TIMESTAMP, nullable: false}]
+  - name: program_modules
+    row_count: 12
+    columns: [{name: program_id, type: INTEGER, nullable: false}, {name: module_id, type: INTEGER, nullable: false}, {name: stage_number, type: INTEGER, nullable: false}]
+  - name: module_lessons
+    row_count: 24
+    columns: [{name: module_id, type: INTEGER, nullable: false}, {name: lesson_id, type: INTEGER, nullable: false}]
+  - name: lesson_attempts
+    row_count: 36
+    columns: [{name: attempt_id, type: INTEGER, nullable: false}, {name: enrollment_id, type: INTEGER, nullable: false}, {name: lesson_id, type: INTEGER, nullable: false}, {name: completed_at, type: TIMESTAMP, nullable: false}, {name: result, type: VARCHAR, nullable: false}]
+generation_config: {domain: education, business_fixture: curriculum_gate_completion}
+requirements: {objective: ordered_curriculum_completion, year: 2025, funnel_steps: [all_lessons_passed, module_stages_ordered], session_gap_minutes: enrollment_lifetime, consecutiveness: module_completion_keys_strictly_ascending, cross_session_policy: attempts_must_match_enrollment_id, repeat_policy: earliest_passing_attempt_per_lesson_after_enrollment, completion_count: distinct_learner_id_per_cohort, output_columns: [cohort, learners_completed_program], order_by: [cohort]}
+edge_cases: [same_timestamp_steps, duplicate_events, out_of_order_timestamps, no_events]
+oracle: {type: reference_query, strategy: independent_curriculum_stage_state_machine}
+instruction_template: >-
+  For each cohort with an enrollment in {year}, return cohort and learners_completed_program.
+  An enrollment completes only when every program lesson is passed after enrollment,
+  and module completion keys preserve ascending stage_number order using completed_at
+  then attempt_id. Include cohorts with zero completions.

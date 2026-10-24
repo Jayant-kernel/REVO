@@ -1,0 +1,28 @@
+template_id: sql.funnel.support_resolution_chain
+version: 1
+family: funnel
+difficulty: 4
+description: Support lifecycle completion requires an ordered opened-assigned-resolved chain.
+tables:
+  - name: ticket_events
+    row_count: 14
+    columns: [{name: event_id, type: INTEGER, nullable: false}, {name: ticket_id, type: INTEGER, nullable: false}, {name: event_time, type: TIMESTAMP, nullable: false}, {name: state, type: VARCHAR, nullable: false}]
+generation_config: {domain: support_operations, business_fixture: support_resolution_chain}
+requirements:
+  objective: complete_support_lifecycle
+  year: 2025
+  funnel_steps: [opened, assigned, resolved]
+  session_gap_minutes: not_applicable_ticket_lifetime
+  consecutiveness: ordered_subsequence_not_adjacent
+  cross_session_policy: all_events_in_year_for_same_ticket
+  repeat_policy: repeats_and_other_states_do_not_reset_progress
+  output_columns: [ticket_id]
+  order_by: [ticket_id]
+edge_cases: [same_timestamp_steps, duplicate_events, out_of_order_timestamps]
+oracle: {type: reference_query, strategy: independent_support_state_machine}
+instruction_template: >-
+  Find tickets with opened, assigned, and resolved events occurring in that
+  order during {year}. Within a ticket, order events by event_time then event_id.
+  Other states and repeated states may intervene without resetting progress.
+  A resolution before opening or assignment cannot complete the chain, and
+  events on different tickets cannot be combined. Return ticket_id once in ascending order.

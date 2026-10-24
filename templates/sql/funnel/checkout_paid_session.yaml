@@ -1,0 +1,27 @@
+template_id: sql.funnel.checkout_paid_session
+version: 1
+family: funnel
+difficulty: 5
+description: Channel-level checkout conversion requires an ordered session funnel and post-checkout captured payment.
+tables:
+  - name: sessions
+    row_count: 8
+    columns: [{name: session_id, type: INTEGER, nullable: false}, {name: visitor_id, type: INTEGER, nullable: false}, {name: channel, type: VARCHAR, nullable: false}, {name: started_at, type: TIMESTAMP, nullable: false}, {name: expires_at, type: TIMESTAMP, nullable: false}]
+  - name: session_events
+    row_count: 24
+    columns: [{name: event_id, type: INTEGER, nullable: false}, {name: session_id, type: INTEGER, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: event_name, type: VARCHAR, nullable: false}]
+  - name: payments
+    row_count: 10
+    columns: [{name: payment_id, type: INTEGER, nullable: false}, {name: session_id, type: INTEGER, nullable: false}, {name: captured_at, type: TIMESTAMP, nullable: false}, {name: payment_status, type: VARCHAR, nullable: false}]
+generation_config: {domain: ecommerce, business_fixture: checkout_paid_session}
+requirements: {objective: channel_paid_checkout_conversion, year: 2025, funnel_steps: [product_view, add_to_cart, checkout_started], session_gap_minutes: session_lifetime, consecutiveness: ordered_subsequence_not_adjacent, cross_session_policy: events_and_payments_must_match_session_id, repeat_policy: first_matching_step_advances, payment_status: captured, payment_deadline: expires_at_inclusive, output_columns: [channel, started_sessions, paid_checkouts], order_by: [channel]}
+edge_cases: [same_timestamp_steps, no_events, duplicate_events, out_of_order_timestamps]
+oracle: {type: reference_query, strategy: independent_session_checkout_payment}
+instruction_template: >-
+  For each acquisition channel with sessions started in {year}, return channel,
+  started_sessions, and paid_checkouts. A session converts only when product_view,
+   add_to_cart, and checkout_started occur in order by occurred_at then event_id,
+   followed by a captured payment for that same session no later than expires_at
+   (a payment exactly at expires_at qualifies).
+  Count each session once and include channels with zero conversions. Sessions
+  with no events have zero paid_checkouts; their started_sessions count remains.

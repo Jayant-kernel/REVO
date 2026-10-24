@@ -1,0 +1,22 @@
+template_id: sql.funnel.logistics_parcel_delivery
+version: 1
+family: funnel
+difficulty: 4
+description: Eligible accepted-to-delivered parcel funnel value by depot.
+tables: [{name: parcel_scans, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: logistics_parcel_delivery}
+requirements: {objective: parcel_delivery_value_by_depot, year: 2025, funnel_steps: [accepted, sorted, dispatched, delivered], in_scope_statuses: funnel_steps, session_gap_minutes: not_applicable_entity_lifetime, cross_session_policy: all_events_in_year_for_same_entity, consecutiveness: steps_in_sequence_order, repeat_policy: first_matching_step_advances, same_timestamp_policy: sequence_ascending, completion_amount: matched_final_step_amount, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [ties, duplicates, ineligible_rows]
+oracle: {type: contract_specific, strategy: differential_logistics_delivery_state_machine}
+instruction_template: >-
+  Return eligible accepted-to-delivered parcel funnel value by depot in {year}.
+  For each parcel, order scans by occurred_at then sequence ascending; a funnel
+  completes when accepted, sorted, dispatched, and delivered occur in that
+  order, with the first matching scan advancing each step. Only rows whose status is
+  one of those four funnel steps in {year} are in scope. For each completed parcel, use the amount on
+  its matched delivered scan; sum those amounts by depot. Include every depot
+   with in-scope scans, returning zero total_amount when none completes, and
+  order depots ascending. Rows that do not match the next expected step are
+  ignored: they neither advance nor reset progress. Each parcel keeps one depot
+   across its rows, so a completion counts toward that parcel's depot. No two
+   rows for a parcel share both occurred_at and sequence.

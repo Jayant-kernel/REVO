@@ -1,0 +1,22 @@
+template_id: sql.funnel.logistics_parcel_delivery
+version: 2
+family: funnel
+difficulty: 5
+description: Bounded consecutive accepted-to-delivered parcel funnel value by depot.
+tables: [{name: parcel_scans, row_count: 12, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: logistics_parcel_delivery_v2}
+requirements: {objective: bounded_consecutive_parcel_delivery_value_by_depot, year: 2025, funnel_steps: [accepted, sorted, dispatched, delivered], in_scope_statuses: funnel_steps, session_gap_minutes: not_applicable_entity_lifetime, cross_session_policy: all_events_in_year_for_same_entity, consecutiveness: consecutive_in_scope_scans, max_consecutive_gap_minutes: 60, repeat_policy: first_complete_consecutive_chain_per_parcel, same_timestamp_policy: sequence_ascending, tie_uniqueness: occurred_at_sequence_per_entity, completion_amount: matched_final_step_amount, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [ties, duplicates, out_of_order_timestamps, same_timestamp_steps, year_boundary, ineligible_rows]
+oracle: {type: contract_specific, strategy: bounded_logistics_delivery_consecutive_state_machine_v2}
+instruction_template: >-
+  Return bounded consecutive accepted-to-delivered parcel funnel value by depot in {year}.
+  For each parcel, retain only scans whose status is accepted, sorted, dispatched,
+  or delivered in {year}, then order them by occurred_at and sequence ascending.
+  A completion is the first consecutive four-scan run accepted, sorted, dispatched,
+  delivered where each later scan is at most {max_consecutive_gap_minutes} minutes
+  after the prior scan. Scans with another in-scope status interrupt a candidate
+  run; a later accepted scan may begin a new run. Use the amount on the delivered
+   scan, sum completed parcel amounts by depot, include every depot with an in-scope
+   scan with zero total_amount when none completes, and order depots ascending. Each parcel keeps
+  one depot across all rows, and no two rows of the same parcel share occurred_at
+  and sequence.

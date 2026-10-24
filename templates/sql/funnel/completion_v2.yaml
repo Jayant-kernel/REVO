@@ -36,7 +36,8 @@ edge_cases: [missing_relationships, out_of_order_timestamps, duplicate_events]
 oracle: {type: reference_query, strategy: independent_funnel_ordering}
 instruction_template: >-
   Using the {tables} tables, compute per-customer funnel progress through the ordered steps
-  {funnel_steps}. {consecutiveness}: steps must occur in timestamp order but non-step events
+   {funnel_steps}. {consecutiveness}: steps must occur in (event_time ASC, event_id ASC)
+   order, but non-step events
   may interleave; {repeat_policy}: scan chronologically and the first matching next step
   extends the chain. Session boundaries have no effect on the result ({cross_session_policy});
   do not calculate a session id. Return every customer, including customers with no events
