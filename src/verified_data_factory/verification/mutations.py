@@ -14,7 +14,9 @@ are recorded evidence of suite weakness — never candidate guilt.
 
 from __future__ import annotations
 
+import hashlib
 import re
+import time
 from collections.abc import Callable
 from copy import deepcopy
 from typing import Any
@@ -24,8 +26,10 @@ from verified_data_factory.task_engine.models import TaskInstance
 
 from . import comparator as compare_mod
 from .backend import ExecutionBackend
+from .behavior_authority import public_behavior_map
 from .models import ComparisonPolicy, ExpectedResult, MutantDetail, MutationResult
 from .oracle_registry import get_oracle
+from .public_rule_proofs import public_proofs
 
 
 class MutationContext:
@@ -75,6 +79,10 @@ def _op_sum_to_avg(task: TaskInstance, sql: str) -> str | None:
 
 def _op_count_star_to_distinct_one(task: TaskInstance, sql: str) -> str | None:
     return _replace_first(r"\bCOUNT\s*\(\s*\*\s*\)", "COUNT(DISTINCT 1)", sql)
+
+
+def _op_count_distinct_to_count(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"\bCOUNT\s*\(\s*DISTINCT\s+[^)]+\)", "COUNT(*)", sql)
 
 
 def _op_flip_first_direction(task: TaskInstance, sql: str) -> str | None:
@@ -133,15 +141,95 @@ def _op_window_widen(task: TaskInstance, sql: str) -> str | None:
     return _replace_first(r"\b30\s*(DAY|day|days|DAYS)\b", r"300 \1", sql)
 
 
+_WHERE_TERMINATORS = (
+    "GROUP BY",
+    "ORDER BY",
+    "LIMIT",
+    "QUALIFY",
+    "HAVING",
+    "UNION",
+    "EXCEPT",
+    "INTERSECT",
+    "WINDOW",
+)
+
+
+def _paren_depth(text: str, offset: int) -> int:
+    return text[:offset].count("(") - text[:offset].count(")")
+
+
+def _op_union_to_union_all(task: TaskInstance, sql: str) -> str | None:
+    """Replace a deduplicating UNION with UNION ALL (keeps duplicate identities)."""
+    return _replace_first(r"\bUNION\b(?!\s+ALL)", "UNION ALL", sql)
+
+
+def _op_captured_to_failed(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"'captured'", "'failed'", sql)
+
+
+def _op_approval_to_rejected(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"'approved'", "'rejected'", sql)
+
+
+def _op_sla_boundary_exclusive(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"\b72\s+HOUR\b", "71 HOUR", sql)
+
+
+def _op_passed_to_failed(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"'passed'", "'failed'", sql)
+
+
+def _op_stage_order_reverse(task: TaskInstance, sql: str) -> str | None:
+    return _replace_first(r"earlier\.stage_number\s*<\s*later\.stage_number", "earlier.stage_number > later.stage_number", sql)
+
+
 def _op_drop_where(task: TaskInstance, sql: str) -> str | None:
-    match = re.search(
-        r"\sWHERE\s+([\s\S]*?)(?=\sGROUP\s+BY|\sORDER\s+BY|\sLIMIT\b|;?\s*$)",
-        sql,
-        re.IGNORECASE,
-    )
-    if not match or not match.group(1).strip():
+    """Remove one WHERE clause, respecting its parenthesis scope.
+
+    A naive regex terminates at ``GROUP BY``/``ORDER BY``/end and therefore
+    deletes across a closing parenthesis in CTE and subquery candidates,
+    producing invalid SQL rather than a semantic counterexample. This
+    scanner stops at the ``)`` that closes the WHERE's own scope (or at a
+    sibling clause at the same depth), so the mutant stays executable.
+    """
+    match = re.search(r"\bWHERE\b", sql, re.IGNORECASE)
+    if not match:
         return None
-    return (sql[: match.start()] + " " + sql[match.end() :]).strip()
+    base_depth = _paren_depth(sql, match.start())
+    depth = base_depth
+    index = match.end()
+    end = len(sql)
+    while index < len(sql):
+        char = sql[index]
+        if char in {"'", '"'}:
+            quote = char
+            index += 1
+            while index < len(sql):
+                if sql[index] == quote:
+                    if index + 1 < len(sql) and sql[index + 1] == quote:
+                        index += 2
+                        continue
+                    index += 1
+                    break
+                index += 1
+            continue
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            if depth == base_depth:
+                end = index
+                break
+            depth -= 1
+        elif depth == base_depth:
+            tail = sql[index:].upper()
+            if any(re.match(re.escape(token) + r"\b", tail) for token in _WHERE_TERMINATORS):
+                end = index
+                break
+        index += 1
+    condition = sql[match.end() : end].strip()
+    if not condition:
+        return None
+    return (sql[: match.start()] + " " + sql[end:]).strip()
 
 
 def _op_partition_swap(task: TaskInstance, sql: str) -> str | None:
@@ -262,10 +350,18 @@ def _cte_aggregate_mutation_tables(
 
 
 OPERATORS: dict[str, MutationOperator] = {
+    "output-row-drop": MutationOperator("output-row-drop", lambda task, sql: f"SELECT * FROM ({sql.strip().rstrip(';')}) AS mutation_output WHERE FALSE"),
+    "output-row-duplicate": MutationOperator("output-row-duplicate", lambda task, sql: f"WITH mutation_output AS ({sql.strip().rstrip(';')}) SELECT * FROM mutation_output UNION ALL SELECT * FROM mutation_output"),
+    "year-to-prior-year": MutationOperator("year-to-prior-year", lambda task, sql: _replace_first(r"\b2025\b", "2024", sql)),
+    "passing-score-to-zero": MutationOperator("passing-score-to-zero", lambda task, sql: _replace_first(r">=\s*50\b", ">= 0", sql)),
+    "passing-boundary-exclusive": MutationOperator("passing-boundary-exclusive", lambda task, sql: _replace_first(r">=\s*50\b", "> 50", sql)),
+    "lag-to-lead": MutationOperator("lag-to-lead", lambda task, sql: _replace_first(r"\bLAG\s*\(", "LEAD(", sql)),
+    "assignment-to-opened": MutationOperator("assignment-to-opened", lambda task, sql: _replace_first(r"'assigned'", "'opened'", sql)),
     "agg-sum-to-avg": MutationOperator("agg-sum-to-avg", _op_sum_to_avg),
     "agg-count-distinct-one": MutationOperator(
         "agg-count-distinct-one", _op_count_star_to_distinct_one
     ),
+    "count-distinct-to-count": MutationOperator("count-distinct-to-count", _op_count_distinct_to_count),
     "order-flip": MutationOperator("order-flip", _op_flip_first_direction),
     "join-inner-to-cross": MutationOperator("join-inner-to-cross", _op_inner_to_cross),
     "threshold-to-zero": MutationOperator("threshold-to-zero", _op_threshold_to_zero),
@@ -277,6 +373,12 @@ OPERATORS: dict[str, MutationOperator] = {
     ),
     "grade-time-flip": MutationOperator("grade-time-flip", _op_grade_time_flip),
     "grade-tie-flip": MutationOperator("grade-tie-flip", _op_grade_tie_flip),
+    "union-to-union-all": MutationOperator("union-to-union-all", _op_union_to_union_all),
+    "captured-to-failed": MutationOperator("captured-to-failed", _op_captured_to_failed),
+    "approval-to-rejected": MutationOperator("approval-to-rejected", _op_approval_to_rejected),
+    "sla-boundary-exclusive": MutationOperator("sla-boundary-exclusive", _op_sla_boundary_exclusive),
+    "passed-to-failed": MutationOperator("passed-to-failed", _op_passed_to_failed),
+    "stage-order-reverse": MutationOperator("stage-order-reverse", _op_stage_order_reverse),
 }
 
 OPERATORS_BY_FAMILY: dict[str, list[str]] = {
@@ -303,6 +405,36 @@ OPERATORS_BY_FAMILY: dict[str, list[str]] = {
 # The payments task includes explicit cross-year ledger rows, unlike the
 # original aggregation task. Dropping its WHERE clause is meaningful there.
 OPERATORS_BY_TEMPLATE: dict[str, list[str]] = {
+    **{
+        template_id: ["agg-sum-to-avg", "order-flip", "where-clause-drop"]
+        for template_id in (
+            "sql.joins.payments_country_transfer", "sql.joins.clinic_scheduled_clinician", "sql.joins.manufacturing_approved_supplier", "sql.joins.education_completed_enrollment", "sql.aggregation.manufacturing_line_scrap", "sql.cte.saas_mrr_changes", "sql.cte.logistics_depot_delay", "sql.subqueries.payments_no_settlement", "sql.subqueries.support_unresolved_reopen", "sql.windows.payments_risk_rank", "sql.windows.logistics_previous_stop", "sql.temporal.saas_trial_activation", "sql.temporal.inventory_daily_stock", "sql.dedup.refund_prefer_approved", "sql.dedup.payments_latest_profile", "sql.retention.media_week_two_return", "sql.retention.clinic_followup_window", "sql.funnel.saas_activation_payment", "sql.funnel.logistics_parcel_delivery",
+        )
+    },
+    "sql.joins.logistics_final_leg": ["join-inner-to-cross", "year-to-prior-year", "where-clause-drop"],
+    "sql.cte.inventory_net_flow": ["agg-sum-to-avg", "year-to-prior-year", "order-flip"],
+    "sql.subqueries.education_all_required": ["passing-score-to-zero", "passing-boundary-exclusive", "where-clause-drop"],
+    "sql.windows.media_previous_play": ["lag-to-lead", "year-to-prior-year", "where-clause-drop"],
+    "sql.temporal.clinic_weekly_visits": ["agg-count-distinct-one", "year-to-prior-year", "where-clause-drop"],
+    "sql.temporal.media_first_full_week_viewers": ["count-distinct-to-count", "year-to-prior-year"],
+    "sql.temporal.manufacturing_shift_downtime": ["agg-sum-to-avg", "year-to-prior-year", "order-flip"],
+    "sql.temporal.logistics_service_level_as_of": ["year-to-prior-year", "order-flip", "where-clause-drop"],
+    "sql.temporal.saas_account_snapshot": ["agg-sum-to-avg", "order-flip", "where-clause-drop"],
+    "sql.retention.saas_repeat_payment": ["window-widen-30-to-300", "year-to-prior-year", "order-flip"],
+    "sql.funnel.support_resolution_chain": ["assignment-to-opened", "year-to-prior-year", "order-flip"],
+    "sql.aggregation.warehouse_throughput": ["agg-sum-to-avg", "where-clause-drop", "order-flip"],
+    "sql.aggregation.top_category_sales": ["agg-sum-to-avg", "where-clause-drop", "order-flip"],
+    "sql.aggregation.fulfillment_sla_dashboard": ["agg-count-distinct-one", "where-clause-drop", "order-flip"],
+    "sql.aggregation.product_unique_conversion": ["count-distinct-to-count", "where-clause-drop", "order-flip"],
+    "sql.cte.order_line_reconciliation": ["agg-sum-to-avg", "where-clause-drop", "order-flip"],
+    "sql.cte.category_descendant_sales": ["where-clause-drop", "order-flip"],
+    "sql.cte.session_funnel_completion": ["agg-count-distinct-one", "order-flip"],
+    "sql.cte.customer_first_month_repeat": ["order-flip", "where-clause-drop"],
+    "sql.subqueries.customer_outreach": ["union-to-union-all", "where-clause-drop", "order-flip"],
+    "sql.funnel.checkout_paid_session": ["captured-to-failed", "order-flip"],
+    "sql.funnel.kyc_document_approval": ["approval-to-rejected", "order-flip"],
+    "sql.funnel.parcel_exception_recovery": ["sla-boundary-exclusive", "order-flip", "where-clause-drop"],
+    "sql.funnel.curriculum_gate_completion": ["passed-to-failed", "stage-order-reverse"],
     "sql.aggregation.payment_net_settled": [
         "agg-sum-to-avg", "order-flip", "where-clause-drop"
     ],
@@ -320,6 +452,8 @@ def applicable_operators(
 ) -> list[MutationOperator]:
     """Operators whose transform applies, capped for cost control."""
     chosen: list[MutationOperator] = []
+    if max_mutations <= 0:
+        return chosen
     names = OPERATORS_BY_TEMPLATE.get(task.template_id, OPERATORS_BY_FAMILY.get(task.family, []))
     for name in names:
         mutated = OPERATORS[name].apply(task, sql)
@@ -327,6 +461,12 @@ def applicable_operators(
             chosen.append(OPERATORS[name])
         if len(chosen) >= max_mutations:
             break
+    # A small template-specific list does not establish minimum discrimination.
+    # These distinct valid output-neighbor queries test omission/multiplicity.
+    for name in ("output-row-drop", "output-row-duplicate"):
+        if not chosen or len(chosen) >= min(3, max_mutations):
+            break
+        chosen.append(OPERATORS[name])
     return chosen
 
 
@@ -334,6 +474,54 @@ def run_mutation_checks(
     ctx: MutationContext, max_mutations: int, min_score: float
 ) -> MutationResult:
     """Execute each applicable mutant; killed = suite rejects it."""
+    authority = public_behavior_map(ctx.task)
+    if authority.granular and authority.task_matches_public_contract:
+        reference, proofs = public_proofs(ctx.task)
+        if ctx.candidate_sql == reference:
+            return _public_candidate_mutations(ctx, proofs, max_mutations, min_score)
+        from .qualification.delivery_profiles import candidate_specs, get_profile
+
+        followup = get_profile(ctx.task.template_id, ctx.task.template_version)
+        if followup is not None:
+            derived = candidate_specs(followup, ctx.candidate_sql, reference, proofs)
+            if derived is not None:
+                return _public_candidate_mutations(ctx, derived, max_mutations, min_score)
+        if (ctx.task.template_id, ctx.task.template_version) == ("sql.dedup.lowest_quote", 1):
+            from .qualification.lowest_quote_candidate_transforms import (
+                candidate_proofs as quote_proofs,
+            )
+
+            derived = quote_proofs(ctx.candidate_sql, reference, proofs)
+            if derived is not None:
+                return _public_candidate_mutations(ctx, derived, max_mutations, min_score)
+        if (ctx.task.template_id, ctx.task.template_version) == ("sql.dedup.education_grade_revisions", 2):
+            from .qualification.grade_candidate_transforms import candidate_proofs as grade_proofs
+
+            derived = grade_proofs(ctx.candidate_sql, reference, proofs)
+            if derived is not None:
+                return _public_candidate_mutations(ctx, derived, max_mutations, min_score)
+        if (ctx.task.template_id, ctx.task.template_version) == ("sql.windows.media_previous_play", 1):
+            from .qualification.playback_candidate_transforms import (
+                candidate_proofs as playback_proofs,
+            )
+
+            derived = playback_proofs(ctx.candidate_sql, reference, proofs)
+            if derived is not None:
+                return _public_candidate_mutations(ctx, derived, max_mutations, min_score)
+        if (ctx.task.template_id, ctx.task.template_version) == ("sql.aggregation.fulfillment_sla_dashboard", 1):
+            from .qualification.sla_candidate_transforms import candidate_proofs
+
+            derived = candidate_proofs(ctx.candidate_sql, proofs)
+            if derived is not None:
+                return _public_candidate_mutations(ctx, derived, max_mutations, min_score)
+        else:
+            from .qualification.alternative_candidate_transforms import (
+                candidate_proofs as alternative_proofs,
+            )
+
+            derived = alternative_proofs(ctx.task.template_id, ctx.task.template_version, ctx.candidate_sql, reference, proofs)
+            if derived is not None:
+                return _public_candidate_mutations(ctx, derived, max_mutations, min_score)
     operators = applicable_operators(ctx.task, ctx.candidate_sql, max_mutations)
     details: list[MutantDetail] = []
     caught = survived = invalid = inconclusive = 0
@@ -373,18 +561,22 @@ def run_mutation_checks(
             generation_timestamp="1970-01-01T00:00:00+00:00",
             generation_duration_ms=0,
         )
+        began = time.monotonic()
+        sql_hash = hashlib.sha256(mutated.encode()).hexdigest()
         try:
             execution = ctx.backend.run(
                 ctx.task, mutant_candidate, mutation_tables, f"mutation:{operator.name}"
             )
-        except Exception:  # noqa: BLE001 — backend faults exclude the mutant
+        except Exception as exc:  # noqa: BLE001 — backend faults exclude the mutant
             inconclusive += 1
             details.append(
                 MutantDetail(
                     operator=operator.name,
                     caught=False,
                     classification="INFRA_INCONCLUSIVE",
-                    reason="backend-inconclusive",
+                    reason=re.sub(r"(?i)(bearer\s+|(?:token|password|api_key)\s*[=:]\s*)\S+", r"\1[REDACTED]", f"{type(exc).__name__}: {exc}")[:500],
+                    sql_sha256=sql_hash, duration_ms=int((time.monotonic() - began) * 1000),
+                    failure_code="BACKEND_EXCEPTION",
                 )
             )
             continue
@@ -396,6 +588,9 @@ def run_mutation_checks(
                     caught=False,
                     classification="INFRA_INCONCLUSIVE",
                     reason=f"infra-{execution.status}",
+                    sql_sha256=sql_hash, execution_id=execution.execution_id,
+                    duration_ms=execution.duration_ms,
+                    failure_code=execution.failure.code if execution.failure else execution.status,
                 )
             )
             continue
@@ -409,6 +604,9 @@ def run_mutation_checks(
                     caught=False,
                     classification="INVALID_MUTANT",
                     reason=f"execution-{execution.status}",
+                    sql_sha256=sql_hash, execution_id=execution.execution_id,
+                    duration_ms=execution.duration_ms,
+                    failure_code=execution.failure.code if execution.failure else execution.status,
                 )
             )
             continue
@@ -417,6 +615,7 @@ def run_mutation_checks(
             [c.name for c in execution.result_data.columns],
             execution.result_data.rows,
             ctx.policy,
+            column_types=[c.type for c in execution.result_data.columns],
         )
         if comparison.match:
             survived += 1
@@ -426,6 +625,7 @@ def run_mutation_checks(
                     caught=False,
                     classification="SURVIVED",
                     reason="mutant-passed",
+                    sql_sha256=sql_hash, execution_id=execution.execution_id, duration_ms=execution.duration_ms,
                 )
             )
         else:
@@ -436,8 +636,14 @@ def run_mutation_checks(
                     caught=True,
                     classification="SEMANTIC_KILL",
                     reason="result-mismatch",
+                    sql_sha256=sql_hash, execution_id=execution.execution_id, duration_ms=execution.duration_ms,
                 )
             )
+    authority = public_behavior_map(ctx.task)
+    # Generic operator names are not requirement-specific discriminator proofs.
+    # Retain kills/score, but leave rule attribution unproven rather than invent it.
+    required_rules = sorted(authority.semantic_rule_ids)
+    covered_rules = sorted({rule for d in details if d.classification == "SEMANTIC_KILL" for rule in d.rule_ids})
     decided = caught + survived
     score = (caught / decided) if decided else None
     return MutationResult(
@@ -451,4 +657,97 @@ def run_mutation_checks(
         mutation_score=score,
         min_score=min_score,
         details=details,
+        covered_rules=covered_rules,
+        required_rules=required_rules,
+        coverage_complete=(
+            authority.task_matches_public_contract
+            and caught >= 3
+            and len({d.sql_sha256 for d in details if d.classification == "SEMANTIC_KILL"}) >= 3
+            and bool(required_rules)
+            and set(required_rules) <= set(covered_rules)
+        ),
+    )
+
+
+def _public_candidate_mutations(
+    ctx: MutationContext, proofs: dict[str, Any], maximum: int, minimum: float,
+) -> MutationResult:
+    """Execute candidate-derived canonical transforms on their attributed fixtures.
+
+    Canonical SQL and explicitly supported candidate-derived SLA AST transforms
+    use this path. Other formulations retain generic UNKNOWN coverage.
+    """
+    from verified_data_factory.task_engine.hidden_fixtures import fixture_fingerprint
+
+    authority = public_behavior_map(ctx.task)
+    groups: dict[tuple[str, str], tuple[dict[str, Any], list[str]]] = {}
+    for rule in authority.rules:
+        if rule.kind != "semantic":
+            continue
+        proof = proofs[rule.proof_key]
+        key = (proof["wrong_sql"], fixture_fingerprint(ctx.task, proof["witness"]))
+        if key not in groups:
+            groups[key] = (proof, [])
+        groups[key][1].append(rule.rule_id)
+    details = []
+    candidate_hash = hashlib.sha256(ctx.candidate_sql.encode()).hexdigest()
+    for index, ((sql, fingerprint), (proof, rule_ids)) in enumerate(list(groups.items())[:maximum]):
+        def solution(text: str, label: str, slot: int = index) -> CandidateSolution:
+            return CandidateSolution(
+                candidate_id=f"{ctx.task.task_id}.public-{slot}-{label}", task_id=ctx.task.task_id,
+                model="candidate-public-rule-replay", model_revision="1", prompt_version="none",
+                generation_schema_version="1.0", provider="local-reference-transform",
+                endpoint_id="none", candidate_index=0, raw_response=text, candidate_sql=text,
+                generation_config={"temperature": 0.0, "top_p": 1.0, "max_tokens": 1},
+                generation_timestamp="1970-01-01T00:00:00+00:00", generation_duration_ms=0,
+            )
+        expected = get_oracle(ctx.task.template_id, ctx.task.template_version).fn(
+            ctx.task.requirements, proof["witness"],
+        )
+        try:
+            correct = ctx.backend.run(ctx.task, solution(ctx.candidate_sql, "candidate"),
+                                      proof["witness"], f"public:{index}:candidate")
+            wrong = ctx.backend.run(ctx.task, solution(sql, "mutant"),
+                                    proof["witness"], f"public:{index}:mutant")
+        except Exception as exc:  # noqa: BLE001 — execution failure cannot establish coverage
+            details.append(MutantDetail(operator=f"public:{index}", caught=False,
+                           classification="INFRA_INCONCLUSIVE", reason=type(exc).__name__,
+                           candidate_sql_sha256=candidate_hash, fixture_sha256=fingerprint))
+            continue
+        classification: Any = "INFRA_INCONCLUSIVE"
+        caught = False
+        if correct.status == "SUCCEEDED" and correct.result_data is not None:
+            data = correct.result_data
+            agrees = compare_mod.compare(expected, [c.name for c in data.columns], data.rows,
+                                         ctx.policy, column_types=[c.type for c in data.columns]).match
+            if agrees and wrong.status == "SUCCEEDED" and wrong.result_data is not None:
+                data = wrong.result_data
+                caught = not compare_mod.compare(expected, [c.name for c in data.columns], data.rows,
+                                                  ctx.policy, column_types=[c.type for c in data.columns]).match
+                classification = "SEMANTIC_KILL" if caught else "SURVIVED"
+            elif agrees and wrong.status not in {"SANDBOX_ERROR", "TIMEOUT"}:
+                classification = "INVALID_MUTANT"
+        details.append(MutantDetail(
+            operator=f"public:{index}", caught=caught, classification=classification,
+            reason="executed clause-specific candidate and mutant", sql_sha256=hashlib.sha256(sql.encode()).hexdigest(),
+            execution_id=wrong.execution_id, candidate_execution_id=correct.execution_id,
+            candidate_sql_sha256=candidate_hash, fixture_sha256=fingerprint,
+            rule_ids=rule_ids if caught else [],
+            retained_executions={"candidate": correct.model_dump(mode="json"),
+                                 "mutant": wrong.model_dump(mode="json"),
+                                 "expected": expected.model_dump(mode="json"), "tables": proof["witness"],
+                                 "candidate_sql": ctx.candidate_sql, "mutant_sql": sql},
+        ))
+    counts = {name: sum(d.classification == name for d in details) for name in
+              ("SEMANTIC_KILL", "SURVIVED", "INVALID_MUTANT", "INFRA_INCONCLUSIVE")}
+    covered = sorted({r for d in details for r in d.rule_ids})
+    kills, survived = counts["SEMANTIC_KILL"], counts["SURVIVED"]
+    distinct = {d.sql_sha256 for d in details if d.caught}
+    return MutationResult(
+        applicable=len(groups), run=len(details), caught=kills, semantic_kills=kills,
+        survived=survived, invalid=counts["INVALID_MUTANT"], inconclusive=counts["INFRA_INCONCLUSIVE"],
+        mutation_score=kills / (kills + survived) if kills + survived else None,
+        min_score=minimum, details=details, covered_rules=covered,
+        required_rules=sorted(authority.semantic_rule_ids),
+        coverage_complete=len(distinct) >= 3 and set(covered) == set(authority.semantic_rule_ids),
     )
