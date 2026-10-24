@@ -1,5 +1,9 @@
 # Candidate task coverage matrix — design, not implemented templates
 
+The library now has 40 distinct template IDs: four independent IDs in every
+family. This satisfies the premium template-diversity floor only; implemented
+templates must not be counted as selected dataset coverage.
+
 Each row is a different business question. Schema IDs name independently
 designed table relationships, not renamed copies of one retail schema. These
 are design inputs for new versioned templates and independent oracles. None is
@@ -7,9 +11,9 @@ an accepted Golden merely by appearing here. Before generation, add for each
 row a formal output contract, normal fixture, boundary fixture, independently
 authored adversarial fixture, and a wrong SQL counterexample.
 
-Implementation progress (2026-10-01): four of the forty design cells now have
-versioned templates, domain-specific deterministic fixtures, independent
-Python oracles, and hand-authored adversarial runtime fixtures:
+Implementation progress (2026-10-01): the matrix's forty design cells now have
+versioned templates, deterministic fixtures, independent Python oracle wiring,
+and hand-authored adversarial runtime fixtures. Earlier implementation examples:
 `sql.joins.saas_paid_invoices` (SA simple joins) and
 `sql.aggregation.payment_net_settled` (PA aggregation), plus
 `sql.aggregation.support_sla_breaches` (SU aggregation) and

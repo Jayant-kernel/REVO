@@ -1,5 +1,18 @@
 # Verified Data Factory: remaining workflow
 
+## Latest local evidence — 2026-10-01
+
+See `quality70-result-20261001.md` for the separately identified new-dataset
+assessment and verified remaining-work register. Local changes add seven tested
+business IDs (21 total, at least two per family), production sandbox/resume/budget
+repairs, and review membership/identity regression checks. A bounded diverse
+smoke generated 60 candidates, selected 15 Goldens across ten families and
+replayed all 15 successfully on the same host. Final suite: 766 passed.
+The new diagnostic assessment is 59/100, not 70; the historical 46-row 52 score
+is unchanged. The premium four-template-per-family preflight is still blocked;
+no 80-row qualification or commercial release occurred. The register below is
+the earlier implementation snapshot and its measurements are historical.
+
 Updated 2026-09-30. This is a status register, not release authorization.
 The master handoff and `docs/release-93-spec.md` remain the acceptance sources.
 
