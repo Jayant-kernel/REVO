@@ -1,0 +1,12 @@
+template_id: sql.subqueries.support_unresolved_reopen
+version: 1
+family: subqueries
+difficulty: 3
+description: Eligible unresolved reopened-ticket workload by agent team.
+tables: [{name: agent_events, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: support_unresolved_reopen}
+requirements: {objective: eligible_reopened_workload_by_team, year: 2025, status_filter: eligible, threshold_operator: not_applicable, exists_semantics: eligible_rows_exist, no_match_behavior: omit_empty_groups, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [ineligible_rows, year_boundary, duplicates]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Use a subquery to return eligible unresolved reopened-ticket workload by team in {year}.

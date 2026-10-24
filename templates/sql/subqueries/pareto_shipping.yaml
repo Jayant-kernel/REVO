@@ -1,0 +1,43 @@
+template_id: sql.subqueries.pareto_shipping
+version: 1
+family: subqueries
+description: Keep shipping options not dominated simultaneously on cost and delivery duration.
+difficulty: 3
+tables:
+  options:
+    row_count: 8
+    columns:
+      - {name: option_id, type: INTEGER, nullable: false}
+      - {name: lane, type: VARCHAR, nullable: false}
+      - {name: cost_cents, type: INTEGER, nullable: true}
+      - {name: duration_minutes, type: INTEGER, nullable: true}
+requirements:
+  objective: lane-local two-objective Pareto frontier
+  year: not_applicable_all_rows
+  status_filter: not_applicable_no_status
+  threshold_operator: competitor weakly lower on both metrics and strictly lower on at least one
+  exists_semantics: correlated NOT EXISTS of a dominating complete option on same lane
+  no_match_behavior: no dominator keeps complete option
+  output_columns: [option_id, lane, cost_cents, duration_minutes]
+  output_types: [INTEGER, VARCHAR, INTEGER, INTEGER]
+  order_by: [option_id]
+  input_domain_rules:
+    - {kind: unique, table: options, columns: [option_id]}
+    - {kind: range, table: options, column: cost_cents, min: 0, max: 2147483647}
+    - {kind: range, table: options, column: duration_minutes, min: 0, max: 2147483647}
+edge_cases: [null_values, ties, zero_values, empty_result]
+oracle: {type: reference_query, strategy: authored_pareto_shipping_v1}
+generation_config: {business_fixture: pareto_shipping, domain: shipping_logistics}
+instruction_template: >-
+  Return {output_columns} with types INTEGER,VARCHAR,INTEGER,INTEGER, option_id
+  ascending. Each row is one unique option_id shipping proposal for a nonnull
+  arbitrary text lane (empty text allowed). Cost is integer currency cents;
+  duration is whole elapsed minutes. Both metrics are nullable and otherwise
+  [0,2147483647]. Incomplete options (either metric NULL) are excluded as both
+  candidates and competitors. Retain complete options unless some same-lane
+  complete competitor has cost <= candidate cost AND duration <= candidate
+  duration AND at least one strict improvement. Use a correlated NOT EXISTS
+  subquery. Equal metric pairs do not dominate each other and all their distinct
+  option_ids survive; no single-winner tie-break. Self cannot dominate itself.
+  Output once per surviving option. Empty input or all incomplete options gives
+  empty output. No date/status filter or missing-settlement history semantics.

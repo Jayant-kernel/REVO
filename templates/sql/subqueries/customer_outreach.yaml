@@ -1,0 +1,34 @@
+template_id: sql.subqueries.customer_outreach
+version: 1
+family: subqueries
+difficulty: 3
+description: Distinct customers reached by email or phone via a deduplicating UNION.
+tables:
+  - name: outreach_activity
+    row_count: 7
+    columns:
+      - {name: activity_id, type: INTEGER, nullable: false}
+      - {name: customer_id, type: INTEGER, nullable: false}
+      - {name: contacted_on, type: DATE, nullable: false}
+      - {name: channel, type: VARCHAR, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: customer_outreach}
+requirements:
+  objective: distinct_customers_reached_by_channel
+  year: 2025
+  status_filter: completed
+  channels: [email, phone]
+  threshold_operator: not_applicable
+  exists_semantics: at_least_one_qualifying_channel
+  no_match_behavior: exclude_customers_without_contact
+  union_semantics: union_deduplicates_customers
+  output_columns: [customer_id]
+  order_by: [customer_id]
+edge_cases: [duplicates, empty_result]
+oracle: {type: reference_query, strategy: independent_union_dedup}
+instruction_template: >-
+  Using the {tables} table, return each customer_id exactly once if they have a
+  '{status_filter}' {channels} contact in {year}. Combine the per-channel results with
+  UNION (not UNION ALL) so a customer contacted on both channels appears once
+  ({union_semantics}); {no_match_behavior}. Return exactly the customer_id column ordered
+  ascending. Handle repeated contacts and an empty result ({edge_cases}).

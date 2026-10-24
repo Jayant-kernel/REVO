@@ -1,0 +1,34 @@
+template_id: sql.subqueries.education_all_required
+version: 1
+family: subqueries
+difficulty: 4
+description: Program completion requires every required course, not every attempt.
+tables:
+  - name: students
+    row_count: 6
+    columns: [{name: student_id, type: INTEGER, nullable: false}, {name: program_id, type: INTEGER, nullable: false}]
+  - name: required_courses
+    row_count: 4
+    columns: [{name: program_id, type: INTEGER, nullable: false}, {name: course_id, type: INTEGER, nullable: false}]
+  - name: attempts
+    row_count: 10
+    columns: [{name: attempt_id, type: INTEGER, nullable: false}, {name: student_id, type: INTEGER, nullable: false}, {name: course_id, type: INTEGER, nullable: false}, {name: score, type: INTEGER}]
+generation_config: {domain: education, business_fixture: education_all_required}
+requirements:
+  objective: every_required_course_passed
+  passing_score: 50
+  year: not_applicable_all_attempts
+  status_filter: score_at_least_50
+  threshold_operator: greater_than_or_equal
+  exists_semantics: at_least_one_passing_attempt_for_each_distinct_required_course
+  no_match_behavior: exclude_programs_with_no_required_courses
+  output_columns: [student_id]
+  order_by: [student_id]
+edge_cases: [null_values, duplicates, multiple_matching_rows, missing_relationships]
+oracle: {type: reference_query, strategy: independent_required_course_sets}
+instruction_template: >-
+  Identify students who passed every required course in their program with a
+  score of at least {passing_score}. Any passing attempt suffices; failed or
+  NULL-scored attempts do not erase a pass. Duplicate requirements and repeat
+  attempts count only once per course. Exclude programs with no requirements;
+  optional courses cannot replace missing requirements. Return student_id in ascending order.
