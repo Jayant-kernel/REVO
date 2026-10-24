@@ -1,0 +1,12 @@
+template_id: sql.windows.payments_risk_rank
+version: 1
+family: window_functions
+difficulty: 3
+description: Eligible merchant settlement amount by risk tier.
+tables: [{name: merchant_settlements, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: payments_risk_rank}
+requirements: {objective: eligible_settlement_by_risk_tier, year: 2025, status_filter: eligible, partition_by: group_key, rank_order: amount_desc, running_order: occurred_at_then_record_id, tie_policy: record_id_ascending, null_ordering: amounts_non_null, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [ties, ineligible_rows, year_boundary]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Use window ranking to return eligible merchant settlement amount by risk tier in {year}.

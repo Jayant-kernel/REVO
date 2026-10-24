@@ -1,0 +1,12 @@
+template_id: sql.windows.logistics_previous_stop
+version: 1
+family: window_functions
+difficulty: 3
+description: Eligible parcel-stop duration amount by depot.
+tables: [{name: parcel_stops, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: logistics_previous_stop}
+requirements: {objective: eligible_stop_duration_by_depot, year: 2025, status_filter: eligible, partition_by: entity_id, rank_order: occurred_at_ascending, running_order: occurred_at_then_record_id, tie_policy: record_id_ascending, null_ordering: timestamps_non_null, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [out_of_order_timestamps, ties, year_boundary]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Use LAG ordering by recorded stop to return eligible parcel-stop duration by depot in {year}.

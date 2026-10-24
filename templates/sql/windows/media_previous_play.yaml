@@ -1,0 +1,28 @@
+template_id: sql.windows.media_previous_play
+version: 1
+family: window_functions
+difficulty: 3
+description: Previous completed playback for each viewer and title.
+tables:
+  - name: plays
+    row_count: 10
+    columns: [{name: play_id, type: INTEGER, nullable: false}, {name: viewer_id, type: INTEGER, nullable: false}, {name: title_id, type: INTEGER, nullable: false}, {name: played_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}]
+generation_config: {domain: media, business_fixture: media_previous_play}
+requirements:
+  objective: previous_completed_playback
+  year: 2025
+  status_filter: completed
+  partition_by: [plays.viewer_id, plays.title_id]
+  rank_order: not_applicable
+  running_order: played_at_then_play_id_ascending
+  tie_policy: smaller_play_id_first
+  null_ordering: first_play_has_null_previous_play_id
+  output_columns: [play_id, previous_play_id]
+  order_by: [play_id]
+edge_cases: [ties, out_of_order_timestamps, single_row_groups]
+oracle: {type: reference_query, strategy: independent_playback_history}
+instruction_template: >-
+  For completed playbacks in {year}, find the previous completed playback of
+  the same title by the same viewer within that year. Order history by played_at
+  then play_id; partial plays do not participate. Return play_id and
+  previous_play_id ordered by play_id. The first playback in each history has NULL previous_play_id.

@@ -1,0 +1,40 @@
+template_id: sql.windows.queue_batches
+version: 1
+family: window_functions
+difficulty: 3
+description: Balanced three-way processing batches for each intake queue.
+tables:
+  - name: submissions
+    row_count: 10
+    columns: [{name: submission_id, type: INTEGER, nullable: false}, {name: queue, type: VARCHAR, nullable: false}, {name: submitted_at, type: TIMESTAMP, nullable: true}]
+requirements:
+  objective: balanced_intake_batch_allocation
+  year: not_applicable_all_history
+  status_filter: not_applicable_all_submissions
+  partition_by: [submissions.queue]
+  rank_order: not_applicable_ntile_not_rank
+  running_order: submitted_at_ascending_nulls_last_then_submission_id_ascending
+  tie_policy: submission_id_breaks_equal_and_null_timestamp_ties
+  null_ordering: submitted_at_nulls_last
+  output_columns: [submission_id, batch_number]
+  output_types: [INTEGER, BIGINT]
+  order_by: [submission_id]
+  input_domain_rules: [{kind: unique, table: submissions, columns: [submission_id]}]
+edge_cases: [ties, null_values, single_row_groups, out_of_order_timestamps]
+oracle: {type: reference_query, strategy: authored_balanced_ntile_batches}
+instruction_template: >-
+  The year policy is {year}: use all history. Allocate every submission to one of three balanced consecutive
+  processing batches per queue using NTILE(3), never value RANK, equal-time shared
+  rank, or running amount totals. Order within a queue by submitted_at ascending
+  NULLS LAST then submission_id ascending, including NULL peers. If N=3q+r, the
+  first r batches have q+1 rows and the rest q rows; when N<3 use batches 1..N.
+  Return submission_id INTEGER and batch_number BIGINT ordered submission_id ascending.
+  Queues are exact VARCHAR labels, no normalization; empty queues are absent. No
+  episodes/status/year exclusion. submission_id must be unique globally; otherwise
+  equal payloads with different IDs are distinct submissions. submitted_at is the
+  only nullable input, naive timezone-free microsecond-resolution TIMESTAMP. No
+  other domain/foreign-key restriction. All years and unknown-time submissions
+  participate. Empty input gives no output. Batch number is a dimensionless integer.
+generation_config:
+  business_fixture: queue_batches
+  domain: intake_operations
