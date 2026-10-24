@@ -9,9 +9,10 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SerializerFunctionWrapHandler, model_serializer
 
-VERIFICATION_CONFIG_VERSION = "1.1-adversarial"
+VERIFICATION_CONFIG_VERSION = "1.4-candidate-public-rules"
+COMPARISON_VERSION = "3.0-authoritative"
 
 Verdict = Literal["PASS", "FAIL", "INCONCLUSIVE"]
 Strength = Literal["STRONG", "WEAK", "UNKNOWN"]
@@ -36,6 +37,8 @@ VerificationFailureCode = Literal[
     "SANDBOX_INFRA_ERROR",
     "WEAK_SUITE",
     "INVALID_INPUT",
+    "STRUCTURAL_REQUIREMENT_FAILED",
+    "STRUCTURAL_CHECK_ERROR",
 ]
 
 OrderType = Literal["unordered", "ordered"]
@@ -48,6 +51,7 @@ class OrderSpec(BaseModel):
 
     type: OrderType = "unordered"
     keys: list[tuple[str, Literal["asc", "desc"]]] = Field(default_factory=list)
+    nulls: dict[str, Literal["first", "last"]] = Field(default_factory=dict)
 
 
 class ComparisonPolicy(BaseModel):
@@ -65,8 +69,18 @@ class ExpectedResult(BaseModel):
     model_config = {"frozen": True}
 
     columns: list[str] = Field(default_factory=list)
+    column_types: list[str] = Field(default_factory=list)
     rows: list[list[Any]] = Field(default_factory=list)
     order: OrderSpec = Field(default_factory=OrderSpec)
+    exact_column_types: bool = False
+
+    @model_serializer(mode="wrap")
+    def serialize_expected(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        # Legacy witness/oracle JSON must retain its canonical pre-opt-in shape.
+        if not self.exact_column_types:
+            data.pop("exact_column_types", None)
+        return data
 
 
 class RowDifference(BaseModel):
@@ -79,6 +93,7 @@ class RowDifference(BaseModel):
 
 class ComparisonResult(BaseModel):
     model_config = {"frozen": True}
+    comparison_version: str = COMPARISON_VERSION
 
     match: bool
     expected_rows: int = Field(ge=0)
@@ -107,16 +122,20 @@ class HiddenCaseOutcome(BaseModel):
 
     index: int = Field(ge=0)
     seed: int = Field(ge=0)
-    source: Literal["DERIVED", "INDEPENDENT_ADVERSARIAL"] = "DERIVED"
+    source: Literal["DERIVED", "INDEPENDENT_ADVERSARIAL", "REQUIREMENT_COUNTEREXAMPLE"] = "DERIVED"
     status: Verdict = "INCONCLUSIVE"
     failure_code: VerificationFailureCode | None = None
     detail: str = ""
+    fixture_sha256: str = ""
 
 
 class HiddenTestResult(BaseModel):
     model_config = {"frozen": True}
 
     total: int = Field(ge=0, default=0)
+    distinct_fixtures: int = Field(ge=0, default=0)
+    minimum_distinct_fixtures: int = Field(ge=0, default=0)
+    fixture_version: str = ""
     passed: int = Field(ge=0, default=0)
     failed: int = Field(ge=0, default=0)
     inconclusive: int = Field(ge=0, default=0)
@@ -169,6 +188,15 @@ class MutantDetail(BaseModel):
     caught: bool
     classification: MutantClassification = "UNKNOWN"
     reason: str = ""
+    sql_sha256: str = ""
+    execution_id: str | None = None
+    duration_ms: int | None = None
+    failure_code: str | None = None
+    rule_ids: list[str] = Field(default_factory=list)
+    candidate_sql_sha256: str = ""
+    candidate_execution_id: str | None = None
+    fixture_sha256: str = ""
+    retained_executions: dict[str, Any] = Field(default_factory=dict)
 
 
 class MutationResult(BaseModel):
@@ -184,6 +212,9 @@ class MutationResult(BaseModel):
     mutation_score: float | None = None
     min_score: float = Field(default=0.9, ge=0, le=1)
     details: list[MutantDetail] = Field(default_factory=list)
+    covered_rules: list[str] = Field(default_factory=list)
+    required_rules: list[str] = Field(default_factory=list)
+    coverage_complete: bool = False
 
 
 class PerformanceOutcome(BaseModel):

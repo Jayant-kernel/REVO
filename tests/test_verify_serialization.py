@@ -57,8 +57,12 @@ def test_evidence_bounded_on_mismatch():
 def test_output_carries_versions_and_no_secrets_or_fixtures():
     result = _passing_result()
     data = json.loads(verification_to_json(result))
-    assert data["verification_config_version"] == "1.1-adversarial"
-    assert data["oracle_version"] == 1
+    assert data["verification_config_version"] == "1.4-candidate-public-rules"
+    assert data["comparison"]["comparison_version"] == "3.0-authoritative"
+    assert data["hidden"]["fixture_version"] == "2.0-content"
+    assert data["hidden"]["distinct_fixtures"] == data["hidden"]["minimum_distinct_fixtures"] == 4
+    assert all(len(case["fixture_sha256"]) == 64 for case in data["hidden"]["cases"])
+    assert data["oracle_version"] == 2
     assert data["oracle"]["strategy"]
     blob = verification_to_json(result).lower()
     assert "api_key" not in blob and "bearer" not in blob

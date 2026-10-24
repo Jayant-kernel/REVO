@@ -13,7 +13,12 @@ POLICY = ComparisonPolicy()
 
 
 def _exp(columns, rows, order=None):
-    return ExpectedResult(columns=columns, rows=rows, order=order or OrderSpec())
+    types = []
+    for index in range(len(columns)):
+        value = next((r[index] for r in rows if r[index] is not None), None)
+        types.append("BOOLEAN" if isinstance(value, bool) else "BIGINT" if isinstance(value, int)
+                     else "DOUBLE" if isinstance(value, float) else "VARCHAR")
+    return ExpectedResult(columns=columns, rows=rows, column_types=types, order=order or OrderSpec())
 
 
 def test_identical_results_match():
@@ -74,8 +79,8 @@ def test_integers_and_floats():
 
 
 def test_numeric_strings_from_decimal_serialization():
-    assert cells_equal("10.50", 10.5, POLICY)
-    assert cells_equal("7", 7.0, POLICY)
+    assert cells_equal("10.50", 10.5, POLICY, "DECIMAL")
+    assert cells_equal("7", 7.0, POLICY, "DECIMAL")
     assert not cells_equal("2025-01-01", 20250101, POLICY)
 
 

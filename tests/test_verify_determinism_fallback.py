@@ -8,6 +8,7 @@ without hypothesis so the properties stay checked everywhere. They
 narrow nothing: the hypothesis suite remains authoritative where it runs.
 """
 
+import json
 import random
 
 from verified_data_factory.verification.comparator import cells_equal, compare
@@ -22,7 +23,8 @@ def test_unordered_permutation_invariance_fixed():
     rows = [[1, "a", None], [2, "b", 3.5], [3, None, True], []]
     cols = ["c0", "c1", "c2"]
     norm = [list(r) + [None] * (len(cols) - len(r)) for r in rows]
-    expected = ExpectedResult(columns=cols, rows=norm, order=OrderSpec())
+    norm = [[None if value is None else json.dumps(value) for value in row] for row in norm]
+    expected = ExpectedResult(columns=cols, column_types=["VARCHAR"] * len(cols), rows=norm, order=OrderSpec())
     shuffled = list(norm)
     random.Random(7).shuffle(shuffled)
     assert compare(expected, cols, shuffled, POLICY).match
@@ -54,6 +56,6 @@ def test_hidden_seeds_deterministic_and_distinct_fixed():
 def test_ordered_keys_detect_permutation_fixed():
     order = OrderSpec(type="ordered", keys=[("v", "asc")])
     rows = [[v] for v in sorted([5, 1, 9, 3, 7])]
-    expected = ExpectedResult(columns=["v"], rows=rows, order=order)
+    expected = ExpectedResult(columns=["v"], column_types=["BIGINT"], rows=rows, order=order)
     assert compare(expected, ["v"], rows, POLICY).match
     assert not compare(expected, ["v"], rows[::-1], POLICY).match

@@ -8,6 +8,8 @@ data without executing anything. The verifier never executes SQL itself.
 from __future__ import annotations
 
 import abc
+from importlib import import_module
+from pathlib import Path
 from typing import Any
 
 from verified_data_factory.generation.models import CandidateSolution
@@ -73,7 +75,13 @@ class DerivedTaskBackend(SandboxBackend):
         registry = load_builtin_registry()
         template = registry.get(task.template_id, task.template_version)
         hidden_task = generate_task(template, hidden_seed, dict(task.generation_metadata.config))
-        return hidden_task.tables
+        from verified_data_factory.task_engine.hidden_fixtures import diverse_hidden_tables
+
+        from .hidden import derive_hidden_seed
+        from .models import VERIFICATION_CONFIG_VERSION
+
+        variant = next((i + 1 for i in range(3) if derive_hidden_seed(task.seed, VERIFICATION_CONFIG_VERSION, i) == hidden_seed), 1 + hidden_seed % 3)
+        return diverse_hidden_tables(hidden_task, hidden_seed, variant)
 
     def independent_adversarial_tables(
         self, task: TaskInstance
@@ -81,3 +89,37 @@ class DerivedTaskBackend(SandboxBackend):
         from .adversarial import independent_adversarial_tables
 
         return independent_adversarial_tables(task)
+
+    def requirement_counterexample_tables(
+        self, task: TaskInstance,
+    ) -> list[dict[str, list[dict[str, Any]]]]:
+        """Execute clause fixtures for supported versions, including noncanonical SQL.
+
+        These are shared-author development discriminators, not independently
+        authored evaluation material or a substitute for derived-fixture diversity.
+        """
+        from verified_data_factory.task_engine.hidden_fixtures import fixture_fingerprint
+
+        from .behavior_authority import SUPPORTED_GRANULAR, public_behavior_map
+        from .public_rule_proofs import public_proofs
+
+        if (task.template_id, task.template_version) not in SUPPORTED_GRANULAR:
+            return []
+        authority = public_behavior_map(task)
+        if not authority.task_matches_public_contract:
+            raise BackendError("task differs from source-bound counterexample contract")
+        _, proofs = public_proofs(task)
+        fixtures = {}
+        for rule in authority.rules:
+            if rule.kind == "semantic":
+                tables = proofs[rule.proof_key]["witness"]
+                fixtures[fixture_fingerprint(task, tables)] = tables
+        # Additional required challenges can witness valid-domain behavior not
+        # covered by a clause's first discriminator (e.g. negative scrap values).
+        collector = import_module("scripts.engineering_qualification_receipts")
+        _, challenges, _ = collector.profile(Path(__file__).resolve().parents[3], task.template_id, task.template_version)
+        for _, tables in challenges:
+            fixtures[fixture_fingerprint(task, tables)] = tables
+        if not fixtures:
+            raise BackendError("supported public counterexample fixtures missing")
+        return list(fixtures.values())

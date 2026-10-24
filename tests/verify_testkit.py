@@ -56,7 +56,16 @@ def make_candidate(task, sql):
     )
 
 
-def make_execution(task, candidate, rows, columns, status="SUCCEEDED", truncated=False):
+def make_execution(task, candidate, rows, columns, status="SUCCEEDED", truncated=False, *, column_types=None):
+    # Correct simulation uses the declared oracle schema, not transported values.
+    if column_types is None:
+        expected = get_oracle(task.template_id, task.template_version).fn(dict(task.requirements), task.tables)
+        declared = dict(zip(expected.columns, expected.column_types))
+        types = [declared[c] for c in columns]
+    else:
+        types = list(column_types)
+    if len(types) != len(columns):
+        raise ValueError("one explicit result type required per column")
     return ExecutionResult(
         execution_id=f"{candidate.candidate_id}.exec-test",
         task_id=task.task_id,
@@ -64,7 +73,7 @@ def make_execution(task, candidate, rows, columns, status="SUCCEEDED", truncated
         status=status,
         failure=None,
         result_data=ResultData(
-            columns=[ResultColumn(name=c, type="UNKNOWN") for c in columns],
+            columns=[ResultColumn(name=c, type=dtype) for c, dtype in zip(columns, types)],
             rows=[list(r) for r in rows],
             rows_returned=len(rows),
             truncated=truncated,
@@ -112,28 +121,31 @@ class SimBackend(ExecutionBackend):
     - hidden rows regenerated through the real Phase 1 public API
     """
 
-    def __init__(self, perturb_labels=(), fail_labels=()):
+    def __init__(self, perturb_labels=(), fail_labels=(), *, column_types_by_label=None):
         self._perturb = set(perturb_labels)
         self._fail = set(fail_labels)
         self.calls = []
+        self._column_types = column_types_by_label or {}
 
     def hidden_tables(self, task, hidden_seed):
-        registry = load_builtin_registry()
-        template = registry.get(task.template_id, task.template_version)
-        hidden = generate_task(template, hidden_seed, dict(task.generation_metadata.config))
-        return hidden.tables
+        from verified_data_factory.verification.backend import DerivedTaskBackend
+        return DerivedTaskBackend().hidden_tables(task, hidden_seed)
 
     def run(self, task, candidate, tables, label):
         self.calls.append(label)
         if label in self._fail:
             raise BackendError(f"simulated infra fault on {label}")
-        columns, rows = oracle_rows(task, tables if tables is not None else task.tables)
+        expected = get_oracle(task.template_id, task.template_version).fn(
+            dict(task.requirements), tables if tables is not None else task.tables
+        )
+        columns, rows = expected.columns, expected.rows
         rows = [list(r) for r in rows]
         if label in self._perturb:
             bogus = list(rows[0]) if rows else [None] * max(1, len(columns))
             bogus[0] = "PERTURBED" if not isinstance(bogus[0], bool) else (not bogus[0])
             rows = [*rows, bogus]
-        return make_execution(task, candidate, rows, columns)
+        return make_execution(task, candidate, rows, columns,
+                              column_types=self._column_types.get(label, expected.column_types))
 
     def labels(self, prefix):
         return [c for c in self.calls if c.startswith(prefix)]

@@ -127,7 +127,8 @@ def test_oracle_unknown_is_inconclusive():
     columns, rows = oracle_rows(task)
     ghost = task.model_copy(update={"template_id": "sql.ghost.unknown"})
     ghost_candidate = make_candidate(ghost, CORRECT_SQL["sql.joins.simple"])
-    ghost_execution = make_execution(ghost, ghost_candidate, rows, columns)
+    ghost_execution = make_execution(ghost, ghost_candidate, rows, columns,
+                                     column_types=["INTEGER", "DOUBLE"])
     result = verify_candidate(
         ghost, ghost_candidate, ghost_execution, VerificationConfig(), SimBackend()
     )

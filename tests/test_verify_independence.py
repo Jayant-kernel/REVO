@@ -53,7 +53,7 @@ def test_oracle_signatures_take_only_requirements_and_rows():
         for name, member in inspect.getmembers(oracle_mod, inspect.isfunction)
         if name.startswith("oracle_")
     ]
-    assert len(fns) == 14
+    assert len(fns) == 15
     for fn in fns:
         params = list(inspect.signature(fn).parameters)
         assert params == ["requirements", "tables"], (fn.__name__, params)
@@ -106,6 +106,23 @@ def test_frozen_template_set_is_explicit():
 
     registry = load_builtin_registry()
     assert {(t.template_id, t.version) for t in registry.list()} == {
+        ("sql.joins.logistics_final_leg", 1),
+        ("sql.cte.inventory_net_flow", 1),
+        ("sql.cte.inventory_net_flow", 2),
+        ("sql.dedup.lowest_quote", 1),
+        ("sql.joins.requested_language_titles", 1),
+        ("sql.subqueries.pareto_shipping", 1),
+        ("sql.retention.renewal_coverage", 1),
+        ("sql.windows.queue_batches", 1),
+        ("sql.subqueries.education_all_required", 1),
+        ("sql.windows.media_previous_play", 1),
+                ("sql.temporal.clinic_weekly_visits", 1),
+                ("sql.temporal.media_first_full_week_viewers", 1),
+                ("sql.temporal.manufacturing_shift_downtime", 1),
+                ("sql.temporal.logistics_service_level_as_of", 1),
+                ("sql.temporal.saas_account_snapshot", 1),
+        ("sql.retention.saas_repeat_payment", 1),
+        ("sql.funnel.support_resolution_chain", 1),
         ("sql.aggregation.grouped", 2),
         ("sql.aggregation.payment_net_settled", 1),
             ("sql.aggregation.support_sla_breaches", 1),
@@ -113,7 +130,8 @@ def test_frozen_template_set_is_explicit():
         ("sql.cte.monthly", 3),
         ("sql.cte.monthly", 4),
             ("sql.dedup.latest", 2),
-            ("sql.dedup.education_grade_revisions", 1),
+                ("sql.dedup.education_grade_revisions", 1),
+                ("sql.dedup.education_grade_revisions", 2),
             ("sql.funnel.completion", 2),
             ("sql.funnel.completion", 3),
         ("sql.joins.multi", 1),
@@ -129,7 +147,41 @@ def test_frozen_template_set_is_explicit():
         ("sql.temporal.monthly", 5),
             ("sql.windows.ranked", 1),
             ("sql.windows.ranked", 2),
-    }
+            ("sql.joins.payments_country_transfer", 1),
+            ("sql.joins.clinic_scheduled_clinician", 1),
+            ("sql.joins.manufacturing_approved_supplier", 1),
+            ("sql.joins.education_completed_enrollment", 1),
+            ("sql.aggregation.manufacturing_line_scrap", 1),
+            ("sql.cte.saas_mrr_changes", 1),
+            ("sql.cte.logistics_depot_delay", 1),
+            ("sql.subqueries.payments_no_settlement", 1),
+            ("sql.subqueries.support_unresolved_reopen", 1),
+            ("sql.windows.payments_risk_rank", 1),
+            ("sql.windows.logistics_previous_stop", 1),
+            ("sql.temporal.saas_trial_activation", 1),
+            ("sql.temporal.inventory_daily_stock", 1),
+            ("sql.dedup.refund_prefer_approved", 1),
+            ("sql.dedup.payments_latest_profile", 1),
+            ("sql.retention.media_week_two_return", 1),
+            ("sql.retention.clinic_followup_window", 1),
+            ("sql.funnel.saas_activation_payment", 2),
+                ("sql.funnel.logistics_parcel_delivery", 1),
+                ("sql.funnel.logistics_parcel_delivery", 2),
+                    ("sql.aggregation.warehouse_throughput", 1),
+                    ("sql.aggregation.warehouse_throughput", 2),
+                ("sql.aggregation.top_category_sales", 1),
+                ("sql.subqueries.customer_outreach", 1),
+                ("sql.funnel.checkout_paid_session", 1),
+                ("sql.funnel.kyc_document_approval", 1),
+                ("sql.funnel.parcel_exception_recovery", 1),
+                ("sql.funnel.curriculum_gate_completion", 1),
+                ("sql.aggregation.fulfillment_sla_dashboard", 1),
+                ("sql.aggregation.product_unique_conversion", 1),
+                ("sql.cte.order_line_reconciliation", 1),
+                ("sql.cte.category_descendant_sales", 1),
+                ("sql.cte.session_funnel_completion", 1),
+                ("sql.cte.customer_first_month_repeat", 1),
+        }
 
 
 def test_verifier_never_executes_sql_outside_phase3():
