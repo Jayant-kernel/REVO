@@ -1,0 +1,12 @@
+template_id: sql.aggregation.manufacturing_line_scrap
+version: 1
+family: aggregation
+difficulty: 2
+description: Eligible production-line scrap amount by line.
+tables: [{name: production_runs, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: manufacturing_line_scrap}
+requirements: {objective: eligible_scrap_by_line, year: 2025, group_by: [group_key], null_handling: amounts_non_null, count_semantics: eligible_rows_summed_once, empty_group_behavior: omit_empty_lines, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [zero_values, ineligible_rows, year_boundary]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Aggregate eligible production scrap amount by line in {year}, ordered by line.

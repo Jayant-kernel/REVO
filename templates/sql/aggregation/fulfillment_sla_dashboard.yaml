@@ -1,0 +1,34 @@
+template_id: sql.aggregation.fulfillment_sla_dashboard
+version: 1
+family: aggregation
+difficulty: 3
+description: Fulfilled shipment SLA dashboard by warehouse.
+tables:
+  - name: fulfillments
+    row_count: 8
+    columns:
+      - {name: fulfillment_id, type: INTEGER, nullable: false}
+      - {name: warehouse, type: VARCHAR, nullable: false}
+      - {name: shipped_at, type: TIMESTAMP, nullable: false}
+      - {name: promised_at, type: TIMESTAMP, nullable: false}
+      - {name: delivered_at, type: TIMESTAMP, nullable: true}
+      - {name: fulfillment_status, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: fulfillment_sla_dashboard}
+requirements:
+  objective: fulfilled_and_on_time_counts_by_warehouse
+  year: 2025
+  status_filter: delivered
+  group_by: [warehouse]
+  null_handling: unresolved_deliveries_excluded
+  count_semantics: count_star_counts_delivered_fulfillments
+  empty_group_behavior: no_row_for_warehouse_without_delivered_fulfillments
+  output_columns: [warehouse, delivered_fulfillments, on_time_fulfillments]
+  order_by: [warehouse]
+edge_cases: [null_values, year_boundary, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_fulfillment_sla_dashboard}
+instruction_template: >-
+  For {year}, build a warehouse fulfillment SLA dashboard from {tables}. Include only
+  '{status_filter}' fulfillments shipped in the year with a non-null delivery timestamp.
+  Return warehouse, delivered_fulfillments, and on_time_fulfillments, where on time means
+  delivered_at is no later than promised_at. Order by warehouse. Exclude cancelled,
+  unresolved, and out-of-year fulfillments ({edge_cases}).

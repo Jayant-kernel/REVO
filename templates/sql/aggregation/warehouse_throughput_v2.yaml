@@ -1,0 +1,37 @@
+template_id: sql.aggregation.warehouse_throughput
+version: 2
+family: aggregation
+difficulty: 2
+description: Posted input-row units by warehouse, with mandatory aggregate HAVING.
+tables:
+  - name: warehouse_loads
+    row_count: 9
+    columns:
+      - {name: load_id, type: INTEGER, nullable: false}
+      - {name: warehouse, type: VARCHAR, nullable: false}
+      - {name: loaded_on, type: DATE, nullable: false}
+      - {name: units, type: INTEGER, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: warehouse_throughput}
+requirements:
+  objective: warehouse_throughput_over_threshold
+  year: 2025
+  status_filter: posted
+  group_by: [warehouse]
+  null_handling: units_are_non_null
+  count_semantics: each_posted_input_row_contributes_units_once
+  empty_group_behavior: no_row_for_absent_warehouse
+  aggregation_filter: having_total_units_at_least_threshold
+  min_total_units: 40
+  output_columns: [warehouse, total_units]
+  order_by: [warehouse]
+edge_cases: [empty_result, zero_values]
+oracle: {type: reference_query, strategy: independent_having_threshold}
+instruction_template: >-
+  Using the {tables} table, sum units per warehouse for '{status_filter}' loads in
+  {year}. Each posted input row contributes its units once; units are non-null.
+  Keep only warehouses whose summed units reach at least the threshold, and you
+  MUST express that group-level condition with a HAVING clause on the aggregate
+  (not a WHERE on individual rows). Return exactly warehouse and total_units ordered
+  by warehouse. Warehouses without qualifying loads produce no row; the threshold
+  can also make the whole result empty. Handle zero and negative unit groups ({edge_cases}).

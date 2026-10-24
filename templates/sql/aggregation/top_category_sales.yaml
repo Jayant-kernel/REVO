@@ -1,0 +1,36 @@
+template_id: sql.aggregation.top_category_sales
+version: 1
+family: aggregation
+difficulty: 2
+description: Top-K categories by completed revenue with a deterministic LIMIT tie-break.
+tables:
+  - name: category_sales
+    row_count: 8
+    columns:
+      - {name: sale_id, type: INTEGER, nullable: false}
+      - {name: category, type: VARCHAR, nullable: false}
+      - {name: sold_on, type: DATE, nullable: false}
+      - {name: amount, type: INTEGER, nullable: false}
+      - {name: status, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: top_category_sales}
+requirements:
+  objective: top_k_category_sales
+  year: 2025
+  status_filter: completed
+  group_by: [category]
+  null_handling: sum_ignores_nulls
+  count_semantics: count_star_counts_rows
+  empty_group_behavior: no_row_for_absent_category
+  top_k: 2
+  tie_break: total_sales_desc_then_category_asc
+  output_columns: [category, total_sales]
+  order_by: [total_sales]
+edge_cases: [ties, zero_values]
+oracle: {type: reference_query, strategy: independent_top_k_limit}
+instruction_template: >-
+  Using the {tables} table, sum amount per category for '{status_filter}' sales in
+  {year}, then return only the top {top_k} categories using a LIMIT clause. Rank by
+  total_sales descending; break ties by category ascending so the result is
+  deterministic ({tie_break}). Return exactly category and total_sales. If fewer than
+  {top_k} categories qualify, return all of them. Handle tied totals and zero-value
+  categories ({edge_cases}).

@@ -1,0 +1,33 @@
+template_id: sql.aggregation.product_unique_conversion
+version: 1
+family: aggregation
+difficulty: 3
+description: Product conversion counts using distinct viewers and buyers.
+tables:
+  - name: product_events
+    row_count: 10
+    columns:
+      - {name: event_id, type: INTEGER, nullable: false}
+      - {name: product_id, type: INTEGER, nullable: false}
+      - {name: visitor_id, type: INTEGER, nullable: false}
+      - {name: occurred_at, type: TIMESTAMP, nullable: false}
+      - {name: event_name, type: VARCHAR, nullable: false}
+generation_config: {business_fixture: product_unique_conversion}
+requirements:
+  objective: unique_product_viewer_and_buyer_counts
+  year: 2025
+  status_filter: purchase
+  group_by: [product_id]
+  null_handling: not_applicable_no_nullable_columns
+  count_semantics: count_distinct_visitor_per_event_type
+  empty_group_behavior: no_row_for_product_without_in_year_views
+  output_columns: [product_id, unique_viewers, unique_buyers]
+  order_by: [product_id]
+edge_cases: [duplicates, year_boundary, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_unique_product_conversion}
+instruction_template: >-
+  From {tables}, return each product viewed in {year} with product_id, unique_viewers,
+  and unique_buyers. Count distinct visitor_id values for view events and distinct
+  visitor_id values for '{status_filter}' events independently; a buyer need not have a
+  view event. Order by product_id and exclude other event names and out-of-year events
+  ({edge_cases}).
