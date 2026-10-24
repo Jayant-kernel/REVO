@@ -89,7 +89,8 @@ def test_verification_summary_mapping():
         )
     )
     assert summary.verdict == "PASS"
-    assert summary.verification_strength == "STRONG"
+    assert summary.verification_strength == "UNKNOWN"
+    assert not verification.mutation.coverage_complete
     assert summary.original_execution_pass
     assert summary.hidden_tests_pass
     assert summary.mutation_status == "SCORED"

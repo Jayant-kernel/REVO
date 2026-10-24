@@ -125,7 +125,10 @@ def _load_package(root: Path) -> tuple[dict[str, Any], dict[str, dict[str, Any]]
     if _digest(manifest) != package_id:
         raise ValueError("review manifest hash mismatch")
     manifest["package_id"] = package_id
-    items = {item["record_id"]: item for item in _read_jsonl(root / "items.jsonl")}
+    item_rows = _read_jsonl(root / "items.jsonl")
+    items = {item["record_id"]: item for item in item_rows}
+    if len(item_rows) != len(items):
+        raise ValueError("duplicate review item identity")
     if len(items) != manifest["item_count"] or set(items) != set(manifest["item_hashes"]):
         raise ValueError("review package membership changed")
     for record_id, item in items.items():
@@ -200,6 +203,12 @@ def review_status(out_dir: str | Path) -> dict[str, Any]:
     }
 
 
+def reviewed_items(out_dir: str | Path) -> dict[str, dict[str, Any]]:
+    """Return content-verified frozen items for downstream content binding."""
+    _manifest, items = _load_package(Path(out_dir))
+    return items
+
+
 def append_review_decision(
     out_dir: str | Path,
     *,
@@ -210,6 +219,7 @@ def append_review_decision(
     reason: str,
     rubric_version: str,
 ) -> dict[str, Any]:
+    reviewer_id = reviewer_id.strip()
     root = Path(out_dir)
     manifest, items = _load_package(root)
     entries = _journal(root, manifest, items)

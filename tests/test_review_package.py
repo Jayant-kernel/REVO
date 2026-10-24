@@ -133,3 +133,20 @@ def test_premium_freeze_rejects_undersized_pool_before_creating_package(tmp_path
     with pytest.raises(ValueError, match="premium pre-review gates failed: row_count"):
         freeze_review_package(source, target, premium=True)
     assert not target.exists()
+
+
+def test_duplicate_item_lines_fail_closed(tmp_path: Path) -> None:
+    package = tmp_path / "review"
+    freeze_review_package(_source(tmp_path), package)
+    items = package / "items.jsonl"
+    items.write_text(items.read_text(encoding="utf-8") * 2, encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate review item"):
+        review_status(package)
+
+
+def test_whitespace_cannot_create_a_second_identity(tmp_path: Path) -> None:
+    package = tmp_path / "review"
+    freeze_review_package(_source(tmp_path), package)
+    _decide(package, "reviewer-1", "first", "PASS")
+    with pytest.raises(ValueError, match="distinct reviewer"):
+        _decide(package, " reviewer-1 ", "second", "PASS")

@@ -1,7 +1,9 @@
 """Deterministic Phase 5 fixture dataset (no Docker, no models).
 
-Built from real Phase 1 tasks + real Phase 4 verification with the
-oracle-simulating backend. Intentionally contains every pathology the
+Built from real Phase 1 tasks and explicitly modeled upstream verification
+inputs for quality-layer unit tests. These simulated STRONG inputs are not
+runtime qualification evidence and must never be exported as a real dataset.
+Intentionally contains every pathology the
 quality layer must handle: golden material, invalid tasks, FAIL and
 INCONCLUSIVE verdicts, exact/structural/semantic duplicates, rare
 families, thin edge coverage, contamination pairs, audit magnets, and a
@@ -30,12 +32,17 @@ def _strong_labels(task, sql):
 
 
 def _verify_pass_strong(task, sql):
-    """Verify with a backend that kills every applicable mutant (STRONG)."""
+    """Model an accepted upstream input; generic runtime coverage stays UNKNOWN."""
     backend = SimBackend(perturb_labels=_strong_labels(task, sql))
     candidate = _tag(make_candidate(task, sql))
     columns, rows = oracle_rows(task)
     execution = make_execution(task, candidate, rows, columns)
     verification = verify_candidate(task, candidate, execution, VerificationConfig(), backend)
+    assert verification.verdict == "PASS"
+    verification = verification.model_copy(update={
+        "verification_strength": "STRONG",
+        "evidence": {**verification.evidence, "unit_test_fixture": "MODELED_UPSTREAM_INPUT_NOT_QUALIFICATION"},
+    })
     return candidate, execution, verification
 
 
@@ -61,11 +68,7 @@ def build_fixture_dataset():
     # 4. Exact duplicate of record 1 (same task, same SQL, distinct id).
     task = make_task("sql.joins.simple")
     sql = CORRECT_SQL["sql.joins.simple"]
-    backend = SimBackend(perturb_labels=_strong_labels(task, sql))
-    candidate = _tag(make_candidate(task, sql))
-    columns, rows = oracle_rows(task)
-    execution = make_execution(task, candidate, rows, columns)
-    verification = verify_candidate(task, candidate, execution, VerificationConfig(), backend)
+    candidate, execution, verification = _verify_pass_strong(task, sql)
     records.append(_record(task, candidate, execution, verification))
 
     # 5. Structural duplicate: same task, formatting-only SQL difference.

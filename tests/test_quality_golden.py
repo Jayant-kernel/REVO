@@ -177,3 +177,13 @@ def test_ineligible_duplicate_cannot_displace_eligible_member():
     result = {q.candidate_id: q for q in select_golden([bad, good], QualityConfig(), {})}
     assert result[bad.candidate_id].decision == "EXCLUDED"
     assert result[good.candidate_id].decision == "GOLDEN"
+
+
+def test_at_most_one_golden_per_task():
+    analysis = _analysis()
+    counts: dict[str, int] = {}
+    for quality in analysis.qualities:
+        if quality.decision == "GOLDEN":
+            counts[quality.task_id] = counts.get(quality.task_id, 0) + 1
+    assert counts
+    assert all(count <= 1 for count in counts.values())

@@ -46,13 +46,16 @@ def decide_record(
         return "EXCLUDED", ["PROPERTY_TESTS_FAIL"]
     if not verification.metamorphic_tests_pass:
         return "EXCLUDED", ["METAMORPHIC_TESTS_FAIL"]
+    evidence_failures = []
     if config.require_strong_verification and verification.verification_strength != "STRONG":
-        return "EXCLUDED", ["STRONG_VERIFICATION_REQUIRED"]
+        evidence_failures.append("STRONG_VERIFICATION_REQUIRED")
     if (
         verification.mutation_status == "SCORED"
         and (verification.mutation_score or 0.0) < config.mutation_min_score
     ):
-        return "EXCLUDED", ["MUTATION_THRESHOLD"]
+        evidence_failures.append("MUTATION_THRESHOLD")
+    if evidence_failures:
+        return "EXCLUDED", evidence_failures
     if verification.mutation_status == "NOT_APPLICABLE" or verification.mutation_applicable == 0:
         justification = (justifications or {}).get(quality.candidate_id, "")
         if not justification.strip() and not quality.mutation_justification.strip():
@@ -136,6 +139,32 @@ def select_golden(
                     by_id[loser] = current.model_copy(
                         update={"decision": "EXCLUDED", "decision_reasons": reasons}
                     )
+
+    # Task-level uniqueness: a task's candidate siblings are not additional
+    # independent business questions. Keep at most one Golden per task,
+    # strongest evidence first, so exports match distinct-task counts.
+    task_members: dict[str, list[str]] = {}
+    for quality in by_id.values():
+        if quality.decision == "GOLDEN":
+            task_members.setdefault(quality.task_id, []).append(quality.candidate_id)
+    for members in task_members.values():
+        if len(members) < 2:
+            continue
+        ranked = sorted(
+            members,
+            key=lambda cid: (
+                _strength_rank(by_id[cid]),
+                -(by_id[cid].verification.mutation_score or 0.0),
+                cid,
+            ),
+        )
+        for loser in ranked[1:]:
+            current = by_id[loser]
+            if current.decision == "GOLDEN":
+                reasons = [*current.decision_reasons, "TASK_DUPLICATE"]
+                by_id[loser] = current.model_copy(
+                    update={"decision": "EXCLUDED", "decision_reasons": reasons}
+                )
 
     # Family quotas: keep the strongest-first prefix per family.
     if config.family_quotas or config.max_family_share:
