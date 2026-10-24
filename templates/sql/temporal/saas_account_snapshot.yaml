@@ -1,0 +1,18 @@
+template_id: sql.temporal.saas_account_snapshot
+version: 1
+family: temporal
+difficulty: 4
+description: Active-account and MRR snapshot from latest effective subscription revisions.
+tables:
+  - name: subscription_revisions
+    row_count: 10
+    columns: [{name: revision_id, type: INTEGER, nullable: false}, {name: account_id, type: INTEGER, nullable: false}, {name: effective_at, type: TIMESTAMP, nullable: false}, {name: plan_name, type: VARCHAR, nullable: false}, {name: subscription_status, type: VARCHAR, nullable: false}, {name: mrr_cents, type: INTEGER, nullable: false}]
+generation_config: {business_fixture: saas_account_snapshot}
+requirements: {objective: active_account_and_mrr_by_latest_plan_as_of_cutoff, year: 2025, window_start: '2025-01-01', window_end: '2026-01-01', boundary_policy: revisions_at_or_before_as_of_cutoff, month_definition: not_applicable_as_of_snapshot, as_of_timestamp: '2025-07-01 00:00:00', output_columns: [plan_name, active_accounts, total_mrr_cents], order_by: [plan_name]}
+edge_cases: [ties, duplicates, negative_values, year_boundary]
+oracle: {type: reference_query, strategy: independent_latest_account_revision_as_of}
+instruction_template: >-
+  As of {as_of_timestamp}, select each account's latest subscription revision at
+  or before the cutoff, breaking effective_at ties by revision_id descending.
+  Keep only active snapshots, then return plan_name, active_accounts, and
+  total_mrr_cents ordered by plan_name.

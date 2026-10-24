@@ -1,0 +1,12 @@
+template_id: sql.temporal.saas_trial_activation
+version: 1
+family: temporal
+difficulty: 3
+description: Eligible trial-to-activation amount by account segment.
+tables: [{name: account_events, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: saas_trial_activation}
+requirements: {objective: eligible_trial_activation_by_segment, year: 2025, window_start: '2025-01-01', window_end: '2025-12-31', boundary_policy: inclusive_calendar_year, month_definition: calendar_timestamp, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [year_boundary, ineligible_rows, zero_values]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Return eligible trial-to-activation amount by account segment in {year}, ordered by segment.

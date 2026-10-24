@@ -1,0 +1,17 @@
+template_id: sql.temporal.manufacturing_shift_downtime
+version: 1
+family: temporal
+difficulty: 3
+description: Closed production downtime minutes by line and operating shift.
+tables:
+  - name: downtime_events
+    row_count: 10
+    columns: [{name: event_id, type: INTEGER, nullable: false}, {name: line_code, type: VARCHAR, nullable: false}, {name: shift_name, type: VARCHAR, nullable: false}, {name: started_at, type: TIMESTAMP, nullable: false}, {name: ended_at, type: TIMESTAMP}, {name: event_status, type: VARCHAR, nullable: false}]
+generation_config: {business_fixture: manufacturing_shift_downtime}
+requirements: {objective: closed_downtime_minutes_by_line_and_start_shift, year: 2025, window_start: '2025-01-01', window_end: '2026-01-01', boundary_policy: start_inclusive_end_exclusive, month_definition: not_applicable_start_timestamp, output_columns: [line_code, shift_name, downtime_minutes], order_by: [line_code, shift_name]}
+edge_cases: [null_values, negative_values, year_boundary, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_closed_interval_duration}
+instruction_template: >-
+  Sum whole downtime minutes for closed events that started in {year}, grouped by
+  line_code and shift_name. Exclude open and non-downtime events. Return line_code,
+  shift_name, downtime_minutes ordered by line_code then shift_name.

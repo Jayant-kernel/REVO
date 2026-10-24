@@ -1,0 +1,12 @@
+template_id: sql.temporal.inventory_daily_stock
+version: 1
+family: temporal
+difficulty: 3
+description: Eligible daily inventory movement by warehouse.
+tables: [{name: stock_events, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: inventory_daily_stock}
+requirements: {objective: eligible_stock_movement_by_warehouse, year: 2025, window_start: '2025-01-01', window_end: '2025-12-31', boundary_policy: inclusive_calendar_year, month_definition: calendar_timestamp, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [negative_values, year_boundary, zero_values]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Return eligible end-of-day stock movement by warehouse in {year}, ordered by warehouse.

@@ -1,0 +1,22 @@
+template_id: sql.temporal.logistics_service_level_as_of
+version: 1
+family: temporal
+difficulty: 4
+description: Depot service level from each shipment's latest tracking state at an as-of timestamp.
+tables:
+  - name: shipments
+    row_count: 6
+    columns: [{name: shipment_id, type: INTEGER, nullable: false}, {name: depot, type: VARCHAR, nullable: false}, {name: accepted_at, type: TIMESTAMP, nullable: false}, {name: promised_at, type: TIMESTAMP, nullable: false}]
+  - name: tracking_events
+    row_count: 14
+    columns: [{name: event_id, type: INTEGER, nullable: false}, {name: shipment_id, type: INTEGER, nullable: false}, {name: event_at, type: TIMESTAMP, nullable: false}, {name: tracking_state, type: VARCHAR, nullable: false}]
+generation_config: {business_fixture: logistics_service_level_as_of}
+requirements: {objective: depot_delivered_on_time_from_latest_state_as_of_cutoff, year: 2025, window_start: '2025-01-01', window_end: '2026-01-01', boundary_policy: accepted_start_inclusive_as_of_cutoff_inclusive, month_definition: not_applicable_as_of_snapshot, as_of_timestamp: '2025-06-30 23:59:59', output_columns: [depot, shipments_in_scope, delivered_on_time], order_by: [depot]}
+edge_cases: [ties, missing_relationships, out_of_order_timestamps, year_boundary]
+oracle: {type: reference_query, strategy: independent_latest_tracking_as_of}
+instruction_template: >-
+  As of {as_of_timestamp}, count each shipment accepted in {year} once by depot.
+  Use its latest tracking event at or before the cutoff, breaking timestamp ties by
+  event_id descending. Count it as delivered_on_time only when that latest state is
+  delivered and its event_at is no later than promised_at. Return depot,
+  shipments_in_scope, delivered_on_time ordered by depot.

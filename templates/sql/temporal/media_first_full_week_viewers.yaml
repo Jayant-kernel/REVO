@@ -1,0 +1,17 @@
+template_id: sql.temporal.media_first_full_week_viewers
+version: 1
+family: temporal
+difficulty: 4
+description: Viewers who completed content on every calendar day of their first seven-day viewing window.
+tables:
+  - name: viewing_events
+    row_count: 16
+    columns: [{name: event_id, type: INTEGER, nullable: false}, {name: viewer_id, type: INTEGER, nullable: false}, {name: watched_at, type: TIMESTAMP, nullable: false}, {name: playback_status, type: VARCHAR, nullable: false}]
+generation_config: {business_fixture: media_first_full_week_viewers}
+requirements: {objective: viewers_with_completed_play_on_each_day_of_first_seven_day_window, year: 2025, window_start: '2025-01-01', window_end: '2026-01-01', boundary_policy: start_inclusive_end_exclusive, month_definition: calendar_dates_from_first_completed_play, output_columns: [viewer_id, first_completed_on], order_by: [viewer_id]}
+edge_cases: [duplicates, out_of_order_timestamps, year_boundary, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_first_seven_calendar_days}
+instruction_template: >-
+  Return each viewer whose first completed playback in {year} begins a seven-day
+  calendar window with at least one completed playback on every day, including
+  the first day. Return viewer_id and the ISO DATE first_completed_on, ordered by viewer_id.

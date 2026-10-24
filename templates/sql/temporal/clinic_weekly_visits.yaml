@@ -1,0 +1,27 @@
+template_id: sql.temporal.clinic_weekly_visits
+version: 1
+family: temporal
+difficulty: 2
+description: Completed synthetic clinic visits assigned to Monday calendar weeks.
+tables:
+  - name: visits
+    row_count: 10
+    columns: [{name: visit_id, type: INTEGER, nullable: false}, {name: clinic, type: VARCHAR, nullable: false}, {name: started_at, type: TIMESTAMP}, {name: status, type: VARCHAR, nullable: false}]
+generation_config: {domain: synthetic_healthcare_operations, business_fixture: clinic_weekly_visits}
+requirements:
+  objective: weekly_completed_visits
+  year: 2025
+  window_start: '2025-01-01'
+  window_end: '2026-01-01'
+  boundary_policy: start_inclusive_end_exclusive
+  month_definition: not_applicable_monday_week_start
+  output_columns: [clinic, week_start, visit_count]
+  order_by: [clinic, week_start]
+edge_cases: [null_values, same_day_events, window_end_boundary]
+oracle: {type: reference_query, strategy: independent_monday_calendar}
+instruction_template: >-
+  Count completed visits starting in {year} by clinic and calendar week.
+  Weeks start Monday at midnight; return that Monday as an ISO DATE week_start
+  even when it falls in the previous year. NULL start times and noncompleted
+  visits are excluded. Return clinic, week_start, visit_count ordered by clinic
+  then week_start. Omit empty groups. All data is synthetic operational data.
