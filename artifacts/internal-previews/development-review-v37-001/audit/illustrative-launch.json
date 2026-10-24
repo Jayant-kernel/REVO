@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Users\\jayan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\review-preview37-copy-001\\replay\\replay.py",
+    "illustrative",
+    "--examples",
+    "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\review-preview37-copy-001\\examples",
+    "--result",
+    "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\review-preview37-copy-001\\illustrative-results-001.json"
+  ],
+  "cwd": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\review-preview37-copy-001",
+  "timeout_seconds": 180,
+  "supervisor_pid": 36984,
+  "started_at": 1792613892.301137
+}

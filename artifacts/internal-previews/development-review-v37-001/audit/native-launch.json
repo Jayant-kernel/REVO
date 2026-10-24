@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\jayan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-I",
+    "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\review-preview37-copy-001\\replay\\native_worker.py",
+    "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-work-001",
+    "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-result-001"
+  ],
+  "pid": 61940,
+  "supervisor": 25188,
+  "at": 1792613976.7403214,
+  "timeout_seconds": 7200,
+  "ownership": "Windows Job kill-on-close"
+}

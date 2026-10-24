@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "illustrative": 8,
+  "authoritative": 8,
+  "fresh_copy": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\review-preview37-copy-001",
+  "work": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-work-001",
+  "output": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-result-001",
+  "package_dependency": "C:\\Users\\jayan\\OneDrive\\Desktop\\Revo\\artifacts\\internal-deliveries\\v37-original8-001\\original8",
+  "original_checkout_imports": false,
+  "local_dependency_package_required": true,
+  "cache_dependency": "installed pinned runtimes and existing Docker sandbox/image; no auto-download authorized"
+}

@@ -1,0 +1,25 @@
+{
+  "example_id": "03",
+  "candidate_id": "sql.windows.media_previous_play.v1.cd1ead8f4849.qwen3-8b.11.a9e4c8f9f042",
+  "task_id": "sql.windows.media_previous_play.v1.cd1ead8f4849",
+  "fixture_scope": "retained public base fixture",
+  "instruction": "For completed playbacks in 2025, find the previous completed playback of the same title by the same viewer within that year. Order history by played_at then play_id; partial plays do not participate. Return play_id and previous_play_id ordered by play_id. The first playback in each history has NULL previous_play_id.",
+  "schema": [{"columns":[{"name":"play_id","nullable":false,"type":"INTEGER"},{"name":"viewer_id","nullable":false,"type":"INTEGER"},{"name":"title_id","nullable":false,"type":"INTEGER"},{"name":"played_at","nullable":false,"type":"TIMESTAMP"},{"name":"status","nullable":false,"type":"VARCHAR"}],"name":"plays","row_count":10,"row_kind":"generic"}],
+  "tables": {"plays": [
+    {"play_id":7,"played_at":"2024-12-31 00:00:00","status":"completed","title_id":10,"viewer_id":1},
+    {"play_id":4,"played_at":"2025-01-02 00:00:00","status":"completed","title_id":10,"viewer_id":2},
+    {"play_id":2,"played_at":"2025-01-01 00:00:00","status":"completed","title_id":10,"viewer_id":1},
+    {"play_id":3,"played_at":"2025-01-02 00:00:00","status":"completed","title_id":20,"viewer_id":1},
+    {"play_id":1,"played_at":"2025-01-01 00:00:00","status":"completed","title_id":10,"viewer_id":1},
+    {"play_id":5,"played_at":"2025-01-03 00:00:00","status":"partial","title_id":10,"viewer_id":1},
+    {"play_id":6,"played_at":"2025-01-04 00:00:00","status":"completed","title_id":10,"viewer_id":1}
+  ]},
+  "sql": "SELECT play_id, previous_play_id\nFROM (\n  SELECT \n    p1.play_id,\n    LAG(p1.play_id, 1) OVER (PARTITION BY p1.viewer_id, p1.title_id ORDER BY p1.played_at, p1.play_id) AS previous_play_id\n  FROM plays p1\n  WHERE p1.status = 'completed'\n    AND EXTRACT(YEAR FROM p1.played_at) = 2025\n)\nORDER BY play_id",
+  "expected": {"columns":[{"name":"play_id","type":"INTEGER"},{"name":"previous_play_id","type":"INTEGER"}],"rows":[[1,null],[2,1],[3,null],[4,null],[6,2]],"rows_returned":5,"truncated":false},
+  "source_bindings": {
+    "membership": {"path":"artifacts/internal-deliveries/v37-original8-001/original8/packet/membership.json","sha256":"185febd3055e02f677370dcd084df380aba506a14e11d80aba508fc94e10c062"},
+    "initial_execution": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/002-execution.json","sha256":"9c9341723bf919282676c880214978ed782d47f818af28c9da68c86d5458d379"},
+    "candidate_verification": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/002-verification.json","sha256":"6ac37ae44eab5e80b6e8c48f51a93d9701c491222a4862b9b4355435f2e3f90e"},
+    "final_result": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/FINAL-RESULT.json","sha256":"2225104c918834d283d46eeba141fb38fed867f6bba852cd4cd6ffc11eb1109b"}
+  }
+}

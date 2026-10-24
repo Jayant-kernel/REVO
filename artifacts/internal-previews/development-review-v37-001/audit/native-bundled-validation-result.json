@@ -1,0 +1,18 @@
+{
+  "report": {
+    "status": "VALID",
+    "errors": [],
+    "warnings": [],
+    "record_count": 8,
+    "file_count": 123765,
+    "checksum_status": "ok",
+    "schema_status": "ok",
+    "split_status": "ok",
+    "provenance_status": "ok",
+    "manifest_status": "ok",
+    "schema_version": "1.0"
+  },
+  "context_sha256": "8233f895f6e58b10ea827b8d16b709aca8a9d36cc1ff56795275882fe075fb80",
+  "implementation": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-work-001\\release\\replay_root\\src\\verified_data_factory\\products\\validation.py",
+  "scope": "new native bundled validate_release; exact pinned supplied context"
+}

@@ -1,0 +1,38 @@
+{
+  "example_id": "04",
+  "candidate_id": "sql.dedup.lowest_quote.v1.c5a5d681007c.qwen3-8b.00.f5fcd4f8535f",
+  "task_id": "sql.dedup.lowest_quote.v1.c5a5d681007c",
+  "fixture_scope": "retained public base fixture",
+  "instruction": "Return ['part', 'supplier', 'price_cents'] with types VARCHAR,VARCHAR,INTEGER, ordered by part ascending. Each input row is a supplier's unit quote in integer currency cents for a part; price_cents is nullable and otherwise in [0,2147483647]. All other fields are nonnull text, including empty text; no uniqueness is assumed. For each part select minimum nonnull price, then lexicographically smallest supplier under DuckDB default binary text ordering. Exact repeats and tied identical projected winners produce one row, not multiple rows. NULL price means unknown and is excluded before selection; all-NULL parts are omitted. Empty input gives empty output. No time, year, status, or latest-row filter.",
+  "schema": [{"columns":[{"name":"part","nullable":false,"type":"VARCHAR"},{"name":"supplier","nullable":false,"type":"VARCHAR"},{"name":"price_cents","nullable":true,"type":"INTEGER"}],"name":"quotes","row_count":8,"row_kind":"generic"}],
+  "tables": {"quotes": [
+    {"part":"p ","price_cents":11,"supplier":" s "},
+    {"part":"frame:101010:0:1: ","price_cents":0,"supplier":"é"},
+    {"part":"P","price_cents":12,"supplier":"s"},
+    {"part":"p","price_cents":20,"supplier":"A"},
+    {"part":"max","price_cents":2147483647,"supplier":"s"},
+    {"part":"p","price_cents":10,"supplier":"B"},
+    {"part":"p","price_cents":10,"supplier":"z"},
+    {"part":"unicode","price_cents":7,"supplier":"z"},
+    {"part":"p","price_cents":null,"supplier":""},
+    {"part":"","price_cents":0,"supplier":""},
+    {"part":"frame:101010:0:1: ","price_cents":891432997,"supplier":""},
+    {"part":"frame:101010:0:0:é","price_cents":0,"supplier":"A"},
+    {"part":"case","price_cents":8,"supplier":"a"},
+    {"part":"frame:101010:0:0:é","price_cents":null,"supplier":"a"},
+    {"part":"frame:101010:0:1: ","price_cents":1415936655,"supplier":"Z"},
+    {"part":"case","price_cents":8,"supplier":"Z"},
+    {"part":"null","price_cents":null,"supplier":"s"},
+    {"part":"unicode","price_cents":7,"supplier":"é"},
+    {"part":"p","price_cents":10,"supplier":"B"},
+    {"part":"frame:101010:0:0:é","price_cents":463527351,"supplier":"Z"}
+  ]},
+  "sql": "SELECT part, supplier, MIN(price_cents) OVER (PARTITION BY part) AS price_cents\nFROM quotes\nWHERE price_cents IS NOT NULL\nQUALIFY ROW_NUMBER() OVER (PARTITION BY part ORDER BY price_cents ASC, supplier ASC) = 1\nORDER BY part ASC",
+  "expected": {"columns":[{"name":"part","type":"VARCHAR"},{"name":"supplier","type":"VARCHAR"},{"name":"price_cents","type":"INTEGER"}],"rows":[["","",0],["P","s",12],["case","Z",8],["frame:101010:0:0:é","A",0],["frame:101010:0:1: ","é",0],["max","s",2147483647],["p","B",10],["p "," s ",11],["unicode","z",7]],"rows_returned":9,"truncated":false},
+  "source_bindings": {
+    "membership": {"path":"artifacts/internal-deliveries/v37-original8-001/original8/packet/membership.json","sha256":"185febd3055e02f677370dcd084df380aba506a14e11d80aba508fc94e10c062"},
+    "initial_execution": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/003-execution.json","sha256":"9deb3c142760c0d551590445d232d310666fea55c15facf1419e74a7dd7b07e6"},
+    "candidate_verification": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/original-pool/003-verification.json","sha256":"b886fca44c46b515277d3cccf1dd73c434dfab20b261c9adc5587821de292f40"},
+    "final_result": {"path":"scratch/company_evaluation/record-delivery-v3/runtime/delivery37/FINAL-RESULT.json","sha256":"2225104c918834d283d46eeba141fb38fed867f6bba852cd4cd6ffc11eb1109b"}
+  }
+}
