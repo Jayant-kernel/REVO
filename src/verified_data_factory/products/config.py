@@ -20,7 +20,14 @@ from .models import PRODUCT_SCHEMA_VERSION, ProductConfig, SplitPolicy
 
 def product_config_id(config: ProductConfig) -> str:
     """Deterministic content identity for a product configuration."""
-    return content_id("PRODUCT_CONFIG", PRODUCT_SCHEMA_VERSION, config.model_dump(mode="json"))
+    payload = config.model_dump(mode="json")
+    for name in ("engineering_evidence_root", "engineering_role_registry"):
+        # Operational paths are not dataset content; preserve historical
+        # STANDARD identities when the new optional fields are absent.
+        payload.pop(name, None)
+    if config.acceptance_profile == "ENGINEERING_STRICT":
+        payload.pop("output_dir", None)
+    return content_id("PRODUCT_CONFIG", PRODUCT_SCHEMA_VERSION, payload)
 
 
 def split_policy_id(policy: SplitPolicy) -> str:

@@ -10,7 +10,10 @@ never modified; rebuilding identical inputs yields an identical
 
 from __future__ import annotations
 
+import importlib.metadata
 import json
+import platform
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -56,6 +59,7 @@ from .serializers import (
     write_parquet,
 )
 from .splits import build_splits
+from .staging import staged_release
 from .transforms import to_benchmark_record, to_evaluation_record, to_training_record
 from .validation import validate_release
 
@@ -103,6 +107,7 @@ def _product_split(config: ProductConfig) -> SplitName:
     return mapping[config.product_type]
 
 
+@staged_release
 def build_release(
     *,
     snapshot: DatasetSnapshot,
@@ -143,6 +148,23 @@ def build_release(
         raise ProductConfigError("duplicate golden records supplied for one snapshot")
     if not in_snapshot:
         raise ProductConfigError("no supplied golden records are members of the dataset snapshot")
+    strict_engineering = config.acceptance_profile == "ENGINEERING_STRICT"
+    if strict_engineering:
+        from .acceptance import acceptance_payload, retain_replay_inputs
+        from .engineering import check_source
+        from .isolation import register_roles
+        from .staging import isolation_authority
+        if config.visibility != "INTERNAL" or config.split_policy.group_by != "engineering_group":
+            raise ProductConfigError("engineering strict requires INTERNAL visibility and engineering group isolation")
+        if not config.engineering_evidence_root or not config.engineering_role_registry:
+            raise ProductConfigError("engineering evidence root and persistent role registry required")
+        if out.exists():
+            raise ProductConfigError("engineering release destination must be new")
+        unresolved_members = [member for member in member_set if not any(_snapshot_member(g, {member}) for g in in_snapshot)]
+        if unresolved_members:
+            raise ProductConfigError("engineering snapshot members were not all supplied")
+        for golden in in_snapshot:
+            check_source(golden, quality_by_id.get(golden.candidate_id, {}), Path(config.engineering_evidence_root))
     quarantine_evidence = quarantined_ids
     quarantined_ids = quarantined_ids or set()
     quarantined_members = sorted({g.candidate_id for g in in_snapshot} & quarantined_ids)
@@ -162,6 +184,8 @@ def build_release(
         source_ids = list(splits[wanted].candidate_ids)
     if config.product_type == "SAMPLE":
         source_ids = source_ids[:SAMPLE_RECORD_LIMIT]
+    if strict_engineering and not source_ids:
+        raise ProductConfigError("empty engineering product is not permitted")
 
     product_records: list[dict[str, Any]] = []
     for position, candidate_id in enumerate(source_ids):
@@ -282,6 +306,49 @@ def build_release(
         encoding="utf-8",
     )
     write_preview(product_records, out / "preview.json", config.preview_size)
+    if strict_engineering:
+        (out / "schema.json").write_text(json.dumps(schema.model_dump(mode="json"), sort_keys=True), encoding="utf-8")
+        (out / "split_policy.json").write_text(json.dumps(config.split_policy.model_dump(mode="json"), sort_keys=True), encoding="utf-8")
+        assert config.engineering_evidence_root is not None
+        source_root = Path(config.engineering_evidence_root)
+        dependency_paths = [p for folder in ("src", "scripts", "configs", "templates", "tests") for p in (source_root / folder).rglob("*")
+                            if p.is_file() and p.suffix in {".py", ".yaml", ".json"} and "__pycache__" not in p.parts]
+        dependency_paths += [p for p in (source_root / "scratch").rglob("*") if p.is_file() and "__pycache__" not in p.parts
+                             and (p.suffix == ".py" or "threshold" in p.name and p.suffix == ".json")]
+        dependency_paths += [source_root / "pyproject.toml"]
+        dependencies = {p.relative_to(source_root).as_posix(): hash_file(p)[1] for p in sorted(dependency_paths)}
+        runtime = {name: importlib.metadata.version(name) for name in ("duckdb", "pydantic", "PyYAML", "httpx", "pyarrow")}
+        selected_goldens = [by_id[cid] for cid in source_ids]
+        selected_quality = {g.candidate_id: quality_by_id[g.candidate_id] for g in selected_goldens}
+        retain_replay_inputs(source_root, out / "replay_root", dependencies,
+                             [selected_quality[g.candidate_id]["engineering_record"] for g in selected_goldens])
+        assert config.engineering_role_registry is not None
+        registry_path = Path(config.engineering_role_registry)
+        role = "TRAIN" if config.product_type in {"TRAIN", "SAMPLE"} else "EVAL"
+        register_roles(registry_path, selected_goldens, role)
+        authority = isolation_authority(source_root, registry_path)
+        (out / "engineering_isolation.json").write_text(json.dumps({"registry_id": authority["registry_id"],
+            "roles": json.loads(registry_path.read_text())}, sort_keys=True), encoding="utf-8")
+        accepted = acceptance_payload(snapshot, selected_goldens, selected_quality, product_records, authority, role)
+        accepted["exclusions"] = {member: "excluded by declared product split or visibility; retained in source snapshot"
+            for member in member_set if not any(_snapshot_member(g, {member}) for g in selected_goldens)}
+        (out / "engineering_acceptance.json").write_text(json.dumps(accepted, sort_keys=True), encoding="utf-8")
+        shutil.copyfile(source_root / "scripts/engineering_validate_export.py", out / "validate_engineering.py")
+        (out / "engineering_dependencies.json").write_text(json.dumps({"source_root_hint": str(source_root), "bundled_root": "replay_root", "files": dependencies,
+            "python_version": platform.python_version(), "runtime_versions": runtime}, sort_keys=True), encoding="utf-8")
+        assets = []
+        for name in ("schema.json", "split_policy.json", "metrics.json", "dataset_card.md", "preview.json", "engineering_dependencies.json", "engineering_acceptance.json", "engineering_isolation.json", "validate_engineering.py"):
+            size, checksum = hash_file(out / name)
+            assets.append(ReleaseFile(relative_path=name, byte_size=size, content_hash=checksum, media_type="text/plain"))
+        for path in sorted((out / "replay_root").rglob("*")):
+            if path.is_file():
+                size, checksum = hash_file(path)
+                assets.append(ReleaseFile(relative_path=path.relative_to(out).as_posix(), byte_size=size,
+                                         content_hash=checksum, media_type="application/octet-stream"))
+        manifest = manifest.model_copy(update={"files": [*manifest.files, *assets]})
+        write_manifest(manifest, out / "manifest.json")
+        write_checksums({entry.relative_path: hash_file(out / entry.relative_path) for entry in manifest.files}
+                        | {"manifest.json": hash_file(out / "manifest.json")}, out / "SHA256SUMS")
 
     shipped_quality = {
         golden.record_id: quality_by_id[golden.candidate_id]

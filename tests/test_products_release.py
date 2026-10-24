@@ -36,6 +36,13 @@ def _build(tmp_path, name="p", out_name=None, **overrides):
     return built, goldens, quality_by_id, snapshot
 
 
+def _mock_review_items(monkeypatch, goldens):
+    """Synthetic review content only; never writes production decisions."""
+    items = {g.record_id: {"instruction": g.instruction, "schema": g.schema_,
+                          "candidate_sql": g.candidate_solution} for g in goldens}
+    monkeypatch.setattr("verified_data_factory.quality.review_package.reviewed_items", lambda _: items)
+
+
 def test_content_hash_snapshot_resolves(tmp_path):
     """CLI-built bundles carry content-hash membership; releases must resolve it."""
     from verified_data_factory.provenance import build_dataset_snapshot
@@ -93,6 +100,7 @@ def test_train_build_is_valid_and_deterministic(tmp_path):
 
 def test_public_eval_withholds_targets(tmp_path, monkeypatch):
     goldens, quality_by_id, snapshot = build_product_fixture()
+    _mock_review_items(monkeypatch, goldens)
     monkeypatch.setattr(
         "verified_data_factory.quality.review_package.review_status",
         lambda _package: {"status_by_record": {record.record_id: "PASS" for record in goldens}},
@@ -120,6 +128,7 @@ def test_public_eval_withholds_targets(tmp_path, monkeypatch):
 
 def test_premium_public_release_rejects_diagnostic_review(tmp_path, monkeypatch):
     goldens, quality_by_id, snapshot = build_product_fixture()
+    _mock_review_items(monkeypatch, goldens)
     monkeypatch.setattr(
         "verified_data_factory.quality.review_package.review_status",
         lambda _package: {
@@ -149,6 +158,7 @@ def test_premium_public_release_rejects_diagnostic_review(tmp_path, monkeypatch)
 
 def test_premium_public_release_requires_bound_derived_quality(tmp_path, monkeypatch):
     goldens, quality_by_id, snapshot = build_product_fixture()
+    _mock_review_items(monkeypatch, goldens)
     monkeypatch.setattr(
         "verified_data_factory.quality.review_package.review_status",
         lambda _package: {
@@ -222,6 +232,7 @@ def test_benchmark_ids_stable(tmp_path):
 
 def test_sample_product_capped(tmp_path, monkeypatch):
     goldens, quality_by_id, snapshot = build_product_fixture()
+    _mock_review_items(monkeypatch, goldens)
     monkeypatch.setattr(
         "verified_data_factory.quality.review_package.review_status",
         lambda _package: {"status_by_record": {record.record_id: "PASS" for record in goldens}},
@@ -352,3 +363,20 @@ def test_metrics_reference_split_counts(tmp_path):
         metrics["train_count"] + metrics["public_eval_count"] + metrics["private_eval_count"]
         == metrics["record_count"]
     )
+
+
+@pytest.mark.parametrize("changed_field", ["instruction", "schema_", "candidate_solution"])
+def test_public_content_changes_require_new_review(tmp_path, monkeypatch, changed_field):
+    goldens, quality_by_id, snapshot = build_product_fixture()
+    _mock_review_items(monkeypatch, goldens)
+    monkeypatch.setattr("verified_data_factory.quality.review_package.review_status",
+        lambda _: {"status_by_record": {g.record_id: "PASS" for g in goldens}})
+    # Preserve the old record ID and claimed PASS status while changing what
+    # will actually ship. Checksums alone cannot bind this to a human review.
+    replacement = [{"name": "changed", "columns": []}] if changed_field == "schema_" else "changed content"
+    goldens[0] = goldens[0].model_copy(update={changed_field: replacement})
+    with pytest.raises(ProductIOError, match="differs from frozen review content"):
+        build_release(snapshot=snapshot, golden_records=goldens, quality_by_id=quality_by_id,
+            config=ProductConfig(product_name="binding", product_type="TRAIN", visibility="PUBLIC"),
+            out_dir=tmp_path / "binding", factory_version="test", provenance_version="test",
+            quarantined_ids=set(), supply_chain={"commercially_cleared": True}, review_package=tmp_path / "synthetic-review")

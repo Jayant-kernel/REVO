@@ -58,7 +58,7 @@ class SplitPolicy(BaseModel):
     train: float = Field(default=0.8, ge=0.0, le=1.0)
     public_eval: float = Field(default=0.1, ge=0.0, le=1.0)
     private_eval: float = Field(default=0.1, ge=0.0, le=1.0)
-    group_by: Literal["semantic_group", "exact_group", "template", "none"] = "semantic_group"
+    group_by: Literal["semantic_group", "exact_group", "template", "none", "engineering_group"] = "semantic_group"
     require_group_isolation: bool = True
     balance_families: bool = False
     min_split_size: int = Field(default=0, ge=0)
@@ -73,7 +73,9 @@ class ProductConfig(BaseModel):
     product_name: str = Field(min_length=1)
     product_type: ProductType
     visibility: Visibility = "INTERNAL"
-    acceptance_profile: Literal["STANDARD", "PREMIUM_93"] = "STANDARD"
+    acceptance_profile: Literal["STANDARD", "PREMIUM_93", "ENGINEERING_STRICT"] = "STANDARD"
+    engineering_evidence_root: str | None = None
+    engineering_role_registry: str | None = None
     schema_version: str = Field(default=SQL_SCHEMA_VERSION, min_length=1)
     output_format: PackagingFormat = "jsonl"
     include_sql_target: bool = True
@@ -171,7 +173,7 @@ class ReleaseManifest(BaseModel):
     product_name: str = Field(min_length=1)
     product_type: ProductType
     visibility: Visibility
-    acceptance_profile: Literal["STANDARD", "PREMIUM_93"] = "STANDARD"
+    acceptance_profile: Literal["STANDARD", "PREMIUM_93", "ENGINEERING_STRICT"] = "STANDARD"
     release_id: str = Field(min_length=1)
     dataset_snapshot_id: str = Field(min_length=1)
     schema_name: str = Field(min_length=1)

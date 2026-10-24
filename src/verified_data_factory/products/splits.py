@@ -34,6 +34,11 @@ def group_key_for(
 ) -> str:
     """Isolation unit for one record (group ids win over bare candidate id)."""
     quality = quality_by_id.get(golden.candidate_id, {})
+    if policy.group_by == "engineering_group":
+        group = quality.get("engineering_isolation_group")
+        if not isinstance(group, str) or not group:
+            raise ProductConfigError("engineering group isolation metadata missing")
+        return group
     if policy.group_by == "semantic_group":
         group = quality.get("semantic_duplicate_group") or quality.get("exact_duplicate_group")
         if group:
@@ -69,6 +74,15 @@ def build_splits(
 ) -> dict[SplitName, DatasetSplit]:
     """Assign every record to exactly one split, deterministically."""
     ordered = sorted(golden_records, key=lambda g: g.candidate_id)
+    if policy.group_by == "engineering_group":
+        from .isolation import connected_groups
+        if not policy.require_group_isolation:
+            raise ProductConfigError("engineering isolation cannot be disabled")
+        expected_groups = connected_groups(ordered)
+        for golden in ordered:
+            supplied = quality_by_id.get(golden.candidate_id, {}).get("engineering_isolation_group")
+            if supplied != expected_groups[golden.candidate_id]:
+                raise ProductConfigError("engineering group metadata missing or inconsistent with schema/template/structure")
     group_members: dict[str, list[str]] = {}
     group_of: dict[str, str] = {}
     for golden in ordered:

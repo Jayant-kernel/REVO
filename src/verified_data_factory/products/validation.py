@@ -45,7 +45,9 @@ def validate_release(
     PUBLIC releases require all gate inputs. Internal releases retain warnings
     when optional evidence is absent.
     """
-    root = Path(release_dir)
+    from verified_data_factory.local_paths import io_path
+
+    root = io_path(Path(release_dir))
     errors: list[ValidationCheck] = []
     warnings: list[ValidationCheck] = []
     schema = canonical_schema()
@@ -72,6 +74,12 @@ def validate_release(
             manifest_status="unparseable",
             schema_version=schema.schema_version,
         )
+
+    if manifest.acceptance_profile == "ENGINEERING_STRICT":
+        paths = [entry.relative_path for entry in manifest.files] + [shard.relative_path for shard in manifest.shards]
+        if any(not (root / relative).resolve().is_relative_to(root.resolve()) for relative in paths):
+            return ReleaseValidationReport(status="INVALID", errors=[_err("engineering.path", "asset path escapes release root")],
+                                           schema_version=schema.schema_version, manifest_status="ok")
 
     # --- files & checksums -------------------------------------------------
     checksum_status = "ok"
@@ -187,9 +195,15 @@ def validate_release(
             )
         else:
             try:
-                from verified_data_factory.quality.review_package import review_status
+                from verified_data_factory.quality.review_package import (
+                    review_status,
+                    reviewed_items,
+                )
+
+                from .transforms import _ddl_text
 
                 review = review_status(review_package)
+                frozen_items = reviewed_items(review_package)
                 reviewed_package_id = review.get("package_id")
                 if manifest.acceptance_profile == "PREMIUM_93":
                     if review.get("candidate_class") != "PREMIUM_PRE_REVIEW":
@@ -217,6 +231,15 @@ def validate_release(
                     if review["status_by_record"].get(record_id) != "PASS":
                         errors.append(
                             _err("release.independent_review", f"{record_id}: final two-reviewer status is not PASS")
+                        )
+                    item = frozen_items.get(record_id)
+                    if item is None or (
+                        record.get("instruction") != item.get("instruction")
+                        or record.get("schema") != _ddl_text(item.get("schema"))
+                        or (record.get("sql") is not None and record.get("sql") != item.get("candidate_sql"))
+                    ):
+                        errors.append(
+                            _err("release.reviewed_content", f"{record_id}: shipped question/schema/SQL differs from frozen review content")
                         )
             except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
                 errors.append(_err("release.independent_review", f"invalid review package: {exc}"))
@@ -343,6 +366,9 @@ def validate_release(
             )
         )
 
+    if manifest.acceptance_profile == "ENGINEERING_STRICT":
+        from .engineering import check_assets
+        errors.extend(_err("engineering.strict", detail) for detail in check_assets(root, manifest, records))
     status = "VALID" if not errors else "INVALID"
     report = ReleaseValidationReport(
         status=status,
