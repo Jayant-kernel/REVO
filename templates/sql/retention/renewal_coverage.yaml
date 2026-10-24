@@ -1,0 +1,46 @@
+template_id: sql.retention.renewal_coverage
+version: 1
+family: retention
+difficulty: 3
+description: Membership renewal coverage across an episode expiry checkpoint.
+tables:
+  - name: episodes
+    row_count: 4
+    columns: [{name: episode_id, type: INTEGER, nullable: false}, {name: member_id, type: INTEGER, nullable: false}, {name: expires_at, type: TIMESTAMP, nullable: false}]
+  - name: renewals
+    row_count: 8
+    columns: [{name: member_id, type: INTEGER, nullable: false}, {name: begins_at, type: TIMESTAMP, nullable: false}, {name: ends_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}]
+requirements:
+  objective: renewal_bridge_coverage
+  retention_window_days: 14
+  qualifying_event: one_confirmed_interval_covers_expiry_and_day14
+  cohort_definition: supplied_expiry_episodes_in_2025
+  boundary_policy: begins_at_le_expiry_and_ends_at_ge_expiry_plus14days
+  repeated_event_policy: existence_only_no_stitching_intervals
+  output_columns: [episode_id, covered]
+  output_types: [INTEGER, BOOLEAN]
+  order_by: [episode_id]
+  input_domain_rules:
+    - {kind: unique, table: episodes, columns: [episode_id]}
+    - {kind: temporal_order, table: renewals, earlier_column: begins_at, later_column: ends_at, allow_null_later: false}
+edge_cases: [duplicates, retention_boundaries, year_boundary, missing_relationships]
+oracle: {type: reference_query, strategy: authored_renewal_interval_coverage}
+instruction_template: >-
+  For each supplied membership episode expiring in calendar 2025, return episode_id
+  INTEGER and covered BOOLEAN ordered by episode_id ascending. One confirmed renewal
+  for that member must begin at or before expiry and end at or after expiry plus
+  {retention_window_days} elapsed 24-hour days. These endpoint comparisons are
+  inclusive even though no activity interval union is computed. Multiple adjacent
+  renewals cannot be stitched. All renewal years participate; other statuses do not.
+  An episode is the supplied unique episode_id, not the member's first purchase;
+  multiple episodes per member are independently tested and one renewal may cover
+  multiple episodes. No renewal gives FALSE. Renewal rows are arbitrary bags:
+  repeated and conflicting intervals are separate evidence and existence prevents
+  multiplication. Empty episodes produce no rows. All times are naive, timezone-free,
+  microsecond-resolution timestamps; no calendar-date cast or rounding. All input
+  columns are nonnull, episodes.episode_id must be unique and every renewal ends_at
+  must be >= begins_at. No other uniqueness, foreign-key or status-enum restriction;
+  orphan renewals are ignored. No tie selection or NULL ordering is applicable.
+generation_config:
+  business_fixture: renewal_coverage
+  domain: membership_services

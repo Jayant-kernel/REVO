@@ -1,0 +1,12 @@
+template_id: sql.retention.media_week_two_return
+version: 1
+family: retention
+difficulty: 3
+description: Eligible returning-viewer activity by title group.
+tables: [{name: viewer_plays, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: media_week_two_return}
+requirements: {objective: week_two_return_by_title_group, year: 2025, retention_window_days: 14, qualifying_event: eligible, cohort_definition: first_play_anchored, boundary_policy: inclusive_day_14, repeated_event_policy: sum_each_eligible_play_once, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [duplicates, year_boundary, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Return eligible week-two returning-viewer activity by title group in {year}.

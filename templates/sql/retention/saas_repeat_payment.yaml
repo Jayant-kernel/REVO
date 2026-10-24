@@ -1,0 +1,28 @@
+template_id: sql.retention.saas_repeat_payment
+version: 1
+family: retention
+difficulty: 3
+description: Repeat paid invoice retention relative to first paid invoice.
+tables:
+  - name: billing
+    row_count: 12
+    columns: [{name: invoice_id, type: INTEGER, nullable: false}, {name: account_id, type: INTEGER, nullable: false}, {name: paid_on, type: DATE}, {name: status, type: VARCHAR, nullable: false}]
+generation_config: {domain: saas, business_fixture: saas_repeat_payment}
+requirements:
+  objective: retained_first_payment_cohort
+  year: 2025
+  retention_window_days: 30
+  qualifying_event: paid_invoice_with_nonnull_date
+  cohort_definition: accounts_whose_first_ever_paid_date_is_in_2025
+  boundary_policy: strictly_after_first_date_through_day_30_inclusive
+  repeated_event_policy: same_day_invoices_do_not_count_as_return
+  output_columns: [account_id]
+  order_by: [account_id]
+edge_cases: [null_values, same_day_events, retention_boundaries, multiple_purchases]
+oracle: {type: reference_query, strategy: independent_first_paid_cohort}
+instruction_template: >-
+  Which accounts first paid an invoice in {year} and paid again on a later date
+  within {retention_window_days} days of that first payment? Use the first ever
+  paid date, including prior years when assigning the cohort. Same-day invoices
+  are not returns; day 30 qualifies and day 31 does not. Ignore unpaid invoices
+  and NULL paid dates. Return each retained account_id once in ascending order.

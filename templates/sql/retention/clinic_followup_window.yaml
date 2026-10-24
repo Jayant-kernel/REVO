@@ -1,0 +1,12 @@
+template_id: sql.retention.clinic_followup_window
+version: 1
+family: retention
+difficulty: 3
+description: Eligible patient follow-up activity by clinic.
+tables: [{name: patient_visits, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: clinic_followup_window}
+requirements: {objective: followup_activity_by_clinic, year: 2025, retention_window_days: 30, qualifying_event: eligible, cohort_definition: initial_visit_anchored, boundary_policy: inclusive_day_30, repeated_event_policy: sum_each_eligible_visit_once, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [same_day_events, year_boundary, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Return eligible patient follow-up activity by clinic in {year}, ordered by clinic.
