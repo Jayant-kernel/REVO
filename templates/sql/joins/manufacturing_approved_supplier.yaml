@@ -1,0 +1,12 @@
+template_id: sql.joins.manufacturing_approved_supplier
+version: 1
+family: multi_joins
+difficulty: 3
+description: Eligible approved supplier part consumption by plant.
+tables: [{name: part_usage, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: manufacturing_approved_supplier}
+requirements: {objective: eligible_consumption_by_plant, year: 2025, status_filter: eligible, join_type: inner, unmatched_behavior: omit_incomplete_supplier_chain, line_revenue_def: sum_eligible_part_amount, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [duplicates, ineligible_rows, year_boundary]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Return each plant and the eligible approved-supplier part consumption in {year}, ordered by plant.

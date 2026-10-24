@@ -1,0 +1,32 @@
+template_id: sql.joins.logistics_final_leg
+version: 1
+family: multi_joins
+difficulty: 2
+description: Delivered parcels and the carrier of their declared final leg.
+tables:
+  - name: shipments
+    row_count: 6
+    columns: [{name: shipment_id, type: INTEGER, nullable: false}, {name: delivered_on, type: DATE}, {name: final_leg_id, type: INTEGER}]
+  - name: legs
+    row_count: 6
+    columns: [{name: leg_id, type: INTEGER, nullable: false}, {name: carrier_id, type: INTEGER}, {name: depot, type: VARCHAR, nullable: false}]
+  - name: carriers
+    row_count: 3
+    columns: [{name: carrier_id, type: INTEGER, nullable: false}, {name: carrier_name, type: VARCHAR, nullable: false}]
+generation_config: {domain: logistics, business_fixture: logistics_final_leg}
+requirements:
+  objective: delivered_parcel_final_carrier
+  year: 2025
+  status_filter: delivered_on_in_year
+  join_type: inner
+  unmatched_behavior: omit_missing_final_leg_or_carrier
+  line_revenue_def: not_applicable_no_revenue
+  output_columns: [shipment_id, depot, carrier_name]
+  order_by: [shipment_id]
+edge_cases: [null_values, missing_relationships]
+oracle: {type: reference_query, strategy: independent_final_leg_lookup}
+instruction_template: >-
+  For parcels delivered in {year}, show the depot and carrier responsible for
+  the declared final leg. Return shipment_id, depot, carrier_name ordered by
+  shipment_id. Omit parcels whose final leg or carrier is missing. A NULL
+  delivery date means the parcel has not been delivered.

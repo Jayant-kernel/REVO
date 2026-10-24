@@ -1,0 +1,39 @@
+template_id: sql.joins.requested_language_titles
+version: 1
+family: simple_joins
+difficulty: 2
+description: Requested-language titles with untranslated requests retained.
+tables:
+  - name: requests
+    row_count: 5
+    columns: [{name: request_id, type: INTEGER, nullable: false}, {name: item_id, type: INTEGER}, {name: language, type: VARCHAR}]
+  - name: translations
+    row_count: 5
+    columns: [{name: item_id, type: INTEGER}, {name: language, type: VARCHAR}, {name: title, type: VARCHAR}]
+requirements:
+  objective: requested_language_titles
+  year: not_applicable_all_rows
+  status_filter: not_applicable_no_status
+  join_type: left
+  unmatched_behavior: retain_request_with_null_title
+  null_semantics: null_key_component_never_matches_title_may_be_null
+  output_columns: [request_id, title]
+  output_types: [INTEGER, VARCHAR]
+  input_domain_rules: []
+edge_cases: [duplicates, null_values, missing_relationships, multiple_matching_rows]
+oracle: {type: reference_query, strategy: authored_requested_language_titles}
+instruction_template: >-
+  For {objective}, left join each request to translations on both item_id and
+  exact case-sensitive language equality. Each request row emits one row per
+  matching translation row, or exactly one row with NULL title if none matches.
+  Any NULL key component prevents matching, including NULL to NULL. A matched
+  NULL title remains NULL; it is not replaced. No language fallback, status/year
+  filter or deduplication. Translation-only rows emit nothing. Inputs are bags;
+  request_id/item_id/language are not unique. Return request_id INTEGER, title
+  nullable VARCHAR as an unordered bag with all multiplicities, no tie/winner
+  selection. Units are categorical text. JSON INTEGER is bounded signed32
+  integer excluding bool/string; VARCHAR is text; NULL only nullable columns.
+  Exact declared table/column sets required; no other domain restrictions.
+generation_config:
+  business_fixture: language_titles
+  domain: media_localization

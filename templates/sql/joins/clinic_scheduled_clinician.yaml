@@ -1,0 +1,12 @@
+template_id: sql.joins.clinic_scheduled_clinician
+version: 1
+family: simple_joins
+difficulty: 2
+description: Eligible scheduled appointment value by clinic.
+tables: [{name: appointments, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: clinic_scheduled_clinician}
+requirements: {objective: eligible_appointments_by_clinic, year: 2025, status_filter: eligible, join_type: inner, unmatched_behavior: omit_unassigned_appointments, null_semantics: keys_non_null, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [year_boundary, missing_relationships, zero_values]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Return each clinic and its eligible scheduled appointment value in {year}, ordered by clinic.
