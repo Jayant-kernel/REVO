@@ -1,0 +1,35 @@
+template_id: sql.dedup.lowest_quote
+version: 1
+family: deduplication
+description: Select the least expensive supplier quote for each part.
+difficulty: 2
+tables:
+  quotes:
+    row_count: 8
+    columns:
+      - {name: part, type: VARCHAR, nullable: false}
+      - {name: supplier, type: VARCHAR, nullable: false}
+      - {name: price_cents, type: INTEGER, nullable: true}
+requirements:
+  objective: lowest nonnull quote per part
+  duplicate_key: part
+  winner_rule: minimum price_cents among nonnull prices
+  tie_break: supplier ascending by DuckDB default binary text ordering
+  timestamp_tie_policy: not_applicable_no_time_field
+  output_columns: [part, supplier, price_cents]
+  output_types: [VARCHAR, VARCHAR, INTEGER]
+  order_by: [part]
+  input_domain_rules: [{kind: range, table: quotes, column: price_cents, min: 0, max: 2147483647}]
+edge_cases: [null_values, ties, duplicates, zero_values, empty_result]
+oracle: {type: reference_query, strategy: authored_lowest_quote_v1}
+generation_config: {business_fixture: lowest_quote_v1}
+instruction_template: >-
+  Return {output_columns} with types VARCHAR,VARCHAR,INTEGER, ordered by part
+  ascending. Each input row is a supplier's unit quote in integer currency cents
+  for a part; price_cents is nullable and otherwise in [0,2147483647]. All other
+  fields are nonnull text, including empty text; no uniqueness is assumed.
+  For each part select minimum nonnull price, then lexicographically smallest
+  supplier under DuckDB default binary text ordering. Exact repeats and tied
+  identical projected winners produce one row, not multiple rows. NULL price
+  means unknown and is excluded before selection; all-NULL parts are omitted.
+  Empty input gives empty output. No time, year, status, or latest-row filter.

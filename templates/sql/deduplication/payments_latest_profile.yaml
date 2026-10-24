@@ -1,0 +1,12 @@
+template_id: sql.dedup.payments_latest_profile
+version: 1
+family: deduplication
+difficulty: 3
+description: Eligible latest merchant-profile value by market.
+tables: [{name: profile_revisions, row_count: 8, columns: [{name: record_id, type: INTEGER, nullable: false}, {name: entity_id, type: INTEGER, nullable: false}, {name: group_key, type: VARCHAR, nullable: false}, {name: occurred_at, type: TIMESTAMP, nullable: false}, {name: status, type: VARCHAR, nullable: false}, {name: amount, type: INTEGER, nullable: false}, {name: sequence, type: INTEGER, nullable: false}]}]
+generation_config: {business_fixture: payments_latest_profile}
+requirements: {objective: valid_profile_value_by_market, year: 2025, duplicate_key: entity_id_and_group_key, winner_rule: eligible_rows_only, tie_break: sequence_descending, timestamp_tie_policy: record_id_descending, output_columns: [group_key, total_amount], order_by: [group_key]}
+edge_cases: [duplicates, ties, ineligible_rows]
+oracle: {type: reference_query, strategy: independent_event_ledger_reconciliation}
+instruction_template: >-
+  Keep valid latest merchant profiles and return eligible profile value by market in {year}.
