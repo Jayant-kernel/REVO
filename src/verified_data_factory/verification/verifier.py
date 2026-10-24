@@ -35,6 +35,7 @@ from .errors import BackendError, OracleUnknownError
 from .hidden import derive_hidden_seed, run_hidden_checks
 from .metamorphic import MetamorphicContext, run_metamorphic_checks
 from .models import (
+    COMPARISON_VERSION,
     HiddenTestResult,
     MetamorphicResult,
     MutationResult,
@@ -70,7 +71,7 @@ def build_verification_id(
 ) -> str:
     """Deterministic id over logical inputs (timings excluded)."""
     digest = hashlib.sha256(
-        f"{task_id}|{candidate_id}|{execution_id or ''}|{config_version}|{oracle_version}".encode()
+        f"{task_id}|{candidate_id}|{execution_id or ''}|{config_version}|{oracle_version}|{COMPARISON_VERSION}".encode()
     ).hexdigest()[:12]
     return f"{candidate_id}.verify-{digest}"
 
@@ -187,6 +188,18 @@ def verify_candidate(
             finished_at=_utc_now_iso(),
         )
 
+    # Structure is an explicit contract obligation, not a semantic mutation kill.
+    from .qualification.structural import structural_checks
+
+    structural = structural_checks(task, candidate.candidate_sql or "")
+    if structural is not None:
+        shell["evidence"]["structural_requirements"] = structural
+        if structural["status"] != "PASS":
+            return VerificationResult(**shell,
+                verdict="FAIL" if structural["status"] == "FAIL" else "INCONCLUSIVE",
+                failure_code="STRUCTURAL_REQUIREMENT_FAILED" if structural["status"] == "FAIL" else "STRUCTURAL_CHECK_ERROR",
+                summary=f"mandatory query structure not established: {structural['rule_id']}", finished_at=_utc_now_iso())
+
     # Stage 2: independent oracle.
     oracle = compute_oracle(task)
     shell["oracle_version"] = oracle.oracle_version
@@ -216,6 +229,7 @@ def verify_candidate(
         [c.name for c in execution.result_data.columns],
         execution.result_data.rows,
         config.comparison,
+        column_types=[c.type for c in execution.result_data.columns],
     )
     performance = collect_performance(
         execution, config.performance_enabled, config.performance_warn_after_ms
@@ -265,7 +279,7 @@ def verify_candidate(
             return VerificationResult(
                 **shell,
                 verdict="INCONCLUSIVE",
-                failure_code="SANDBOX_INFRA_ERROR",
+                failure_code="WEAK_SUITE" if any(c.failure_code == "WEAK_SUITE" for c in hidden.cases) else "SANDBOX_INFRA_ERROR",
                 summary=f"hidden fixtures: {hidden.inconclusive}/{hidden.total} inconclusive",
                 oracle=oracle,
                 comparison=comparison,
@@ -335,6 +349,7 @@ def verify_candidate(
                     backend,
                     config.comparison,
                     task.seed,
+                    candidate_types=[c.type for c in execution.result_data.columns],
                 )
             )
         except BackendError as exc:
@@ -386,8 +401,12 @@ def verify_candidate(
         )
         if mutation.mutation_score is None:
             strength = "UNKNOWN"
-        elif mutation.mutation_score >= config.mutation_min_score:
+        elif (mutation.mutation_score >= config.mutation_min_score and mutation.semantic_kills >= 3
+              and mutation.coverage_complete and mutation.invalid == mutation.inconclusive == 0):
             strength = "STRONG"
+        elif mutation.mutation_score >= config.mutation_min_score:
+            # A perfect ratio over a thin/unfinished campaign is not strong proof.
+            strength = "UNKNOWN"
         else:
             strength = "WEAK"
             return VerificationResult(

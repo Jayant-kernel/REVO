@@ -236,6 +236,7 @@ def test_subqueries_strict_threshold():
 def test_windows_rank_gaps_and_running_total():
     req = _req(
         output_columns=["customers.customer_id", "orders.order_id", "order_rank", "running_total"],
+        order_by=["customers.customer_id", "orders.order_date"],
         year=2025,
         status_filter="completed",
     )
@@ -435,7 +436,7 @@ def test_oracle_registry_covers_all_templates():
         assert entry.oracle_version >= 1
         assert entry.strategy == template.oracle_spec.strategy
     # Versioned semantic clarifications keep v1 available for historical runs.
-    assert len(known_templates()) == 28
+    assert len(known_templates()) == 80
 
 
 def test_oracle_unknown_raises():
@@ -450,6 +451,13 @@ def test_oracles_run_on_real_phase1_fixtures(registry):
     from verified_data_factory.task_engine import generate_task
 
     seeds = {
+        "sql.joins.logistics_final_leg": 94001,
+        "sql.cte.inventory_net_flow": 94001,
+        "sql.subqueries.education_all_required": 94001,
+        "sql.windows.media_previous_play": 94001,
+        "sql.temporal.clinic_weekly_visits": 94001,
+        "sql.retention.saas_repeat_payment": 94001,
+        "sql.funnel.support_resolution_chain": 94001,
         "sql.joins.simple": 101,
         "sql.joins.multi": 201,
         "sql.aggregation.grouped": 301,
@@ -466,8 +474,9 @@ def test_oracles_run_on_real_phase1_fixtures(registry):
         "sql.funnel.completion": 1001,
     }
     for template in registry.list():
-        task = generate_task(template, seeds[template.template_id])
+        task = generate_task(template, seeds.get(template.template_id, 94001))
         entry = get_oracle(task.template_id, task.template_version)
         expected = entry.fn(dict(task.requirements), task.tables)
         assert expected.columns
+        assert len(expected.column_types) == len(expected.columns)
         assert isinstance(expected.rows, list)

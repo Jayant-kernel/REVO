@@ -14,6 +14,24 @@ from verified_data_factory.task_engine.models import TaskInstance
 def independent_adversarial_tables(
     task: TaskInstance,
 ) -> dict[str, list[dict[str, Any]]] | None:
+    from .business_adversarial import business_adversarial
+    from .delivery_adversarial import delivery_adversarial
+    from .legacy_adversarial import legacy_adversarial
+
+    delivery_case = delivery_adversarial(task.template_id, task.template_version)
+    if delivery_case is not None:
+        return delivery_case
+    if task.template_version == 1 or (task.template_id, task.template_version) in {
+        ("sql.funnel.saas_activation_payment", 2), ("sql.funnel.logistics_parcel_delivery", 2),
+        ("sql.aggregation.warehouse_throughput", 2),
+        ("sql.cte.inventory_net_flow", 2),
+    }:
+        business_case = business_adversarial(task.template_id, task.template_version)
+        if business_case is not None:
+            return business_case
+    legacy_case = legacy_adversarial(task.template_id, task.template_version)
+    if legacy_case is not None:
+        return legacy_case
     if task.template_id == "sql.joins.saas_paid_invoices" and task.template_version == 1:
         return {
             "accounts": [
@@ -50,7 +68,7 @@ def independent_adversarial_tables(
                 {"ticket_id": 6, "team": "Payments", "priority": "normal", "opened_at": "2025-12-31 23:59:59", "due_at": "2026-01-01 23:59:59", "resolved_at": "2026-01-02 00:00:00"},
             ]
         }
-    if task.template_id == "sql.dedup.education_grade_revisions" and task.template_version == 1:
+    if task.template_id == "sql.dedup.education_grade_revisions" and task.template_version in {1, 2}:
         return {
             "grade_revisions": [
                 {"revision_id": 1, "student_id": 1, "course_id": 10, "recorded_at": "2025-01-01 10:00:00", "revision_status": "valid", "grade": "B"},

@@ -7,7 +7,8 @@ from verified_data_factory.task_engine.registry import TemplateRegistry
 
 
 def test_registry_lists_all_templates(registry):
-    assert len(registry) == 23
+    assert len(registry) == 75
+    assert len({template.template_id for template in registry.list()}) == 62
 
 
 def test_registry_get(registry):
@@ -22,7 +23,8 @@ def test_registry_get_unknown_raises(registry):
 
 
 def test_registry_list_by_family(registry):
-    assert len(registry.list_by_family("retention")) == 2
+    assert len(registry.list_by_family("retention")) == 6
+    assert len({template.template_id for template in registry.list_by_family("temporal")}) == 8
     assert registry.list_by_family("retention")[0].template_id == "sql.retention.30_day"
     assert registry.list_by_family("no_such_family") == []
 

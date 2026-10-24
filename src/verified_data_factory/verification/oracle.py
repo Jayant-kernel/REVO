@@ -56,6 +56,7 @@ def oracle_simple_joins(
     rows.sort(key=lambda r: (-r[1], r[0]))
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "DOUBLE"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("total_revenue", "desc")]),
     )
@@ -65,21 +66,20 @@ def oracle_saas_paid_invoices(
     requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
 ) -> ExpectedResult:
     """Paid invoices issued in-year for currently active SaaS accounts."""
-    active_names = {
-        account["account_id"]: account["account_name"]
-        for account in tables["accounts"]
-        if account["account_status"] == requirements["account_status_filter"]
-    }
+    active_accounts = [account for account in tables["accounts"]
+                       if account["account_status"] == requirements["account_status_filter"]]
     rows = [
-        [invoice["invoice_id"], active_names[invoice["account_id"]], invoice["amount_cents"]]
+        [invoice["invoice_id"], account["account_name"], invoice["amount_cents"]]
         for invoice in tables["invoices"]
-        if invoice["account_id"] in active_names
+        for account in active_accounts
+        if invoice["account_id"] == account["account_id"]
         and invoice["invoice_status"] == requirements["status_filter"]
         and _in_year(invoice["issued_on"], int(requirements["year"]))
     ]
     rows.sort(key=lambda row: row[0])
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "VARCHAR", "BIGINT"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("invoice_id", "asc")]),
     )
@@ -108,6 +108,7 @@ def oracle_multi_joins(
     rows.sort(key=lambda r: (-r[2], r[0], str(r[1])))
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "VARCHAR", "DOUBLE"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("line_revenue", "desc")]),
     )
@@ -133,6 +134,7 @@ def oracle_aggregation(
         rows.append([status, len(amounts), total, avg])
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["VARCHAR", "BIGINT", "DOUBLE", "DOUBLE"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("status", "asc")]),
     )
@@ -155,6 +157,7 @@ def oracle_payment_net_settled(
     rows = [[merchant_id, amount] for merchant_id, amount in sorted(totals.items())]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "HUGEINT"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("merchant_id", "asc")]),
     )
@@ -178,6 +181,7 @@ def oracle_support_sla_breaches(
     rows = [[team, priority, counts[(team, priority)]] for team, priority in sorted(counts)]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["VARCHAR", "VARCHAR", "BIGINT"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("team", "asc"), ("priority", "asc")]),
     )
@@ -208,6 +212,7 @@ def oracle_cte(
     rows = [[cid, month, revenue] for cid, (month, revenue) in sorted(best.items())]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "VARCHAR", "DOUBLE"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("customer_id", "asc")]),
     )
@@ -226,10 +231,12 @@ def oracle_subqueries(
         and _in_year(o["order_date"], year)
         and float(o["amount"]) > threshold
     }
-    names = {c["customer_id"]: c["name"] for c in tables["customers"]}
-    rows = [[cid, names[cid]] for cid in sorted(qualifying)]
+    rows = [[customer["customer_id"], customer["name"]]
+            for customer in sorted(tables["customers"], key=lambda row: row["customer_id"])
+            if customer["customer_id"] in qualifying]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "VARCHAR"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("customer_id", "asc")]),
     )
@@ -275,11 +282,19 @@ def oracle_windows(
             }
             rows.append([values[column] for column in output_columns])
             previous = amount
-    order_keys = [("customer_id", "asc")]
-    if "order_date" in output_columns:
-        order_keys.extend([("order_date", "asc"), ("order_id", "asc")])
+    # Preserve required keys even if an old projection cannot prove them.
+    order_keys = [(name.rsplit(".", 1)[-1], "asc") for name in requirements["order_by"]]
+    output_types = {
+        "customer_id": "INTEGER",
+        "order_id": "INTEGER",
+        "order_date": "DATE",
+        "order_rank": "BIGINT",
+        "running_total": "DOUBLE",
+        "previous_amount": "DOUBLE",
+    }
     return ExpectedResult(
         columns=output_columns,
+        column_types=[output_types[column] for column in output_columns],
         rows=rows,
         order=OrderSpec(type="ordered", keys=order_keys),
     )
@@ -310,6 +325,7 @@ def oracle_temporal(
     rows = [[m, orders.get(m, 0), events.get(m, 0)] for m in sorted(set(orders) | set(events))]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["VARCHAR", "BIGINT", "BIGINT"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("activity_month", "asc")]),
     )
@@ -328,6 +344,7 @@ def oracle_dedup(
     rows = [[cid, best[cid]["event_type"], best[cid]["event_time"]] for cid in sorted(best)]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "VARCHAR", "TIMESTAMP"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("customer_id", "asc")]),
     )
@@ -355,9 +372,38 @@ def oracle_education_grade_revisions(
     ]
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "INTEGER", "VARCHAR", "TIMESTAMP", "INTEGER"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("student_id", "asc"), ("course_id", "asc")]),
     )
+
+
+def oracle_immutable_education_grade_revisions(
+    requirements: Mapping[str, Any], tables: Mapping[str, list[dict[str, Any]]]
+) -> ExpectedResult:
+    """V2 rejects conflicting valid identities; exact repeats remain in-domain."""
+    identities: dict[tuple[int, int, _dt.datetime, int], str] = {}
+    best: dict[tuple[int, int], tuple[_dt.datetime, int, dict[str, Any]]] = {}
+    for revision in tables["grade_revisions"]:
+        if revision["revision_status"] != "valid":
+            continue
+        student, course, identifier = (int(revision[column]) for column in ("student_id", "course_id", "revision_id"))
+        # TIMESTAMP is a naive SQL wall-clock value, not TIMESTAMPTZ.
+        recorded = _dt.datetime.fromisoformat(str(revision["recorded_at"])).replace(tzinfo=None)
+        key = student, course, recorded, identifier
+        grade = str(revision["grade"])
+        if key in identities and identities[key] != grade:
+            raise ValueError("conflicting valid grades at immutable revision identity")
+        identities[key] = grade
+        pair = student, course
+        previous = best.get(pair)
+        if previous is None or (recorded, identifier) > previous[:2]:
+            best[pair] = recorded, identifier, revision
+    return ExpectedResult(columns=_out_cols(requirements),
+        column_types=["INTEGER", "INTEGER", "VARCHAR", "TIMESTAMP", "INTEGER"],
+        rows=[[student, course, best[(student, course)][2]["grade"],
+               best[(student, course)][0].isoformat(sep=" "), best[(student, course)][1]] for student, course in sorted(best)],
+        order=OrderSpec(type="ordered", keys=[("student_id", "asc"), ("course_id", "asc")]))
 
 
 def oracle_retention(
@@ -380,6 +426,7 @@ def oracle_retention(
         rows.append([customer["customer_id"], retained])
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "BOOLEAN"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("customer_id", "asc")]),
     )
@@ -406,6 +453,7 @@ def oracle_funnel(
         rows.append([customer["customer_id"], reached, reached == len(steps)])
     return ExpectedResult(
         columns=_out_cols(requirements),
+        column_types=["INTEGER", "BIGINT", "BOOLEAN"],
         rows=rows,
         order=OrderSpec(type="ordered", keys=[("customer_id", "asc")]),
     )
