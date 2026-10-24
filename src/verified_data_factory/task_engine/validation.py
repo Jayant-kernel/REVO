@@ -43,6 +43,8 @@ KNOWN_EDGE_CASES = frozenset(
         "canceled_latest_revision",
         "grade_timestamp_tie",
         "grade_only_canceled_group",
+        "year_boundary",
+        "ineligible_rows",
     }
 )
 
@@ -63,10 +65,12 @@ RELEASE_EDGE_CASES = KNOWN_EDGE_CASES - frozenset(
         "canceled_latest_revision",
         "grade_timestamp_tie",
         "grade_only_canceled_group",
+        "year_boundary",
+        "ineligible_rows",
     }
 )
 
-ALLOWED_ORACLE_TYPES = frozenset({"reference_query"})
+ALLOWED_ORACLE_TYPES = frozenset({"contract_specific", "reference_query"})
 
 # Per-family semantic keys every template's requirements must define.
 # This gate prevents ambiguous task specifications from reaching Phase 2:
@@ -237,6 +241,21 @@ def validate_task(task: TaskInstance) -> None:
             raise ValidationError(f"fixture metadata mismatch for {name}")
 
     # Semantic checks feasible in Phase 1.
+    from ..verification.qualification.delivery_profiles import get_profile
+
+    profile = get_profile(task.template_id, task.template_version)
+    if profile is not None:
+        try:
+            profile.validate_rows(task.tables)
+        except ValueError as exc:
+            raise ValidationError(str(exc)) from exc
+    if (task.template_id, task.template_version) == ("sql.dedup.lowest_quote", 1):
+        from ..verification.qualification.lowest_quote_profile import validate_rows
+
+        try:
+            validate_rows(task.tables)
+        except ValueError as exc:
+            raise ValidationError(str(exc)) from exc
     _check_fk_consistency(task)
     _check_requirements(task, col_index)
     unknown = [e for e in task.edge_cases if e not in KNOWN_EDGE_CASES]

@@ -247,8 +247,9 @@ def test_saas_fk_validation_and_metamorphic_override():
     changed.tables["invoices"][0]["account_id"] = 999999
     with pytest.raises(Exception, match="has no account"):
         validate_task(changed)
-    names = [fn.__name__ for fn in TEMPLATE_RELATION_OVERRIDES[task.template_id]]
-    assert names == ["relate_row_permutation", "relate_add_irrelevant_account"]
+    names = [fn.__name__ for fn in TEMPLATE_RELATION_OVERRIDES[(task.template_id, task.template_version)]]
+    assert names == ["relate_row_permutation", "relate_add_irrelevant_account",
+                     "relate_paid_invoice_duplicate", "relate_paid_inactive_account"]
 
 
 def test_release_edge_taxonomy_remains_frozen_with_new_domain_checks():

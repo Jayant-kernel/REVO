@@ -1,5 +1,7 @@
 """New domain templates traverse the real sandbox and full verifier."""
 
+from pathlib import Path
+
 import pytest
 
 from tests.integration.sandbox.test_docker_available import requires_docker
@@ -27,15 +29,29 @@ def test_new_domain_full_verification(template_id, sql):
     task = generate_task(load_builtin_registry().get(template_id), 94001)
     candidate = make_candidate(task, sql)
     sandbox = SandboxConfig(timeout_seconds=60)
+    backend = DerivedTaskBackend(sandbox)
     execution = SandboxExecutor(sandbox, DockerRunner(sandbox)).execute(task, candidate)
     result = verify_candidate(
-        task, candidate, execution, VerificationConfig(), DerivedTaskBackend(sandbox)
+        task, candidate, execution, VerificationConfig(), backend
     )
     assert result.verdict == "PASS", (result.verdict, result.failure_code, result.summary)
-    assert result.verification_strength == "STRONG"
+    if (task.template_id, task.template_version) == ("sql.dedup.education_grade_revisions", 2):
+        from verified_data_factory.verification.readiness import effective_quarantine
+
+        assert "ROW_NUMBER()" in sql
+        assert effective_quarantine(Path(__file__).resolve().parents[2], task.template_id, 1)
+        assert result.verification_strength == "STRONG"
+        assert result.mutation.coverage_complete
+    else:
+        assert result.verification_strength == "UNKNOWN"
+        assert not result.mutation.coverage_complete
     assert result.mutation is not None and result.mutation.mutation_score == 1.0
     assert result.hidden is not None and result.hidden.failed == 0
-    assert result.hidden.total == 4
+    clause_fixtures = backend.requirement_counterexample_tables(task)
+    assert result.hidden.total == 4 + len(clause_fixtures)
+    assert sum(case.source == "REQUIREMENT_COUNTEREXAMPLE" and case.status == "PASS"
+               for case in result.hidden.cases) == len(clause_fixtures)
+    assert result.hidden.distinct_fixtures == 4
     assert sum(
         case.source == "INDEPENDENT_ADVERSARIAL" and case.status == "PASS"
         for case in result.hidden.cases

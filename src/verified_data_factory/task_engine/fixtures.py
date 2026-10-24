@@ -776,6 +776,20 @@ def generate_fixture_tables(
     template: TaskTemplate, seed: int
 ) -> tuple[dict[str, list[dict[str, Any]]], list[str]]:
     """Generate all fixture rows deterministically for ``(template, seed)``."""
+    business_fixture = template.generation_config.get("business_fixture")
+    from ..verification.qualification.delivery_profiles import get_profile
+
+    profile = get_profile(template.template_id, template.version)
+    if profile is not None:
+        return profile.fixture(seed, 0), list(template.edge_cases)
+    if (template.template_id, template.version) == ("sql.dedup.lowest_quote", 1):
+        from ..verification.qualification.lowest_quote_profile import fixture
+
+        return fixture(seed, 0), list(template.edge_cases)
+    if business_fixture:
+        from .business_fixtures import business_tables
+
+        return business_tables(str(business_fixture), seed), list(template.edge_cases)
     tables: dict[str, list[dict[str, Any]]] = {}
     defs = {t.name: t for t in template.schema_definition}
     customer_ids: list[int] = []
@@ -880,6 +894,24 @@ def materialize_duckdb(
     from .schema import ddl_for_table
 
     defs = {t.name: t for t in tables_def}
+    from ..verification.qualification.delivery_profiles import schema_profile
+
+    profile = schema_profile(tables_def)
+    if profile is not None:
+        try:
+            profile.validate_rows(rows, allow_required_null=True)
+        except ValueError as exc:
+            raise FixtureError(str(exc)) from exc
+    # This exact public schema has a non-coercing raw domain, unlike legacy schemas.
+    if len(tables_def) == 1 and tables_def[0].name == "quotes" and [
+        (c.name, c.type, c.nullable) for c in tables_def[0].columns
+    ] == [("part", "VARCHAR", False), ("supplier", "VARCHAR", False), ("price_cents", "INTEGER", True)]:
+        from ..verification.qualification.lowest_quote_profile import validate_rows
+
+        try:
+            validate_rows(rows, allow_text_null=True)
+        except ValueError as exc:
+            raise FixtureError(str(exc)) from exc
     con = duckdb.connect(str(db_path) if db_path else ":memory:")
     try:
         for name in sorted(rows):

@@ -72,7 +72,8 @@ def load_template_file(path: str | Path) -> TaskTemplate:
     """Load a single YAML template file."""
     path = Path(path)
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+        data = yaml.load(path.read_text(encoding="utf-8"), Loader=loader)
     except Exception as exc:
         raise TemplateError(f"malformed YAML in {path}: {exc}") from exc
     if not isinstance(data, dict):
