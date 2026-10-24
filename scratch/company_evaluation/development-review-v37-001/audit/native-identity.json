@@ -1,0 +1,11 @@
+{
+  "run_id": "755d4036563245b196cbcf5c8ce06a3c",
+  "work": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-work-001",
+  "output": "C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\preview37-result-001",
+  "pins": {
+    "release/manifest.json": "a470e889b701571af653bb30a1d9d3036a828096e8a7370f858d2788f01784eb",
+    "anchor.json": "9d8566217753b3fd1187961b0e2009ca81e4b3a16c0f4f25e99a15f165d9f266",
+    "quality-context.json": "8233f895f6e58b10ea827b8d16b709aca8a9d36cc1ff56795275882fe075fb80",
+    "validate_bound_release_windows.py": "fef7a1557705a997e4e455bb19dcb1dadce913768fc446e44b129715c27f3726"
+  }
+}

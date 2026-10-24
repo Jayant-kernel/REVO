@@ -1,0 +1,34 @@
+{
+  "sha256:1c5759cb51dd7bbfb8f67e29c06a737cca31f4bb9276c236af0d6c0e2d977fd9": {
+    "candidate_id": "sql.aggregation.fulfillment_sla_dashboard.v1.ee6cf26ee225.qwen3-8b.00.b8142874a73f",
+    "status": "PASS"
+  },
+  "sha256:999067b8e0766177fade176111645ad875bf2f786dd4e795b79ca38249524fef": {
+    "candidate_id": "sql.dedup.education_grade_revisions.v2.78bb3766bf95.qwen3-8b.04.1e77446511d8",
+    "status": "PASS"
+  },
+  "sha256:2d8bbc0c3c4ced5ed0514c357acf054b6eb4ab42f64b06e2fb8d074b4f0ae179": {
+    "candidate_id": "sql.dedup.lowest_quote.v1.c5a5d681007c.qwen3-8b.00.f5fcd4f8535f",
+    "status": "PASS"
+  },
+  "sha256:ca635305edb1fd96f0bed7797143939dd15288e3016f94b7a3ef76a81343daac": {
+    "candidate_id": "sql.joins.requested_language_titles.v1.0d54c5975c5a.qwen3-8b.00.49d13f9284e6",
+    "status": "PASS"
+  },
+  "sha256:6c8a6ff339c1e05258e48de2bbab8f9d83da8ffdd5eaff77be96e332b9e5c949": {
+    "candidate_id": "sql.retention.renewal_coverage.v1.63a1c0fefc7c.qwen3-8b.00.b9dbae6d29b5",
+    "status": "PASS"
+  },
+  "sha256:915d202e5519e46708e1e95dc058296d73b216d3ce0f11379042009c9d2b7b03": {
+    "candidate_id": "sql.subqueries.pareto_shipping.v1.5505da8aaef5.qwen3-8b.00.02876080a37c",
+    "status": "PASS"
+  },
+  "sha256:45b99143b7bcb0852f4638db1b45559947e73ebb6fa27144a98e7a3eda511fe6": {
+    "candidate_id": "sql.windows.media_previous_play.v1.cd1ead8f4849.qwen3-8b.11.a9e4c8f9f042",
+    "status": "PASS"
+  },
+  "sha256:cf558b6628a08c608b12d029fac355502e59bc6869e36a14f0e54b2dc9be0962": {
+    "candidate_id": "sql.windows.queue_batches.v1.11f188ba5320.qwen3-8b.00.dfda1f1b90f0",
+    "status": "PASS"
+  }
+}

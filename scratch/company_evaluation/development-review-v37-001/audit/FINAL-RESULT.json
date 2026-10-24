@@ -1,0 +1,70 @@
+{
+  "accepted80": 0,
+  "artifact": "artifacts\\internal-previews\\development-review-v37-001",
+  "artifact_manifest_sha256": "2e2b63e30a49ae88a838ff29b6c8b747987b98b7e97d950d294f3fe7f92a58c1",
+  "authoritative_replayed": 8,
+  "authoritative_report": {
+    "checksum_status": "ok",
+    "errors": [],
+    "file_count": 123765,
+    "manifest_status": "ok",
+    "provenance_status": "ok",
+    "record_count": 8,
+    "schema_status": "ok",
+    "schema_version": "1.0",
+    "split_status": "ok",
+    "status": "VALID",
+    "warnings": []
+  },
+  "budget": {
+    "generation_seconds": 558.326999999983,
+    "physical_attempts": 36,
+    "unfinished_attempts": []
+  },
+  "company_showcase_accepted": 0,
+  "dependency_manifest_sha256": "a470e889b701571af653bb30a1d9d3036a828096e8a7370f858d2788f01784eb",
+  "dependency_package_bytes": 602194502,
+  "dependency_package_files": 123854,
+  "dependency_release_declared_files": 123765,
+  "external_sharing": "BLOCKED",
+  "findings_fixed": [
+    "M01 renewal navigation label now describes coverage for each eligible episode"
+  ],
+  "historical_native_incidents": "UNRESOLVED",
+  "human_review": "PENDING",
+  "illustrative_replayed": 8,
+  "markdown_links_ok": true,
+  "minor_deferred": [
+    "optional suite Temp evidence not bundled/durable; primary profile evidence remains package/checkout referenced",
+    "no slim authoritative closure or non-Windows portability proved"
+  ],
+  "new_generation_calls": 0,
+  "original_completed": 2,
+  "original_packages_unchanged": true,
+  "original_percent": 12.5,
+  "original_total": 16,
+  "post_review_adjustment": "START-HERE clarified copying reviewer layer before writing results and added closeout navigation; no executable/SQL/evidence change",
+  "preview_tasks": {
+    "P01": "COMPLETE",
+    "P02": "COMPLETE",
+    "P03": "COMPLETE",
+    "P04": "COMPLETE",
+    "P05": "COMPLETE",
+    "P06": "COMPLETE",
+    "P07": "COMPLETE",
+    "P08": "COMPLETE"
+  },
+  "preview_tasks_completed": 8,
+  "preview_tasks_total": 8,
+  "records_verified": 8,
+  "review": "PASS; prior Worker A authorship/access disclosed, not blind/human",
+  "reviewer_layer_bytes": 322114,
+  "reviewer_layer_files": 51,
+  "source_bound_inputs": 687,
+  "source_qualification_current": true,
+  "source_references_checked": 104,
+  "status": "DEVELOPMENT_REVIEW_PREVIEW_COMPLETE",
+  "strict_certificate": false,
+  "tested_code_unchanged": true,
+  "utility": "NOT_MEASURED"
+}

@@ -1,0 +1,1124 @@
+{
+  "anchor_sha256": "9d8566217753b3fd1187961b0e2009ca81e4b3a16c0f4f25e99a15f165d9f266",
+  "at": 1792576123.517476,
+  "budget": {
+    "generation_seconds": 558.326999999983,
+    "physical_attempts": 36,
+    "unfinished_attempts": []
+  },
+  "context_sha256": "8233f895f6e58b10ea827b8d16b709aca8a9d36cc1ff56795275882fe075fb80",
+  "declared_release_bytes": 528602604,
+  "declared_release_files": 123765,
+  "eligible": 8,
+  "manifest_sha256": "a470e889b701571af653bb30a1d9d3036a828096e8a7370f858d2788f01784eb",
+  "original_checklist": {
+    "blocked": 8,
+    "completed": 2,
+    "partial": 5,
+    "total": 16,
+    "unstarted": 1
+  },
+  "package_bytes": 602194502,
+  "package_files": 123854,
+  "preserved_identity": "full V36/V37 package inventories and current 687 qualification inputs checked",
+  "release_census": {
+    "data": {
+      "bytes": 13675,
+      "files": 1
+    },
+    "dataset_card.md": {
+      "bytes": 1294,
+      "files": 1
+    },
+    "engineering_acceptance.json": {
+      "bytes": 1016362,
+      "files": 1
+    },
+    "engineering_dependencies.json": {
+      "bytes": 11034179,
+      "files": 1
+    },
+    "engineering_isolation.json": {
+      "bytes": 1855,
+      "files": 1
+    },
+    "metrics.json": {
+      "bytes": 509,
+      "files": 1
+    },
+    "preview.json": {
+      "bytes": 8824,
+      "files": 1
+    },
+    "replay_root/NEW v2/qualification-v33.py": {
+      "bytes": 13127,
+      "files": 1
+    },
+    "replay_root/NEW v2/qualification-v34.py": {
+      "bytes": 6996,
+      "files": 1
+    },
+    "replay_root/NEW v2/qualification-v35.py": {
+      "bytes": 5250,
+      "files": 1
+    },
+    "replay_root/configs/example.yaml": {
+      "bytes": 219,
+      "files": 1
+    },
+    "replay_root/configs/experiment_example.yaml": {
+      "bytes": 584,
+      "files": 1
+    },
+    "replay_root/configs/generation_example.yaml": {
+      "bytes": 608,
+      "files": 1
+    },
+    "replay_root/configs/package_a": {
+      "bytes": 5033,
+      "files": 2
+    },
+    "replay_root/configs/product_example.yaml": {
+      "bytes": 578,
+      "files": 1
+    },
+    "replay_root/configs/production": {
+      "bytes": 15329,
+      "files": 10
+    },
+    "replay_root/configs/provenance_example.yaml": {
+      "bytes": 232,
+      "files": 1
+    },
+    "replay_root/configs/quality_example.yaml": {
+      "bytes": 422,
+      "files": 1
+    },
+    "replay_root/configs/quality_premium_93.yaml": {
+      "bytes": 600,
+      "files": 1
+    },
+    "replay_root/configs/sandbox_example.yaml": {
+      "bytes": 558,
+      "files": 1
+    },
+    "replay_root/configs/sandbox_production.yaml": {
+      "bytes": 481,
+      "files": 1
+    },
+    "replay_root/configs/task_catalog.yaml": {
+      "bytes": 1348,
+      "files": 1
+    },
+    "replay_root/configs/verification_example.yaml": {
+      "bytes": 346,
+      "files": 1
+    },
+    "replay_root/manifests/package-a-contract-quarantine.json": {
+      "bytes": 21741,
+      "files": 1
+    },
+    "replay_root/pyproject.toml": {
+      "bytes": 1832,
+      "files": 1
+    },
+    "replay_root/scratch/company_evaluation": {
+      "bytes": 309335057,
+      "files": 48026
+    },
+    "replay_root/scratch/funnel_experiment": {
+      "bytes": 204161602,
+      "files": 75170
+    },
+    "replay_root/scripts/company_generation_experiment.py": {
+      "bytes": 23127,
+      "files": 1
+    },
+    "replay_root/scripts/create_pilot002_diagnostic.py": {
+      "bytes": 2330,
+      "files": 1
+    },
+    "replay_root/scripts/diagnose_pilot001.py": {
+      "bytes": 8194,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_campaign.py": {
+      "bytes": 7487,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_checker_comparison.py": {
+      "bytes": 14338,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_criterion_preflight.py": {
+      "bytes": 1466,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_discrimination_measurement.py": {
+      "bytes": 7718,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_diversity_audit.py": {
+      "bytes": 4494,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_four_arm_stub.py": {
+      "bytes": 7051,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_fuzz.py": {
+      "bytes": 7518,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_guarded_operation.py": {
+      "bytes": 16265,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_hidden_audit.py": {
+      "bytes": 4374,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_logistics_counterexample.py": {
+      "bytes": 4746,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_metric_preflight.py": {
+      "bytes": 1739,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_oracle_breakages.py": {
+      "bytes": 1220,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_pipeline.py": {
+      "bytes": 17332,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_program_audit.py": {
+      "bytes": 5684,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_program_evidence.py": {
+      "bytes": 3507,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_qualification_authority.py": {
+      "bytes": 5526,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_qualification_receipts.py": {
+      "bytes": 12241,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_readiness.py": {
+      "bytes": 3373,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_readiness_count.py": {
+      "bytes": 1494,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_realism_profiles.py": {
+      "bytes": 6784,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_receipt_artifacts.py": {
+      "bytes": 24109,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_receipt_benchmark.py": {
+      "bytes": 4747,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_rejudge.py": {
+      "bytes": 14109,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_relation_audit.py": {
+      "bytes": 5545,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_reproducibility.py": {
+      "bytes": 1674,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_rule_audit.py": {
+      "bytes": 12694,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_rule_measurement.py": {
+      "bytes": 8471,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_rule_overlap.py": {
+      "bytes": 1079,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_score.py": {
+      "bytes": 3834,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_scrap_coverage.py": {
+      "bytes": 5325,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_shared_probes.py": {
+      "bytes": 2876,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_stub_worker.py": {
+      "bytes": 1454,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_survivors.py": {
+      "bytes": 2534,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_vacuity.py": {
+      "bytes": 2512,
+      "files": 1
+    },
+    "replay_root/scripts/engineering_validate_export.py": {
+      "bytes": 956,
+      "files": 1
+    },
+    "replay_root/scripts/funnel_experiment_runner.py": {
+      "bytes": 12700,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_buyer_review_facts.py": {
+      "bytes": 3729,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_challenge_repair.py": {
+      "bytes": 6087,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_evidence.py": {
+      "bytes": 10875,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_paused_run_guard.py": {
+      "bytes": 4366,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_phase10_count.py": {
+      "bytes": 2499,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_phase10_readiness.py": {
+      "bytes": 11645,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_phase14_count.py": {
+      "bytes": 3231,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_phase9_audit.py": {
+      "bytes": 7979,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_reaudit.py": {
+      "bytes": 3079,
+      "files": 1
+    },
+    "replay_root/scripts/package_a_reaudit_certify.py": {
+      "bytes": 2375,
+      "files": 1
+    },
+    "replay_root/scripts/phase12_fake_funnel_experiment.py": {
+      "bytes": 11407,
+      "files": 1
+    },
+    "replay_root/scripts/phase3_diagnostic.py": {
+      "bytes": 38880,
+      "files": 1
+    },
+    "replay_root/scripts/phase3_readiness_manifest.py": {
+      "bytes": 1998,
+      "files": 1
+    },
+    "replay_root/scripts/phase456_evidence.py": {
+      "bytes": 7743,
+      "files": 1
+    },
+    "replay_root/scripts/prepare_smoke_evidence.py": {
+      "bytes": 9404,
+      "files": 1
+    },
+    "replay_root/scripts/quality70_evidence.py": {
+      "bytes": 4435,
+      "files": 1
+    },
+    "replay_root/scripts/requalify_q5.py": {
+      "bytes": 6269,
+      "files": 1
+    },
+    "replay_root/scripts/run_funnel_generation_scratch.py": {
+      "bytes": 19147,
+      "files": 1
+    },
+    "replay_root/src/verified_data_factory": {
+      "bytes": 1517002,
+      "files": 204
+    },
+    "replay_root/templates/sql": {
+      "bytes": 130233,
+      "files": 75
+    },
+    "replay_root/tests/__init__.py": {
+      "bytes": 176,
+      "files": 1
+    },
+    "replay_root/tests/business_fixtures.py": {
+      "bytes": 5389,
+      "files": 1
+    },
+    "replay_root/tests/conftest.py": {
+      "bytes": 582,
+      "files": 1
+    },
+    "replay_root/tests/e2e": {
+      "bytes": 32789,
+      "files": 7
+    },
+    "replay_root/tests/integration": {
+      "bytes": 16200,
+      "files": 6
+    },
+    "replay_root/tests/product_fixtures.py": {
+      "bytes": 4272,
+      "files": 1
+    },
+    "replay_root/tests/provenance_fixtures.py": {
+      "bytes": 2663,
+      "files": 1
+    },
+    "replay_root/tests/quality_dataset.py": {
+      "bytes": 7631,
+      "files": 1
+    },
+    "replay_root/tests/stage4_role_worker.py": {
+      "bytes": 817,
+      "files": 1
+    },
+    "replay_root/tests/test_alternative_candidate_transforms.py": {
+      "bytes": 3141,
+      "files": 1
+    },
+    "replay_root/tests/test_business_benchmark.py": {
+      "bytes": 3153,
+      "files": 1
+    },
+    "replay_root/tests/test_business_claims.py": {
+      "bytes": 4083,
+      "files": 1
+    },
+    "replay_root/tests/test_business_cli.py": {
+      "bytes": 6897,
+      "files": 1
+    },
+    "replay_root/tests/test_business_customer.py": {
+      "bytes": 2982,
+      "files": 1
+    },
+    "replay_root/tests/test_business_economics.py": {
+      "bytes": 2086,
+      "files": 1
+    },
+    "replay_root/tests/test_business_evidence.py": {
+      "bytes": 2367,
+      "files": 1
+    },
+    "replay_root/tests/test_business_experiments.py": {
+      "bytes": 4514,
+      "files": 1
+    },
+    "replay_root/tests/test_business_pilot.py": {
+      "bytes": 2013,
+      "files": 1
+    },
+    "replay_root/tests/test_business_pipeline.py": {
+      "bytes": 7090,
+      "files": 1
+    },
+    "replay_root/tests/test_business_security.py": {
+      "bytes": 3706,
+      "files": 1
+    },
+    "replay_root/tests/test_business_stats.py": {
+      "bytes": 2060,
+      "files": 1
+    },
+    "replay_root/tests/test_business_tasks.py": {
+      "bytes": 27303,
+      "files": 1
+    },
+    "replay_root/tests/test_catalog.py": {
+      "bytes": 1588,
+      "files": 1
+    },
+    "replay_root/tests/test_checker_comparison_accounting.py": {
+      "bytes": 1947,
+      "files": 1
+    },
+    "replay_root/tests/test_checkpoint_join_bag.py": {
+      "bytes": 1446,
+      "files": 1
+    },
+    "replay_root/tests/test_checkpoint_selection_profiles.py": {
+      "bytes": 7841,
+      "files": 1
+    },
+    "replay_root/tests/test_company_delivery_protocol.py": {
+      "bytes": 677,
+      "files": 1
+    },
+    "replay_root/tests/test_company_generation_budget.py": {
+      "bytes": 5459,
+      "files": 1
+    },
+    "replay_root/tests/test_coverage_templates.py": {
+      "bytes": 2688,
+      "files": 1
+    },
+    "replay_root/tests/test_delivery_adversarial.py": {
+      "bytes": 11362,
+      "files": 1
+    },
+    "replay_root/tests/test_delivery_allocation.py": {
+      "bytes": 835,
+      "files": 1
+    },
+    "replay_root/tests/test_delivery_profile_integration.py": {
+      "bytes": 6397,
+      "files": 1
+    },
+    "replay_root/tests/test_diverse_templates.py": {
+      "bytes": 11929,
+      "files": 1
+    },
+    "replay_root/tests/test_edge_representation.py": {
+      "bytes": 4704,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_comparator.py": {
+      "bytes": 5013,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_contract_relations.py": {
+      "bytes": 4011,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_criterion_preflight.py": {
+      "bytes": 2890,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_discrimination_measurement.py": {
+      "bytes": 1400,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_export.py": {
+      "bytes": 8901,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_four_arm_stub.py": {
+      "bytes": 1069,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_guarded_operation.py": {
+      "bytes": 14888,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_hidden_diversity.py": {
+      "bytes": 4688,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_isolation.py": {
+      "bytes": 2606,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_mutation_details.py": {
+      "bytes": 642,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_observed_fuzz.py": {
+      "bytes": 1909,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_output_authority.py": {
+      "bytes": 6886,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_pipeline.py": {
+      "bytes": 4651,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_qualification_receipts.py": {
+      "bytes": 1317,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_readiness.py": {
+      "bytes": 4544,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_receipt_outcomes.py": {
+      "bytes": 1495,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_rejudge.py": {
+      "bytes": 3401,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_rule_measurement.py": {
+      "bytes": 1502,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_rule_qualification.py": {
+      "bytes": 1696,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_score.py": {
+      "bytes": 2272,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_strength.py": {
+      "bytes": 2019,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_timeout_recovery.py": {
+      "bytes": 1604,
+      "files": 1
+    },
+    "replay_root/tests/test_engineering_timestamp_inputs.py": {
+      "bytes": 1184,
+      "files": 1
+    },
+    "replay_root/tests/test_exact_queue_types.py": {
+      "bytes": 5737,
+      "files": 1
+    },
+    "replay_root/tests/test_fixtures.py": {
+      "bytes": 3997,
+      "files": 1
+    },
+    "replay_root/tests/test_funnel_experiment_runner.py": {
+      "bytes": 2353,
+      "files": 1
+    },
+    "replay_root/tests/test_funnel_generation_scratch.py": {
+      "bytes": 1513,
+      "files": 1
+    },
+    "replay_root/tests/test_gen_batch.py": {
+      "bytes": 3036,
+      "files": 1
+    },
+    "replay_root/tests/test_gen_candidate.py": {
+      "bytes": 4583,
+      "files": 1
+    },
+    "replay_root/tests/test_gen_parser.py": {
+      "bytes": 2011,
+      "files": 1
+    },
+    "replay_root/tests/test_gen_prompt.py": {
+      "bytes": 2913,
+      "files": 1
+    },
+    "replay_root/tests/test_gen_provider.py": {
+      "bytes": 6308,
+      "files": 1
+    },
+    "replay_root/tests/test_grade_candidate_transforms.py": {
+      "bytes": 2375,
+      "files": 1
+    },
+    "replay_root/tests/test_grade_revision_ambiguous_tie.py": {
+      "bytes": 1972,
+      "files": 1
+    },
+    "replay_root/tests/test_grade_v2_domain.py": {
+      "bytes": 2012,
+      "files": 1
+    },
+    "replay_root/tests/test_identity.py": {
+      "bytes": 2165,
+      "files": 1
+    },
+    "replay_root/tests/test_instructions.py": {
+      "bytes": 899,
+      "files": 1
+    },
+    "replay_root/tests/test_inventory_integer_domain.py": {
+      "bytes": 1003,
+      "files": 1
+    },
+    "replay_root/tests/test_inventory_row_bag_v2.py": {
+      "bytes": 1457,
+      "files": 1
+    },
+    "replay_root/tests/test_language_titles_profile.py": {
+      "bytes": 11708,
+      "files": 1
+    },
+    "replay_root/tests/test_legacy_adversarial.py": {
+      "bytes": 9867,
+      "files": 1
+    },
+    "replay_root/tests/test_logistics_final_leg_bag.py": {
+      "bytes": 2138,
+      "files": 1
+    },
+    "replay_root/tests/test_logistics_funnel_v2.py": {
+      "bytes": 7645,
+      "files": 1
+    },
+    "replay_root/tests/test_lowest_quote.py": {
+      "bytes": 9662,
+      "files": 1
+    },
+    "replay_root/tests/test_models.py": {
+      "bytes": 2536,
+      "files": 1
+    },
+    "replay_root/tests/test_package_a_challenge_repair.py": {
+      "bytes": 1261,
+      "files": 1
+    },
+    "replay_root/tests/test_pareto_observed_forms.py": {
+      "bytes": 7189,
+      "files": 1
+    },
+    "replay_root/tests/test_pareto_shipping_profile.py": {
+      "bytes": 10082,
+      "files": 1
+    },
+    "replay_root/tests/test_phase0_structure.py": {
+      "bytes": 2565,
+      "files": 1
+    },
+    "replay_root/tests/test_phase10_readiness.py": {
+      "bytes": 3769,
+      "files": 1
+    },
+    "replay_root/tests/test_phase12_fake_funnel_experiment.py": {
+      "bytes": 2103,
+      "files": 1
+    },
+    "replay_root/tests/test_phase14_report.py": {
+      "bytes": 2066,
+      "files": 1
+    },
+    "replay_root/tests/test_phase3_breakage_evidence.py": {
+      "bytes": 961,
+      "files": 1
+    },
+    "replay_root/tests/test_phase3_diagnostic.py": {
+      "bytes": 3001,
+      "files": 1
+    },
+    "replay_root/tests/test_phase3_scheduler.py": {
+      "bytes": 6766,
+      "files": 1
+    },
+    "replay_root/tests/test_phase6_saas_v2_fuzz.py": {
+      "bytes": 1046,
+      "files": 1
+    },
+    "replay_root/tests/test_phase8_logistics_breakage_evidence.py": {
+      "bytes": 987,
+      "files": 1
+    },
+    "replay_root/tests/test_phase9_audits.py": {
+      "bytes": 1445,
+      "files": 1
+    },
+    "replay_root/tests/test_pilot001_regressions.py": {
+      "bytes": 3775,
+      "files": 1
+    },
+    "replay_root/tests/test_playback_candidate_transforms.py": {
+      "bytes": 1765,
+      "files": 1
+    },
+    "replay_root/tests/test_premium_candidate.py": {
+      "bytes": 2442,
+      "files": 1
+    },
+    "replay_root/tests/test_previous_play_bag.py": {
+      "bytes": 613,
+      "files": 1
+    },
+    "replay_root/tests/test_production_preparation.py": {
+      "bytes": 18306,
+      "files": 1
+    },
+    "replay_root/tests/test_products_census.py": {
+      "bytes": 4679,
+      "files": 1
+    },
+    "replay_root/tests/test_products_cli.py": {
+      "bytes": 2697,
+      "files": 1
+    },
+    "replay_root/tests/test_products_config.py": {
+      "bytes": 1975,
+      "files": 1
+    },
+    "replay_root/tests/test_products_novelty_economics.py": {
+      "bytes": 3284,
+      "files": 1
+    },
+    "replay_root/tests/test_products_release.py": {
+      "bytes": 15371,
+      "files": 1
+    },
+    "replay_root/tests/test_products_release_gates.py": {
+      "bytes": 4639,
+      "files": 1
+    },
+    "replay_root/tests/test_products_row_manifest.py": {
+      "bytes": 4219,
+      "files": 1
+    },
+    "replay_root/tests/test_products_serializers.py": {
+      "bytes": 2405,
+      "files": 1
+    },
+    "replay_root/tests/test_products_splits.py": {
+      "bytes": 3311,
+      "files": 1
+    },
+    "replay_root/tests/test_products_visibility.py": {
+      "bytes": 1860,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_canonical.py": {
+      "bytes": 2950,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_checkpoint_swap.py": {
+      "bytes": 2213,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_export.py": {
+      "bytes": 7973,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_graph.py": {
+      "bytes": 5053,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_hashing.py": {
+      "bytes": 3457,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_lineage.py": {
+      "bytes": 6573,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_reproducibility.py": {
+      "bytes": 8023,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_snapshots.py": {
+      "bytes": 4966,
+      "files": 1
+    },
+    "replay_root/tests/test_provenance_supply_chain.py": {
+      "bytes": 5868,
+      "files": 1
+    },
+    "replay_root/tests/test_qualification_named.py": {
+      "bytes": 1472,
+      "files": 1
+    },
+    "replay_root/tests/test_qualification_snapshot_once.py": {
+      "bytes": 2915,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_audit.py": {
+      "bytes": 5109,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_cli.py": {
+      "bytes": 3080,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_diversity.py": {
+      "bytes": 2841,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_duplicates.py": {
+      "bytes": 3110,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_export.py": {
+      "bytes": 6768,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_golden.py": {
+      "bytes": 7516,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_mutation_gate.py": {
+      "bytes": 4600,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_population_metrics.py": {
+      "bytes": 1524,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_quarantine.py": {
+      "bytes": 3086,
+      "files": 1
+    },
+    "replay_root/tests/test_quality_records.py": {
+      "bytes": 4883,
+      "files": 1
+    },
+    "replay_root/tests/test_queue_batches_profile.py": {
+      "bytes": 10262,
+      "files": 1
+    },
+    "replay_root/tests/test_queue_observed_forms.py": {
+      "bytes": 9133,
+      "files": 1
+    },
+    "replay_root/tests/test_reconciliation_cte_structure.py": {
+      "bytes": 8610,
+      "files": 1
+    },
+    "replay_root/tests/test_reconciliation_integer_domain.py": {
+      "bytes": 652,
+      "files": 1
+    },
+    "replay_root/tests/test_record_delivery_v2_integration.py": {
+      "bytes": 1837,
+      "files": 1
+    },
+    "replay_root/tests/test_registry.py": {
+      "bytes": 1707,
+      "files": 1
+    },
+    "replay_root/tests/test_renewal_coverage_profile.py": {
+      "bytes": 9747,
+      "files": 1
+    },
+    "replay_root/tests/test_renewal_probe_roundtrip.py": {
+      "bytes": 4457,
+      "files": 1
+    },
+    "replay_root/tests/test_reproducibility.py": {
+      "bytes": 2556,
+      "files": 1
+    },
+    "replay_root/tests/test_review_package.py": {
+      "bytes": 6325,
+      "files": 1
+    },
+    "replay_root/tests/test_runner_integrity.py": {
+      "bytes": 6624,
+      "files": 1
+    },
+    "replay_root/tests/test_runtime_requirement_counterexamples.py": {
+      "bytes": 1180,
+      "files": 1
+    },
+    "replay_root/tests/test_saas_funnel_oracle.py": {
+      "bytes": 6451,
+      "files": 1
+    },
+    "replay_root/tests/test_saas_v2_differential_sql.py": {
+      "bytes": 5484,
+      "files": 1
+    },
+    "replay_root/tests/test_sandbox_docker_cmd.py": {
+      "bytes": 4878,
+      "files": 1
+    },
+    "replay_root/tests/test_sandbox_executor.py": {
+      "bytes": 9519,
+      "files": 1
+    },
+    "replay_root/tests/test_sandbox_fixture.py": {
+      "bytes": 1235,
+      "files": 1
+    },
+    "replay_root/tests/test_sandbox_harness.py": {
+      "bytes": 3029,
+      "files": 1
+    },
+    "replay_root/tests/test_sandbox_models.py": {
+      "bytes": 2767,
+      "files": 1
+    },
+    "replay_root/tests/test_sandbox_policy.py": {
+      "bytes": 2012,
+      "files": 1
+    },
+    "replay_root/tests/test_semantics.py": {
+      "bytes": 3364,
+      "files": 1
+    },
+    "replay_root/tests/test_serialization.py": {
+      "bytes": 3124,
+      "files": 1
+    },
+    "replay_root/tests/test_sla_candidate_transforms.py": {
+      "bytes": 3846,
+      "files": 1
+    },
+    "replay_root/tests/test_stage1_exists_relationships.py": {
+      "bytes": 1370,
+      "files": 1
+    },
+    "replay_root/tests/test_stage1_foundation.py": {
+      "bytes": 5932,
+      "files": 1
+    },
+    "replay_root/tests/test_stage1_round2.py": {
+      "bytes": 3281,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_authority_transaction.py": {
+      "bytes": 2680,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_behavior_authority.py": {
+      "bytes": 7444,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_bundle_profiles.py": {
+      "bytes": 1345,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_granular_rules.py": {
+      "bytes": 3997,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_receipt_producer.py": {
+      "bytes": 16034,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_receipt_validation.py": {
+      "bytes": 39738,
+      "files": 1
+    },
+    "replay_root/tests/test_stage2_runtime_public_rules.py": {
+      "bytes": 2276,
+      "files": 1
+    },
+    "replay_root/tests/test_stage3_durable_attempts.py": {
+      "bytes": 2845,
+      "files": 1
+    },
+    "replay_root/tests/test_stage4_publication.py": {
+      "bytes": 5306,
+      "files": 1
+    },
+    "replay_root/tests/test_stage5_quarantine_resolution.py": {
+      "bytes": 4354,
+      "files": 1
+    },
+    "replay_root/tests/test_stage5_sla_profile.py": {
+      "bytes": 4140,
+      "files": 1
+    },
+    "replay_root/tests/test_stage7_metric_population.py": {
+      "bytes": 699,
+      "files": 1
+    },
+    "replay_root/tests/test_subquery_threshold_boundary.py": {
+      "bytes": 1965,
+      "files": 1
+    },
+    "replay_root/tests/test_template_safe_loader.py": {
+      "bytes": 982,
+      "files": 1
+    },
+    "replay_root/tests/test_templates.py": {
+      "bytes": 1704,
+      "files": 1
+    },
+    "replay_root/tests/test_throughput_structural_rules.py": {
+      "bytes": 3469,
+      "files": 1
+    },
+    "replay_root/tests/test_validation.py": {
+      "bytes": 1499,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_cli.py": {
+      "bytes": 2557,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_comparator.py": {
+      "bytes": 6315,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_determinism_fallback.py": {
+      "bytes": 2614,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_hidden.py": {
+      "bytes": 3457,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_hypothesis.py": {
+      "bytes": 3227,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_independence.py": {
+      "bytes": 8699,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_mutations.py": {
+      "bytes": 9164,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_oracles.py": {
+      "bytes": 15118,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_properties.py": {
+      "bytes": 5153,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_serialization.py": {
+      "bytes": 3282,
+      "files": 1
+    },
+    "replay_root/tests/test_verify_verdicts.py": {
+      "bytes": 8717,
+      "files": 1
+    },
+    "replay_root/tests/verify_sql_samples.py": {
+      "bytes": 6786,
+      "files": 1
+    },
+    "replay_root/tests/verify_testkit.py": {
+      "bytes": 6013,
+      "files": 1
+    },
+    "schema.json": {
+      "bytes": 977,
+      "files": 1
+    },
+    "split_policy.json": {
+      "bytes": 232,
+      "files": 1
+    },
+    "validate_engineering.py": {
+      "bytes": 956,
+      "files": 1
+    }
+  },
+  "replayed": 8,
+  "source_current": true,
+  "source_freeze_sha256": "4f670c4cc43f86d79b36d960d8cd366296670b5eee963e6bda86b9327ab0eded",
+  "spec_sha256": "e36c65908926032ca4914fe5723e5bca940a37516aa9f471940a329f0ca6cd3b",
+  "status": "VERIFIED_FROZEN_BASELINE",
+  "suite_source_sha256": "c2353dd2d7910f56b23dba3f270321654dd8f0b32624220568934b23277cb420"
+}
