@@ -65,6 +65,9 @@ class ProductionConfig(BaseModel):
     diversity_warnings: dict[str, float] = Field(default_factory=dict)
     private_benchmark_target: int = Field(default=150, ge=100, le=200)
     business_hypothesis: str = "INSUFFICIENT_EVIDENCE"
+    schedule_mode: Literal["legacy", "distinct_contract"] = "legacy"
+    selected_contract_ids: dict[str, list[str]] = Field(default_factory=dict)
+    distinct_contract_selection: Literal["contract_id_ascending"] = "contract_id_ascending"
 
     @field_validator("model")
     @classmethod
@@ -90,4 +93,8 @@ class ProductionConfig(BaseModel):
             raise ValueError("initial task batch exceeds max_total_tasks")
         if self.output_dir.rstrip("/\\").endswith("production-001"):
             raise ValueError("output_dir must not reuse historical production-001")
+        if self.schedule_mode == "distinct_contract" and set(self.selected_contract_ids) != set(FAMILIES):
+            raise ValueError("distinct_contract mode must select contract IDs for every family")
+        if any(not contract_id for ids in self.selected_contract_ids.values() for contract_id in ids):
+            raise ValueError("selected contract IDs must be nonempty")
         return self

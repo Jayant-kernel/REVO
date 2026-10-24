@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 from collections import Counter
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,7 @@ import yaml
 
 from verified_data_factory.generation.models import PROMPT_VERSION
 from verified_data_factory.provenance import content_id
+from verified_data_factory.task_engine.errors import RegistryError
 
 from .errors import ProductionConfigError
 from .models import ProductionConfig
@@ -29,7 +31,14 @@ def load_config(path: str | Path) -> ProductionConfig:
 
 
 def config_id(config: ProductionConfig) -> str:
-    return content_id("PRODUCTION_CONFIG", config.config_version, config.model_dump(mode="json"))
+    payload = config.model_dump(mode="json")
+    if config.schedule_mode == "legacy" and not config.selected_contract_ids:
+        # These fields did not exist in frozen legacy configurations, so their
+        # defaults must not invalidate an existing manifest on resume.
+        payload.pop("schedule_mode")
+        payload.pop("selected_contract_ids")
+        payload.pop("distinct_contract_selection")
+    return content_id("PRODUCTION_CONFIG", config.config_version, payload)
 
 
 def policy_file_hashes(config: ProductionConfig) -> dict[str, str]:
@@ -49,6 +58,18 @@ def policy_file_hashes(config: ProductionConfig) -> dict[str, str]:
         raise ProductionConfigError(f"referenced policy cannot be hashed: {exc}") from exc
 
 
+def implementation_id() -> str:
+    """Bind resume to executable source, including uncommitted local changes."""
+    package = Path(__file__).resolve().parents[1]
+    files = {
+        path.relative_to(package).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(package.rglob("*.py"))
+    }
+    return "sha256:" + hashlib.sha256(
+        json.dumps(files, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
 def assert_resume_config(config: ProductionConfig, manifest_path: str | Path) -> None:
     """Reject resume if any identity-bearing configuration field changed."""
     try:
@@ -65,6 +86,14 @@ def assert_resume_config(config: ProductionConfig, manifest_path: str | Path) ->
 def requests_made() -> int:
     """Test seam: planning must never make provider or Docker requests."""
     return 0
+
+
+def _matches_ollama_digest(revision: str, digest: object) -> bool:
+    """Match the exact observed Ollama digest while retaining its evidence type."""
+    if not isinstance(digest, str):
+        return False
+    namespace, separator, observed = revision.partition(":")
+    return separator == ":" and namespace in {"ollama-digest", "ollama-manifest"} and observed == digest
 
 
 def plan(config: ProductionConfig) -> dict[str, Any]:
@@ -121,13 +150,173 @@ def _template_diversity(config: ProductionConfig, registry: Any) -> dict[str, An
     }
 
 
-def preflight(config: ProductionConfig, root: str | Path = ".") -> dict[str, Any]:
+ContractReadiness = Callable[[str], bool]
+_READINESS_MANIFEST_VERSIONS = {"1.0", "2.0"}
+_READINESS_COLUMNS = (
+    "template_validates",
+    "fixture_generator",
+    "independent_oracle",
+    "registry_entry",
+    "adversarial_case",
+    "reference_sql_mapping",
+    "mutation_applicability",
+    "focused_test",
+)
+
+
+def _quarantined_contract_ids(manifest_path: Path) -> set[str]:
+    """Load Package A's additive selection exclusions, when present."""
+    path = manifest_path.parent / "package-a-contract-quarantine.json"
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, TypeError, ValueError) as exc:
+        raise ProductionConfigError(f"quarantine file is unreadable: {exc}") from exc
+    if payload.get("version") != 1 or not isinstance(payload.get("quarantines"), list):
+        raise ProductionConfigError("quarantine file has invalid structure")
+    ids: set[str] = set()
+    for entry in payload["quarantines"]:
+        if (
+            not isinstance(entry, dict)
+            or not isinstance(entry.get("contract_id"), str)
+            or not isinstance(entry.get("contract_version"), int)
+            or not isinstance(entry.get("reason"), str)
+            or not isinstance(entry.get("evidence_id"), str)
+            or not isinstance(entry.get("scope"), list)
+            or "production" not in entry["scope"]
+        ):
+            raise ProductionConfigError("quarantine file has invalid contract entry")
+        ids.add(entry["contract_id"])
+    return ids
+
+
+def contract_readiness_from_manifest(path: str | Path) -> ContractReadiness:
+    """Load a hash-verified Phase 3 readiness manifest as a scheduler callback."""
+    manifest_path = Path(path)
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest_hash = manifest.pop("manifest_hash")
+    except (OSError, AttributeError, KeyError, TypeError, ValueError) as exc:
+        raise ProductionConfigError(f"readiness manifest is unreadable: {exc}") from exc
+    payload = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    expected_hash = "sha256:" + hashlib.sha256(payload).hexdigest()
+    if manifest_hash != expected_hash:
+        raise ProductionConfigError("readiness manifest hash does not match its contents")
+    if manifest.get("manifest_version") == "engineering-3.0":
+        from verified_data_factory.verification.readiness import qualify, sha256
+        root = Path(__file__).resolve().parents[3]
+        try:
+            reference = manifest["evidence_index"]
+            index_path = (root / reference["path"]).resolve()
+            if not index_path.is_relative_to(root) or sha256(index_path) != reference["sha256"]:
+                raise ProductionConfigError("engineering readiness evidence index is stale")
+            index = json.loads(index_path.read_text(encoding="utf-8"))
+            records = index["contracts"]
+            if len({(r["contract_id"], r["contract_version"]) for r in records}) != len(records):
+                raise ProductionConfigError("duplicate engineering evidence contract")
+            expected = {(r["contract_id"], r["template_version"]) for r in manifest["contracts"]}
+            if expected != {(r["contract_id"], r["contract_version"]) for r in records}:
+                raise ProductionConfigError("engineering manifest and evidence population disagree")
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            raise ProductionConfigError(f"engineering readiness evidence invalid: {exc}") from exc
+        quarantined = _quarantined_contract_ids(manifest_path)
+        def engineering_ready(contract_id: str) -> bool:
+            matches = [r for r in records if r["contract_id"] == contract_id]
+            return (contract_id not in quarantined and len(matches) == 1
+                    and qualify(root, matches[0])["eligible"] is True)
+        return engineering_ready
+    if manifest.get("manifest_version") not in _READINESS_MANIFEST_VERSIONS:
+        raise ProductionConfigError("readiness manifest has an unsupported version")
+    columns = manifest.get("readiness_columns")
+    contracts = manifest.get("contracts")
+    if columns != list(_READINESS_COLUMNS):
+        raise ProductionConfigError("readiness manifest has invalid readiness columns")
+    if not isinstance(contracts, list):
+        raise ProductionConfigError("readiness manifest has invalid contracts")
+    statuses: dict[str, bool] = {}
+    for contract in contracts:
+        if (
+            not isinstance(contract, dict)
+            or not isinstance(contract.get("contract_id"), str)
+            or not isinstance(contract.get("family"), str)
+            or not isinstance(contract.get("template_version"), int)
+            or contract.get("status") not in {"FULLY_VERIFIED", "NOT_READY", "QUARANTINED"}
+        ):
+            raise ProductionConfigError("readiness manifest has invalid contract entry")
+        contract_id = contract["contract_id"]
+        if contract_id in statuses or any(
+            contract.get(column) not in ({"yes", "no", "unknown", "differential"} if column == "independent_oracle" else {"yes", "no", "unknown"})
+            for column in columns
+        ):
+            raise ProductionConfigError("readiness manifest has invalid or duplicate contract status")
+        statuses[contract_id] = contract.get("status") == "FULLY_VERIFIED" and all(
+            contract[column] == "yes" or (column == "independent_oracle" and contract[column] == "differential")
+            for column in columns
+        )
+    quarantined = _quarantined_contract_ids(manifest_path)
+    return lambda contract_id: contract_id not in quarantined and statuses.get(contract_id, False)
+
+
+def _distinct_contract_preflight(
+    config: ProductionConfig,
+    registry: Any,
+    contract_readiness: ContractReadiness | None,
+) -> dict[str, Any]:
+    """Validate explicitly selected contracts without owning their evidence."""
+    if config.schedule_mode == "legacy":
+        return {"ok": True, "mode": "legacy"}
+
+    failures: dict[str, list[str]] = {}
+    selected: dict[str, list[str]] = {}
+    for family, scheduled_count in config.family_distribution.items():
+        contract_ids = config.selected_contract_ids[family]
+        selected[family] = sorted(contract_ids)
+        family_failures: list[str] = []
+        if len(contract_ids) < scheduled_count:
+            family_failures.append("insufficient selected contracts")
+        if len(set(contract_ids)) != len(contract_ids):
+            family_failures.append("duplicate selected contract IDs")
+        for contract_id in contract_ids:
+            try:
+                template = registry.get(contract_id)
+            except (RegistryError, ValueError):
+                family_failures.append(f"unknown contract ID {contract_id}")
+                continue
+            if template.family != family:
+                family_failures.append(f"contract ID {contract_id} belongs to {template.family}")
+            elif contract_readiness is None or not contract_readiness(contract_id):
+                family_failures.append(f"contract ID {contract_id} is not fully verified")
+        if family_failures:
+            failures[family] = family_failures
+    return {
+        "ok": not failures,
+        "mode": config.schedule_mode,
+        "selection_rule": config.distinct_contract_selection,
+        "selected_contract_ids": selected,
+        "failures": failures,
+    }
+
+
+def preflight(
+    config: ProductionConfig,
+    root: str | Path = ".",
+    *,
+    contract_readiness: ContractReadiness | None = None,
+    readiness_manifest: str | Path | None = None,
+) -> dict[str, Any]:
+    if contract_readiness is not None and readiness_manifest is not None:
+        raise ProductionConfigError("supply either a readiness manifest or a readiness callback, not both")
+    if readiness_manifest is not None:
+        contract_readiness = contract_readiness_from_manifest(readiness_manifest)
     root = Path(root)
     results: dict[str, Any] = {"production_config_id": config_id(config), "checks": {}}
     from verified_data_factory.task_engine import load_builtin_registry
 
-    results["checks"]["template_diversity"] = _template_diversity(
-        config, load_builtin_registry()
+    registry = load_builtin_registry()
+    results["checks"]["template_diversity"] = _template_diversity(config, registry)
+    results["checks"]["distinct_contracts"] = _distinct_contract_preflight(
+        config, registry, contract_readiness
     )
     sandbox_settings: Any | None = None
     try:
@@ -149,7 +338,7 @@ def preflight(config: ProductionConfig, root: str | Path = ".") -> dict[str, Any
     try:
         tags = httpx.get(config.model.endpoint.removesuffix("/v1") + "/api/tags", timeout=10).json().get("models", [])
         found = next((m for m in tags if m.get("name") == config.model.model_id), None)
-        results["checks"]["model"] = {"ok": bool(found and found.get("digest") and config.model.model_revision.endswith(found["digest"])), "available": bool(found), "digest": (found or {}).get("digest")}
+        results["checks"]["model"] = {"ok": bool(found and _matches_ollama_digest(config.model.model_revision, found.get("digest"))), "available": bool(found), "digest": (found or {}).get("digest")}
     except (httpx.HTTPError, KeyError, TypeError, ValueError) as exc:
         results["checks"]["model"] = {"ok": False, "message": str(exc)}
     docker_ok, docker_info = _docker(["info", "--format", "{{.ServerVersion}}"])

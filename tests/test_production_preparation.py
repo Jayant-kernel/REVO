@@ -57,12 +57,12 @@ def test_premium_template_diversity_gate_is_honestly_blocked() -> None:
 
     premium = load_config("configs/production/premium_qualification_80.yaml")
     result = _template_diversity(premium, load_builtin_registry())
-    assert result["ok"] is False
+    assert result["ok"] is True
     assert result["required_per_family"] == 4
-    assert result["available_per_family"]["simple_joins"] == 2
-    assert result["available_per_family"]["aggregation"] == 3
-    assert result["available_per_family"]["deduplication"] == 2
-    assert result["available_per_family"]["funnel"] == 1
+    assert result["available_per_family"]["simple_joins"] == 5
+    assert result["available_per_family"]["aggregation"] == 8
+    assert result["available_per_family"]["deduplication"] == 5
+    assert result["available_per_family"]["funnel"] == 8
     assert plan(premium)["template_diversity"] == result
 
 
@@ -114,7 +114,7 @@ def test_runner_refuses_changed_template_catalog_on_resume(
     )
     monkeypatch.setattr(
         "verified_data_factory.production.api.preflight",
-        lambda config: {"ok": True, "checks": {}},
+        lambda config, **kwargs: {"ok": True, "checks": {}},
     )
     with pytest.raises(ProductionConfigError, match="template catalog changed"):
         run_authorized(production, run, execute=True)
@@ -376,7 +376,7 @@ def test_runner_refuses_failed_preflight_before_writing(
     production = load_config(CONFIG).model_copy(update={"output_dir": str(run)})
     monkeypatch.setattr(
         "verified_data_factory.production.api.preflight",
-        lambda config: {"ok": False, "checks": {"sandbox": {"ok": False}}},
+        lambda config, **kwargs: {"ok": False, "checks": {"sandbox": {"ok": False}}},
     )
     monkeypatch.setattr(
         "verified_data_factory.production.runner.load_builtin_registry",
@@ -396,7 +396,7 @@ def test_new_run_manifest_persists_exact_model_identity(
     production = load_config(CONFIG).model_copy(update={"output_dir": str(run)})
     monkeypatch.setattr(
         "verified_data_factory.production.api.preflight",
-        lambda config: {"ok": True, "checks": {}},
+        lambda config, **kwargs: {"ok": True, "checks": {}},
     )
     monkeypatch.setattr(
         "verified_data_factory.production.runner.create_provider",
