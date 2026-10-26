@@ -1,0 +1,621 @@
+{
+  "quarantines": [
+    {
+      "contract_id": "sql.funnel.logistics_parcel_delivery",
+      "contract_version": 1,
+      "evidence_id": "phase1-legacy-saas-provenance-20261004",
+      "reason": "Contract-specific verification is reopened; the current contract lacks the required maximum-gap semantics and evidence.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.logistics_parcel_delivery",
+      "contract_version": 2,
+      "evidence_id": "phase8-logistics-verifier-inconclusive",
+      "reason": "Forward v2 has focused semantic evidence but the production verifier returned INCONCLUSIVE, so it is not eligible for selection.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.checkout_paid_session",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.curriculum_gate_completion",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.kyc_document_approval",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.parcel_exception_recovery",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.support_resolution_chain",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.completion",
+      "contract_version": 3,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Excluded by the frozen mutation-applicability assessment and not Phase 8 qualified.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.fulfillment_sla_dashboard",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.grouped",
+      "contract_version": 2,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.payment_net_settled",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.product_unique_conversion",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.support_sla_breaches",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.top_category_sales",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.aggregation.warehouse_throughput",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.category_descendant_sales",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.customer_first_month_repeat",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.inventory_net_flow",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.logistics_depot_delay",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.monthly",
+      "contract_version": 4,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.order_line_reconciliation",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.saas_mrr_changes",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.cte.session_funnel_completion",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.dedup.education_grade_revisions",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.dedup.latest",
+      "contract_version": 2,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.dedup.payments_latest_profile",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.dedup.refund_prefer_approved",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.education_completed_enrollment",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.logistics_final_leg",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.manufacturing_approved_supplier",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.multi",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.retention.30_day",
+      "contract_version": 2,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.retention.clinic_followup_window",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.retention.media_week_two_return",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.retention.saas_repeat_payment",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.clinic_scheduled_clinician",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.payments_country_transfer",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.saas_paid_invoices",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.joins.simple",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.subqueries.customer_outreach",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.subqueries.education_all_required",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.subqueries.exists",
+      "contract_version": 2,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.subqueries.payments_no_settlement",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.subqueries.support_unresolved_reopen",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.clinic_weekly_visits",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.inventory_daily_stock",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.logistics_service_level_as_of",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.manufacturing_shift_downtime",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.media_first_full_week_viewers",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.monthly",
+      "contract_version": 5,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.saas_account_snapshot",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.temporal.saas_trial_activation",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.windows.logistics_previous_stop",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.windows.media_previous_play",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.windows.payments_risk_rank",
+      "contract_version": 1,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.windows.ranked",
+      "contract_version": 2,
+      "evidence_id": "engineering-4-rule-audit",
+      "reason": "complete requirement-specific counterexample evidence is absent; do not infer intent or proof from registration",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    }
+  ],
+  "version": 1
+}

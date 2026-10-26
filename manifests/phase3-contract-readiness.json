@@ -1,0 +1,356 @@
+{
+  "manifest_version": "engineering-3.0",
+  "evidence_index": {
+    "path": "scratch/funnel_experiment/engineering/phase6-contract-evidence.json",
+    "sha256": "73be9bf7d729c07a69216a7b6cecebb023094ffde62ddad5f344386b2ea51f95"
+  },
+  "contracts": [
+    {
+      "contract_id": "sql.aggregation.fulfillment_sla_dashboard",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.aggregation.grouped",
+      "template_version": 2,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.aggregation.manufacturing_line_scrap",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "NOT_READY"
+    },
+    {
+      "contract_id": "sql.aggregation.payment_net_settled",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.aggregation.product_unique_conversion",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.aggregation.support_sla_breaches",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.aggregation.top_category_sales",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.aggregation.warehouse_throughput",
+      "template_version": 1,
+      "family": "aggregation",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.category_descendant_sales",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.customer_first_month_repeat",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.inventory_net_flow",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.logistics_depot_delay",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.monthly",
+      "template_version": 4,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.order_line_reconciliation",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.saas_mrr_changes",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.cte.session_funnel_completion",
+      "template_version": 1,
+      "family": "cte",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.dedup.education_grade_revisions",
+      "template_version": 1,
+      "family": "deduplication",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.dedup.latest",
+      "template_version": 2,
+      "family": "deduplication",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.dedup.payments_latest_profile",
+      "template_version": 1,
+      "family": "deduplication",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.dedup.refund_prefer_approved",
+      "template_version": 1,
+      "family": "deduplication",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.checkout_paid_session",
+      "template_version": 1,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.completion",
+      "template_version": 3,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.curriculum_gate_completion",
+      "template_version": 1,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.kyc_document_approval",
+      "template_version": 1,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.logistics_parcel_delivery",
+      "template_version": 2,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.parcel_exception_recovery",
+      "template_version": 1,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.funnel.saas_activation_payment",
+      "template_version": 2,
+      "family": "funnel",
+      "status": "NOT_READY"
+    },
+    {
+      "contract_id": "sql.funnel.support_resolution_chain",
+      "template_version": 1,
+      "family": "funnel",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.clinic_scheduled_clinician",
+      "template_version": 1,
+      "family": "simple_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.education_completed_enrollment",
+      "template_version": 1,
+      "family": "multi_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.logistics_final_leg",
+      "template_version": 1,
+      "family": "multi_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.manufacturing_approved_supplier",
+      "template_version": 1,
+      "family": "multi_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.multi",
+      "template_version": 1,
+      "family": "multi_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.payments_country_transfer",
+      "template_version": 1,
+      "family": "simple_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.saas_paid_invoices",
+      "template_version": 1,
+      "family": "simple_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.joins.simple",
+      "template_version": 1,
+      "family": "simple_joins",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.retention.30_day",
+      "template_version": 2,
+      "family": "retention",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.retention.clinic_followup_window",
+      "template_version": 1,
+      "family": "retention",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.retention.media_week_two_return",
+      "template_version": 1,
+      "family": "retention",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.retention.saas_repeat_payment",
+      "template_version": 1,
+      "family": "retention",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.subqueries.customer_outreach",
+      "template_version": 1,
+      "family": "subqueries",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.subqueries.education_all_required",
+      "template_version": 1,
+      "family": "subqueries",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.subqueries.exists",
+      "template_version": 2,
+      "family": "subqueries",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.subqueries.payments_no_settlement",
+      "template_version": 1,
+      "family": "subqueries",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.subqueries.support_unresolved_reopen",
+      "template_version": 1,
+      "family": "subqueries",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.clinic_weekly_visits",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.inventory_daily_stock",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.logistics_service_level_as_of",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.manufacturing_shift_downtime",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.media_first_full_week_viewers",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.monthly",
+      "template_version": 5,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.saas_account_snapshot",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.temporal.saas_trial_activation",
+      "template_version": 1,
+      "family": "temporal",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.windows.logistics_previous_stop",
+      "template_version": 1,
+      "family": "window_functions",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.windows.media_previous_play",
+      "template_version": 1,
+      "family": "window_functions",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.windows.payments_risk_rank",
+      "template_version": 1,
+      "family": "window_functions",
+      "status": "QUARANTINED"
+    },
+    {
+      "contract_id": "sql.windows.ranked",
+      "template_version": 2,
+      "family": "window_functions",
+      "status": "QUARANTINED"
+    }
+  ],
+  "supersedes": {
+    "path": "scratch/funnel_experiment/engineering/phase6-superseded-readiness.json",
+    "sha256": "58e683a12798d18e5c24117732091340fdb406df3f052804eaeed75f877a02e7"
+  },
+  "manifest_hash": "sha256:00e3b0813d4ebdec6d6a9e89ea75780fb12dcc27bf91af32277e7493d3d626f4"
+}
