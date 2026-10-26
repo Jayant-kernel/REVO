@@ -1,0 +1,44 @@
+{
+ "items": [
+  {
+   "instruction": "Compute the total number of orders placed per calendar month.",
+   "sql": "SELECT date_trunc('month', order_date) AS m, COUNT(*) FROM orders GROUP BY 1"
+  },
+  {
+   "instruction": "List every active customer with their most recent login timestamp.",
+   "sql": "SELECT customer_id, MAX(login_at) FROM logins GROUP BY customer_id"
+  },
+  {
+   "instruction": "Find the average order value for each shipping region.",
+   "sql": "SELECT region, AVG(amount) FROM orders JOIN regions USING (region_id) GROUP BY region"
+  },
+  {
+   "instruction": "Return products whose total sold quantity exceeds one hundred units.",
+   "sql": "SELECT product_id FROM sales GROUP BY product_id HAVING SUM(quantity) > 100"
+  },
+  {
+   "instruction": "Show the top three salespeople by closed revenue.",
+   "sql": "SELECT salesperson_id, SUM(revenue) FROM deals GROUP BY salesperson_id ORDER BY 2 DESC LIMIT 3"
+  },
+  {
+   "instruction": "Count distinct visitors per landing page for the last quarter.",
+   "sql": "SELECT page_id, COUNT(DISTINCT visitor_id) FROM page_views GROUP BY page_id"
+  },
+  {
+   "instruction": "Determine which employees have never submitted an expense report.",
+   "sql": "SELECT employee_id FROM employees WHERE NOT EXISTS (SELECT 1 FROM expenses WHERE expenses.employee_id = employees.employee_id)"
+  },
+  {
+   "instruction": "Compute the running total of payments per account ordered by date.",
+   "sql": "SELECT account_id, paid_on, SUM(amount) OVER (PARTITION BY account_id ORDER BY paid_on) FROM payments"
+  },
+  {
+   "instruction": "Join customers, orders, and line items to report revenue per category.",
+   "sql": "SELECT c.customer_id, p.category, SUM(li.quantity * p.price) FROM customers c JOIN orders o ON o.customer_id = c.customer_id JOIN line_items li ON li.order_id = o.order_id JOIN products p ON p.product_id = li.product_id GROUP BY 1, 2"
+  },
+  {
+   "instruction": "Report the number of support tickets reopened after resolution.",
+   "sql": "SELECT COUNT(*) FROM ticket_events a JOIN ticket_events b ON a.ticket_id = b.ticket_id AND b.event_time > a.event_time WHERE a.state = 'resolved' AND b.state = 'reopened'"
+  }
+ ]
+}

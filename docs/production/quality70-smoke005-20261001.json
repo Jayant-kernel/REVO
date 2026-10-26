@@ -1,0 +1,2577 @@
+{
+  "distinct_template_ids": 43,
+  "domain_counts": {
+    "UNSPECIFIED": 32,
+    "education": 2,
+    "inventory": 1,
+    "logistics": 1,
+    "media": 1,
+    "payments": 1,
+    "saas": 1,
+    "saas_subscriptions": 1,
+    "support_operations": 2,
+    "synthetic_healthcare_operations": 1
+  },
+  "external_benchmark_overlap": "NOT_MEASURED",
+  "historical": {
+    "controlled-requalification-002": {
+      "artifact_hashes": {
+        "provenance\\bundle\\activities.jsonl": "sha256:62038f497ee217b8261827e0d6996e5aa0fe3882e56192ad93bf73724c9e134d",
+        "provenance\\bundle\\artifacts.jsonl": "sha256:a31de23aacd6d386a0f9dd6054dce2d268934155f7690ca9417460d0a40bb271",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.130157b97df6.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.be41d4bfdc5c.raw.txt": "sha256:6476d9f16ac02dd1d8bf3252fddfd4848835ffe9c77f38172dc36c3f3f938ddc",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.130157b97df6.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.be41d4bfdc5c.sql": "sha256:a6fc079f246cc607d66ea2661f418ecc2070f56f0049046d008cbd5e072ca6e8",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.1774aa0226e3.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a3be3c759dbf.raw.txt": "sha256:c4ba00d3a0e2c3f2980fd9e02f7871b662dfc69b331b88c11ab72134cffd95e1",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.1774aa0226e3.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a3be3c759dbf.sql": "sha256:c9d5b5271464594e9eee77c19840d7f9a985a6c8303bcd8fd8d3576c6d5d3eb6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.1f02e6e2a079.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.1c7d22774208.raw.txt": "sha256:b66910c61f1e676d7d7cf111a6fec5967d3402f6d0d1553202483864be20a1b6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.1f02e6e2a079.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.1c7d22774208.sql": "sha256:b66910c61f1e676d7d7cf111a6fec5967d3402f6d0d1553202483864be20a1b6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.20111df1c942.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ef8657dd5eb5.raw.txt": "sha256:09c3eaf33a6648170c36d92bce1dff8e97f832b4b92213d3dcb7562beee3ba27",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.20111df1c942.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ef8657dd5eb5.sql": "sha256:c7379cbab83b23abaff5bfb5ac99edb53583583b89b9c10f2e899e6bd57bbdb2",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.20111df1c942.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.01.cd0856aee37d.raw.txt": "sha256:dfd711ebf1df2fd27fa1713576cc185310d2f237317ee5d63ee5810071f4e094",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.20111df1c942.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.01.cd0856aee37d.sql": "sha256:dfd711ebf1df2fd27fa1713576cc185310d2f237317ee5d63ee5810071f4e094",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.232cf4e80c02.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4804ca6a4e88.raw.txt": "sha256:a72f192b028dc22c40d7a843f90b1daea2e874daf0e182062bb6235324342602",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.232cf4e80c02.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4804ca6a4e88.sql": "sha256:3cd04e3d8c34a43dd6c8b628cff7f52d700d024d44fb69bce6987da76490060f",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.2d4330a13697.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.fd49aa506edc.raw.txt": "sha256:9b922f626c5394e7cd52e7c9e177a03e96a42610cbe255a92d9877f663f9de3c",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.2d4330a13697.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.fd49aa506edc.sql": "sha256:114d180a933df989ffd5fddae9923d7632aa76eb4efa13cdcab92d13ab2a2e94",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.33a6dda79ddf.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.22be64fcfbad.raw.txt": "sha256:6f053e7a64f48d4b2deedace5a5efce4eef58d76068fe322f1d18c79ff2fe099",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.33a6dda79ddf.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.22be64fcfbad.sql": "sha256:6f053e7a64f48d4b2deedace5a5efce4eef58d76068fe322f1d18c79ff2fe099",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.38343dcf82fb.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.411396a40420.raw.txt": "sha256:d8a05d8bfaa38a0de96beaec68570ca58419fae5c37d5ba999d5b3888a655f72",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.38343dcf82fb.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.411396a40420.sql": "sha256:d8a05d8bfaa38a0de96beaec68570ca58419fae5c37d5ba999d5b3888a655f72",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.57467596cbcc.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.0a1e29464588.raw.txt": "sha256:026817ec9b40503222a77f74b496a876e61aacc0db190ea5fd018fe312796f4d",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.57467596cbcc.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.0a1e29464588.sql": "sha256:45df8d9f715a9024a3dd741941b531ddee8a986420b7cdbe4f2956bd33b1db02",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.5f68b11fa0c0.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a2a9fbcfe3dc.raw.txt": "sha256:ac57c34db4b93166c6909c2a6e7453cb9091036c64e825e8caffb3bb5d664060",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.5f68b11fa0c0.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a2a9fbcfe3dc.sql": "sha256:ac57c34db4b93166c6909c2a6e7453cb9091036c64e825e8caffb3bb5d664060",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.6f90e6d3cc88.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.e82217ae4e76.raw.txt": "sha256:6f053e7a64f48d4b2deedace5a5efce4eef58d76068fe322f1d18c79ff2fe099",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.6f90e6d3cc88.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.e82217ae4e76.sql": "sha256:6f053e7a64f48d4b2deedace5a5efce4eef58d76068fe322f1d18c79ff2fe099",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.7189ed6d4941.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.9099f54aeedc.raw.txt": "sha256:bbfe40238442ce8da9ae7f95a9b8be45d405775a750f380d5ce20b7fcad52306",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.7189ed6d4941.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.9099f54aeedc.sql": "sha256:ea732eac9ce8d191651fcb7e2f6740c71fad72a1ec41b60660acb29ba3e94bda",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.815bc888cf26.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.aff893362ec0.raw.txt": "sha256:b9057279c0d7b2cb0335a469703e674c4859deafa88ca813649191ba7f9f45dc",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.815bc888cf26.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.aff893362ec0.sql": "sha256:d8a05d8bfaa38a0de96beaec68570ca58419fae5c37d5ba999d5b3888a655f72",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.8f37e48f1e79.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.7f8eb7db902d.raw.txt": "sha256:3528ce8906f600ffe2b7870b73144ed5c4ba5b0073beae22fdd1a8070e0e4433",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.8f37e48f1e79.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.7f8eb7db902d.sql": "sha256:b2d879dfb72e61d31e4ca5afcfbde0584b51f7bbc438cebe360d4b961118c3ec",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.9114b0a91b30.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4ffb70be5714.raw.txt": "sha256:eacfa869e69330d519c075d08547cdb18e9c0c65b55b4825dc50eea1d9d783a5",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.9114b0a91b30.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4ffb70be5714.sql": "sha256:dd22ab1460bece0d8cc0becff191680f72bc4c29aaf2ba2896652fed8b5bfff6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.943559642d36.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f3ca4540d05b.raw.txt": "sha256:4977fd5c51ca0e54cb1e582645cef1ebe24cbeb6a704938a3261657fd2492451",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.943559642d36.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f3ca4540d05b.sql": "sha256:4977fd5c51ca0e54cb1e582645cef1ebe24cbeb6a704938a3261657fd2492451",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.bf12f1fa4515.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.b14b2e0de02c.raw.txt": "sha256:1279facfd893ff251aba4dd5ae9d607080df4de6408055812bc6201e4d36189a",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.bf12f1fa4515.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.b14b2e0de02c.sql": "sha256:4da1c0f9d5b66c33e54ef39d00a43d26f392e5677c57a9544635305fe4b5318c",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.d1eaa7d41a0c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.1e54d13a20ba.raw.txt": "sha256:026817ec9b40503222a77f74b496a876e61aacc0db190ea5fd018fe312796f4d",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.d1eaa7d41a0c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.1e54d13a20ba.sql": "sha256:45df8d9f715a9024a3dd741941b531ddee8a986420b7cdbe4f2956bd33b1db02",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.dea5bc01841d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.41533c6c2774.raw.txt": "sha256:c9d5b5271464594e9eee77c19840d7f9a985a6c8303bcd8fd8d3576c6d5d3eb6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.dea5bc01841d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.41533c6c2774.sql": "sha256:c9d5b5271464594e9eee77c19840d7f9a985a6c8303bcd8fd8d3576c6d5d3eb6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.eb72883d8200.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.141ccd0cab63.raw.txt": "sha256:09c3eaf33a6648170c36d92bce1dff8e97f832b4b92213d3dcb7562beee3ba27",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.eb72883d8200.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.141ccd0cab63.sql": "sha256:c7379cbab83b23abaff5bfb5ac99edb53583583b89b9c10f2e899e6bd57bbdb2",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec0b1f48fa48.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.db49fa4a39a9.raw.txt": "sha256:ec2b580d2ab7e01ae75cab55d7e42864917df24f877a6b07a2520abb855f9afe",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec0b1f48fa48.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.db49fa4a39a9.sql": "sha256:e56ba135aafc67c3916764357f0c760592b77094102da7eac7733823d2a2bf19",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec0b1f48fa48.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.01.df87de3b9c36.raw.txt": "sha256:8ba5aae8dca7f0020a4021650ac3d73c231f56748a2846a184397961c05c3297",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec0b1f48fa48.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.01.df87de3b9c36.sql": "sha256:794ffdccce2f06fec4c326236dc5840febe8500253931321348d15cdd5f15bc5",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec2c5171d450.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.5baa552bb8a3.raw.txt": "sha256:83b813bc551c24417fa0fbee36fdf694d636d1a53a28710bbaf097daacc8bd56",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec2c5171d450.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.5baa552bb8a3.sql": "sha256:336b494f1ec5e60ed3ca2e340a29aaba4f8a856a38ae69f69219a3f73d24f5d9",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec2c5171d450.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.02.e5f3590c7dfb.raw.txt": "sha256:e94690f8d3cae578f98a96d6724bd0383f1238dac09d7b241838e98d46d815f6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ec2c5171d450.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.02.e5f3590c7dfb.sql": "sha256:e94690f8d3cae578f98a96d6724bd0383f1238dac09d7b241838e98d46d815f6",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ed0c89e3ada7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.62ab041f1d5c.raw.txt": "sha256:1758942c9d3c3d8e169af3b138cbc4df04ffb343b3eb68de105107e6027c93d2",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.ed0c89e3ada7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.62ab041f1d5c.sql": "sha256:1758942c9d3c3d8e169af3b138cbc4df04ffb343b3eb68de105107e6027c93d2",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.fa01685c8ea1.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f46f8773d2fb.raw.txt": "sha256:a6fc079f246cc607d66ea2661f418ecc2070f56f0049046d008cbd5e072ca6e8",
+        "provenance\\bundle\\artifacts\\sql.cte.monthly.v4.fa01685c8ea1.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f46f8773d2fb.sql": "sha256:a6fc079f246cc607d66ea2661f418ecc2070f56f0049046d008cbd5e072ca6e8",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.04c1a5c1a3c5.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.c676c90bef2b.raw.txt": "sha256:a46d2021426cc025f70bfc173aa2ca058c22803cbfa915f8fde0ad3158adc64b",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.04c1a5c1a3c5.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.c676c90bef2b.sql": "sha256:59dfe0542bf54c7b44f77a33e90e73ca8f3527bb318a74266f35082c4eabe217",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.0bcb881bf95b.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.95cd128e4899.raw.txt": "sha256:ce45c6ead67870a288e12de6167bdb9f41767b03e922d65f73efda3b1e2f7297",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.0bcb881bf95b.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.95cd128e4899.sql": "sha256:ce45c6ead67870a288e12de6167bdb9f41767b03e922d65f73efda3b1e2f7297",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.151d5a010616.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.b56c59173839.raw.txt": "sha256:163b26f9b5cebc65b01f84fe22d84e46cfdfef2c6add05397afa64aa7ef2bf0d",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.151d5a010616.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.b56c59173839.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.16532ebc37c8.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ec731c46813d.raw.txt": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.16532ebc37c8.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ec731c46813d.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.23db5111f628.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a506580b5195.raw.txt": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.23db5111f628.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a506580b5195.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.2752395d6fbd.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.55a6d384b32c.raw.txt": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.2752395d6fbd.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.55a6d384b32c.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.2d5fc015155c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.36ebcc2d75c7.raw.txt": "sha256:5d0ae57283b8b5f8292b3d2c1573cee417c32ab7f105f9f4f0e14904192edf46",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.2d5fc015155c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.36ebcc2d75c7.sql": "sha256:9828e937643154b895a307e88d65ba9641c3294b75763283814311b7ae292f11",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.2ecb95a3554d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.57e5c79f6889.raw.txt": "sha256:4544a5570f216c02f99fa0a3048f16ca1dec2fa06056a9ad78fedfce5e7e7686",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.2ecb95a3554d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.57e5c79f6889.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.35b5cfaceafe.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.2d7821247589.raw.txt": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.35b5cfaceafe.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.2d7821247589.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.4883f28ddf11.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.d28d825efdb8.raw.txt": "sha256:833f4954061e5756c7efd22cc816a6cfc28d28cc99f93431ec838738e8db7af8",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.4883f28ddf11.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.d28d825efdb8.sql": "sha256:0dac8101d02ec39273239df01bbf68654f44dfd03fd5a403f66f190320217871",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.58deb5b9f92f.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.6223a27d0f87.raw.txt": "sha256:77264d1115ac6328e61c4cdd77b02b4c479ba60ced0b4d7091d9bd507a5dec5a",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.58deb5b9f92f.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.6223a27d0f87.sql": "sha256:77264d1115ac6328e61c4cdd77b02b4c479ba60ced0b4d7091d9bd507a5dec5a",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.59cdc863ae12.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.2d6d0f6230ad.raw.txt": "sha256:5691a14e2119de5939f5b3a7009867c7678940f7e482d095c5ebe0d15ea25637",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.59cdc863ae12.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.2d6d0f6230ad.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.6d2d450bea7a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.05b9f91d1b72.raw.txt": "sha256:0dac8101d02ec39273239df01bbf68654f44dfd03fd5a403f66f190320217871",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.6d2d450bea7a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.05b9f91d1b72.sql": "sha256:0dac8101d02ec39273239df01bbf68654f44dfd03fd5a403f66f190320217871",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.6da485621ffa.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.fabcf85501d1.raw.txt": "sha256:163b26f9b5cebc65b01f84fe22d84e46cfdfef2c6add05397afa64aa7ef2bf0d",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.6da485621ffa.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.fabcf85501d1.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.7907193114f7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.bf0387c8c8b4.raw.txt": "sha256:163b26f9b5cebc65b01f84fe22d84e46cfdfef2c6add05397afa64aa7ef2bf0d",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.7907193114f7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.bf0387c8c8b4.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.7c43c14fe0dc.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.eb4f7815938f.raw.txt": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.7c43c14fe0dc.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.eb4f7815938f.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.84389d7c2ef2.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4836b0f8fc48.raw.txt": "sha256:e4456683c8f78798ec77cdae03a05eada47115664e0eba5754599b8f0543707b",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.84389d7c2ef2.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4836b0f8fc48.sql": "sha256:59dfe0542bf54c7b44f77a33e90e73ca8f3527bb318a74266f35082c4eabe217",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.8de3ed7d2522.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.974702b1787b.raw.txt": "sha256:163b26f9b5cebc65b01f84fe22d84e46cfdfef2c6add05397afa64aa7ef2bf0d",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.8de3ed7d2522.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.974702b1787b.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.927c60e8f6d4.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.7bc5dbfb55d2.raw.txt": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.927c60e8f6d4.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.7bc5dbfb55d2.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.9d8b3b58150d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ff0030fb04e1.raw.txt": "sha256:5691a14e2119de5939f5b3a7009867c7678940f7e482d095c5ebe0d15ea25637",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.9d8b3b58150d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ff0030fb04e1.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.aa58a7abf2f0.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.5aedfcc620f6.raw.txt": "sha256:77264d1115ac6328e61c4cdd77b02b4c479ba60ced0b4d7091d9bd507a5dec5a",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.aa58a7abf2f0.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.5aedfcc620f6.sql": "sha256:77264d1115ac6328e61c4cdd77b02b4c479ba60ced0b4d7091d9bd507a5dec5a",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.bde2ede07df7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.e1a9461d2d48.raw.txt": "sha256:9828e937643154b895a307e88d65ba9641c3294b75763283814311b7ae292f11",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.bde2ede07df7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.e1a9461d2d48.sql": "sha256:9828e937643154b895a307e88d65ba9641c3294b75763283814311b7ae292f11",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.bf9eaf9c5c88.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.986b11289e35.raw.txt": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.bf9eaf9c5c88.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.986b11289e35.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.c5521323f86a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.6a88367f9927.raw.txt": "sha256:77264d1115ac6328e61c4cdd77b02b4c479ba60ced0b4d7091d9bd507a5dec5a",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.c5521323f86a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.6a88367f9927.sql": "sha256:77264d1115ac6328e61c4cdd77b02b4c479ba60ced0b4d7091d9bd507a5dec5a",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.c5d3f9e8c83d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.0db1f5df22f4.raw.txt": "sha256:163b26f9b5cebc65b01f84fe22d84e46cfdfef2c6add05397afa64aa7ef2bf0d",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.c5d3f9e8c83d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.0db1f5df22f4.sql": "sha256:c6dc103579723afc4b5ddc0c61cdc8e5753e9c075f61576b5e4203f69913310e",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.ccf279b1d18a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f5701c538c42.raw.txt": "sha256:0dac8101d02ec39273239df01bbf68654f44dfd03fd5a403f66f190320217871",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.ccf279b1d18a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f5701c538c42.sql": "sha256:0dac8101d02ec39273239df01bbf68654f44dfd03fd5a403f66f190320217871",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.d69a2dbd562c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.3fb3182eb71f.raw.txt": "sha256:59dfe0542bf54c7b44f77a33e90e73ca8f3527bb318a74266f35082c4eabe217",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.d69a2dbd562c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.3fb3182eb71f.sql": "sha256:59dfe0542bf54c7b44f77a33e90e73ca8f3527bb318a74266f35082c4eabe217",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.e22053ad872e.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.71569856f549.raw.txt": "sha256:833f4954061e5756c7efd22cc816a6cfc28d28cc99f93431ec838738e8db7af8",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.e22053ad872e.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.71569856f549.sql": "sha256:0dac8101d02ec39273239df01bbf68654f44dfd03fd5a403f66f190320217871",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.f6aef702dfa2.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4e19da5908bc.raw.txt": "sha256:4544a5570f216c02f99fa0a3048f16ca1dec2fa06056a9ad78fedfce5e7e7686",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.f6aef702dfa2.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4e19da5908bc.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.f84de1f31fc7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.3d939949e744.raw.txt": "sha256:4544a5570f216c02f99fa0a3048f16ca1dec2fa06056a9ad78fedfce5e7e7686",
+        "provenance\\bundle\\artifacts\\sql.temporal.monthly.v5.f84de1f31fc7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.3d939949e744.sql": "sha256:fece165c32e83aec927b52982773b5c4c3d224e9ff312b1255f7d4cff1d12259",
+        "provenance\\bundle\\completeness.json": "sha256:9f47c283707ba79c4daac099592977a0f78657f739a749460484ae2bd623c23b",
+        "provenance\\bundle\\edges.jsonl": "sha256:a38e250a6245979aa25d62024fe07b2dff2d3f97b5d65b48aeab58872c6666b8",
+        "provenance\\bundle\\golden_records.jsonl": "sha256:6788e520972363c5856714d639afcc3acfb99a650f9e1fc7309cebaf48f6b7bf",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.130157b97df6.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.be41d4bfdc5c.golden.json": "sha256:66ea2b99d499a21bf16a04042fc881e121785588d90c63484fda28df751d2dc9",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.1774aa0226e3.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a3be3c759dbf.golden.json": "sha256:c4eea5e275b65353b2c80acfbd12f9d5c26f70f1279e90c16bb09310f9cd2f25",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.1f02e6e2a079.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.1c7d22774208.golden.json": "sha256:9e9b6702e2940a57c5adfad4959de1bf7ad32ea80234ef4846b32efaf13078bd",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.2d4330a13697.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.fd49aa506edc.golden.json": "sha256:1b31159a7819c68c1b5424013f707c4219a7f08875757cc9df015d387e3b31f0",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.33a6dda79ddf.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.22be64fcfbad.golden.json": "sha256:17b9b5a8718cccf5f7f8d779ca0b3b7a96edd919becba3469f5c46f86f2ddb3c",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.38343dcf82fb.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.411396a40420.golden.json": "sha256:eba513b082a72bf2698fea997dc00e1a11b872a419470f496290f00c4978ca7c",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.57467596cbcc.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.0a1e29464588.golden.json": "sha256:6a511787936ab6f77660c2d95ca95e2c1c0f776a8e9b557ad88a5c02986b6d3b",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.5f68b11fa0c0.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.a2a9fbcfe3dc.golden.json": "sha256:7e43fd0ba803268444e73689a58beab879ed058651d72a7db28fd6bc73fc13b5",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.6f90e6d3cc88.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.e82217ae4e76.golden.json": "sha256:3fccbf85a8718a0926dfb240757fa6456c17a2284fcdf077738347b8914c747c",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.815bc888cf26.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.aff893362ec0.golden.json": "sha256:e1cdf4428e38236984c22e489e1c33f9776aad837ccceeccde9890068f1a4663",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.8f37e48f1e79.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.7f8eb7db902d.golden.json": "sha256:63945f5c17c5057e213ff8ac4b8fbeed21d754cd801c0c67cea29f4914481541",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.9114b0a91b30.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4ffb70be5714.golden.json": "sha256:c1840a22aa9d8a418a85f4c8c3211b7eadd6319341590af489a4532e17d40b8b",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.943559642d36.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f3ca4540d05b.golden.json": "sha256:da09953837ec287bedbf7f02a0ae17102bac34bb9b15a050400a4c0fc6acca6c",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.bf12f1fa4515.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.b14b2e0de02c.golden.json": "sha256:63a1e9184f283edcdaa17b37bdfa96d6b02596b1c74a3900f79ebef0da0c7370",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.d1eaa7d41a0c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.1e54d13a20ba.golden.json": "sha256:8114eac1289f2e429af334d4f69ca52f08ba1951830cad8e0bb1622377df5dee",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.dea5bc01841d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.41533c6c2774.golden.json": "sha256:7dbb1d9ffb9296f46b85d393545c6abe8b0a549b18a9d4ae8b0446ce1b9ab4e1",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.ed0c89e3ada7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.62ab041f1d5c.golden.json": "sha256:4f4b6a7c5f0252d905717565129bf41b57fbf614fb1d3abad055d6788476caf3",
+        "provenance\\bundle\\golden_records\\sql.cte.monthly.v4.fa01685c8ea1.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f46f8773d2fb.golden.json": "sha256:338dc78903adce9956fd60c64f53f01d08deb820c21b3def548ba2a01b9ab49d",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.04c1a5c1a3c5.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.c676c90bef2b.golden.json": "sha256:8ffbc59933edbaa783df4aaa18478fa7673113e96bddc482e6be274588dff600",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.0bcb881bf95b.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.95cd128e4899.golden.json": "sha256:98ffb9562446bcf3929f7d539391760e1102b4cbd0da96b94df0eb7e98a851b3",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.16532ebc37c8.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ec731c46813d.golden.json": "sha256:8976eba5f975247a71ae6087647bc0ba2e00bbf3059a63549e794e5c8516daf7",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.2752395d6fbd.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.55a6d384b32c.golden.json": "sha256:b24aa8ccf6990ca178ec1db15a98096389ba6cca80f6100056f2bd8ca8f569aa",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.2d5fc015155c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.36ebcc2d75c7.golden.json": "sha256:b607d7c666d412dbab244a3bc37f122c21c094efe3c00e3e2926b20bfc7ddf4e",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.2ecb95a3554d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.57e5c79f6889.golden.json": "sha256:9e0de19fccc1694b26b2f16b36c5ed77ae23547cdeb8968084c37952d9486a6e",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.35b5cfaceafe.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.2d7821247589.golden.json": "sha256:44b1fddf2e92266ec1a38a97cfc0a9c8d3d29ad32760cc76674567b4b4934d59",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.4883f28ddf11.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.d28d825efdb8.golden.json": "sha256:33e9f3e5d82957d7ebd8167341e8a275b45aab01cbfba5251f4a8c9f4f26f5fe",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.58deb5b9f92f.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.6223a27d0f87.golden.json": "sha256:600d854b8379e9797ca919197e9f7071d70a4e28a9581e09b7b7f85bbbcbe024",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.59cdc863ae12.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.2d6d0f6230ad.golden.json": "sha256:8e2c474f643a8dc0620753ab7da9469316f2b1f22dc03e79991d13e5e3abfd53",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.6d2d450bea7a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.05b9f91d1b72.golden.json": "sha256:f831bf78ea4cd9750c31cd026714607545433106f0a5f88b92d7e040c2e9c22f",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.6da485621ffa.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.fabcf85501d1.golden.json": "sha256:9301e82c57d1a0212221b6cd7786ff6500bcf331c91ef9a989140e7cdce03378",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.7907193114f7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.bf0387c8c8b4.golden.json": "sha256:b50655edbfd0422763d50a86bc11843239668d2b74adc9cb99b23f65dcde5e43",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.7c43c14fe0dc.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.eb4f7815938f.golden.json": "sha256:369b1073f45770d0578b980e5ff320598144ced1fff072043551946ca652258c",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.84389d7c2ef2.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4836b0f8fc48.golden.json": "sha256:93791c8e6b83784013a498a709bde09286801f21b0d9812f0accd4cbf0df7334",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.8de3ed7d2522.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.974702b1787b.golden.json": "sha256:99a34292196935bc40f77e4351a0ea4f4b89ef602b7d7de53d49fcacb439c1a1",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.927c60e8f6d4.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.7bc5dbfb55d2.golden.json": "sha256:00f7f0d7f3b7224923eb14912913fc14bf65f2b709e060673669bd305ffb1ccf",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.9d8b3b58150d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.ff0030fb04e1.golden.json": "sha256:b568cb771d81e24982c135f6aef498f64811e058239e1123072a8e95850cfe5f",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.aa58a7abf2f0.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.5aedfcc620f6.golden.json": "sha256:86f82fb83c0c326bb3116a4385a3e9258518d81184c6a348556290a1e165caf7",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.bde2ede07df7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.e1a9461d2d48.golden.json": "sha256:2b955349142320ef87ff466a4adba6a46e0eaa677247583db3d75567f5929ae6",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.bf9eaf9c5c88.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.986b11289e35.golden.json": "sha256:98829a7c5ff493f94d9f1976c66d4dd5c61961b4d04bad9c70d2f8124021fbb7",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.c5521323f86a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.6a88367f9927.golden.json": "sha256:957f810ea4bacd807d16769291a8250a7fd78a77c75a4644042909fe5768a8ca",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.c5d3f9e8c83d.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.0db1f5df22f4.golden.json": "sha256:f0f2fb39e5d4ae4a54fe7a0756913fa8e2e13e944a187c65f806e1fea7ed8079",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.ccf279b1d18a.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.f5701c538c42.golden.json": "sha256:3b9271db7531e9cfbf85b824a2bdda9ca0e92e53e8956ed86ef859496fdeaa86",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.d69a2dbd562c.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.3fb3182eb71f.golden.json": "sha256:29dd3488420cf6900b952149de8b0f62646330b6db760e650f13a5743bda0b1c",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.e22053ad872e.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.71569856f549.golden.json": "sha256:dba7f1bc0173e41eb28f45db392a02d500db6fd153be3f6f1bbf565b093c504e",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.f6aef702dfa2.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.4e19da5908bc.golden.json": "sha256:99f393284e892729ec82f9bbf7d40dc1be763e3f0b4a3a4bedd42127474b5770",
+        "provenance\\bundle\\golden_records\\sql.temporal.monthly.v5.f84de1f31fc7.huihui-devstral-small-2-24b-instruct-2512-abliterated-latest.00.3d939949e744.golden.json": "sha256:df6342b71d10e758adbc3d505fd95e1f615d44fd02d3d8a06d3a1dda968a7e8f",
+        "provenance\\bundle\\manifest.json": "sha256:ea19a9a7c21006713ad65a72b285d588011a7d8be3fa1206bef19f0d5ba3bfe6",
+        "provenance\\bundle\\nodes.jsonl": "sha256:f9df83982c29abf18c8ead07eba97f5577a0fb7e7de7d5bb0d920fa791dd8f1a",
+        "provenance\\bundle\\reproducibility.json": "sha256:baab71c2394c48c819666afa1f67c1fd5e49c8a951e68d167b3d3072bbcd110a",
+        "provenance\\bundle\\reproduction.json": "sha256:591183d17f98434c285b6ef61c4c7a773bde0a46513f0df474cdc9949d5a014a",
+        "provenance\\bundle\\snapshot.json": "sha256:671be8e9e24c17dfbbf97f0f68109e6eea1ed8a6ab0f5fbbe4e14923ad508024",
+        "quality\\export\\audit_required.jsonl": "sha256:e6a95adf0c2c17f16d0d5522bea79a93ad6dbc575f8939817beae2a59cad4bc8",
+        "quality\\export\\audit_sample.jsonl": "sha256:2baa52547fcc81d0d5685a4c0677de3b69faa05cc8c1eb6b9e911b8f07543d9f",
+        "quality\\export\\dataset_health.json": "sha256:aa4559a8fb387dfefabc8ece974283ece5c7e2d3b78a4f826c53ca726d486193",
+        "quality\\export\\excluded.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "quality\\export\\golden.jsonl": "sha256:608d2b4c538b42bb44044d5b3de1748c597ddec9b71c12fbd7dacca9e3dfe752",
+        "quality\\export\\inconclusive.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "quality\\qualities.json": "sha256:00ece177afcb339857de6d0f69d667751c6bbff5415a42c39e02b0a6e19eb958",
+        "run-state.json": "sha256:4d4d9904646c00722d357836486a385194bcb89a652378dd7db70a478690663d",
+        "verification\\verification.jsonl": "sha256:c566a309bcfced3001caa880366801025b20886a58bda857ea0c8ae596d15871"
+      },
+      "candidate_bundles": 0,
+      "candidates": 0,
+      "executions": 0,
+      "failure_summary": {},
+      "family_results": {
+        "cte": {
+          "GOLDEN": 18
+        },
+        "temporal": {
+          "GOLDEN": 28
+        },
+        "unknown": {
+          "PASS": 57
+        }
+      },
+      "generation_failures": 0,
+      "generation_successes": 0,
+      "golden": 46,
+      "golden_sha256": "sha256:608d2b4c538b42bb44044d5b3de1748c597ddec9b71c12fbd7dacca9e3dfe752",
+      "premium_screen": {
+        "automated_pre_review_gates_pass": false,
+        "candidate_sibling_exact_overlap_flags": 0,
+        "excluded_mutants_for_inspection": [],
+        "flagged_record_ids": [],
+        "gates": {
+          "automated_row_evidence": {
+            "actual": 46,
+            "passed": false,
+            "target": "zero failed rows"
+          },
+          "construct_coverage": {
+            "actual": 10,
+            "passed": false,
+            "target": 16
+          },
+          "domain_variety": {
+            "actual": 0,
+            "passed": false,
+            "target": "at least 5 explicit domains"
+          },
+          "edge_coverage": {
+            "actual": 3,
+            "passed": false,
+            "target": "at least 15 of 17"
+          },
+          "exact_instruction_variety": {
+            "actual": 2,
+            "passed": false,
+            "target": "at least 40; material difference still needs review"
+          },
+          "family_balance": {
+            "actual": {
+              "aggregation": 0,
+              "cte": 18,
+              "deduplication": 0,
+              "funnel": 0,
+              "multi_joins": 0,
+              "retention": 0,
+              "simple_joins": 0,
+              "subqueries": 0,
+              "temporal": 28,
+              "window_functions": 0
+            },
+            "passed": false,
+            "target": "8 per family"
+          },
+          "normalized_sql_text_variety": {
+            "actual": 16,
+            "passed": false,
+            "target": "80 distinct normalized SQL texts; AST and semantic novelty not measured"
+          },
+          "one_selected_row_per_task": {
+            "actual": 46,
+            "passed": true,
+            "target": 46
+          },
+          "row_count": {
+            "actual": 46,
+            "passed": false,
+            "target": 80
+          },
+          "schema_concentration": {
+            "actual": 28,
+            "passed": false,
+            "target": "at most 12 rows per schema"
+          },
+          "schema_variety": {
+            "actual": 2,
+            "passed": false,
+            "target": "at least 10"
+          },
+          "selected_semantic_collision_members": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero among selected rows; fingerprint is a screening heuristic"
+          },
+          "selected_structural_collision_members": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero among selected rows; fingerprint is a screening heuristic"
+          },
+          "template_floor": {
+            "actual": 0,
+            "passed": false,
+            "target": "at least 4 IDs per family"
+          },
+          "unique_record_and_candidate_ids": {
+            "actual": {
+              "candidates": 46,
+              "records": 46
+            },
+            "passed": true,
+            "target": 46
+          },
+          "unresolved_contamination_flags": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero or independently resolved"
+          }
+        },
+        "not_measured": [
+          "material semantic difference among instructions",
+          "normalized SQL AST and semantic equivalence",
+          "external benchmark contamination",
+          "human validation of adversarial fixture design and independence",
+          "schema and column description completeness",
+          "full provenance graph and clean-environment replay",
+          "schema relationship realism and empirical difficulty",
+          "reviewer judgments, rights, clean-environment replay, and utility"
+        ],
+        "row_failures": [
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:fab2e0c2225a1b89a9f7aeaa95829c7c81d9e39ac291824a72980f68a89ebb77"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5cf6c0fecc437c5edee49cff0a983c5625c99acc37610f6f662f398440e280c3"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8d3f8caca64240855e38d4dc5053b1620f022475cb72533278ad1574d61f1a0b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ef681bb4985dcfa96354eaf8876b804e04aa14670c09c5e593511ea622ac3f42"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:636bd00eb6547797225a15fdc29d5b53ddc70e148329860b0e28ece517fc4516"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a8f4b66e9f6cbd9e1f1c0b732aa1ac67e94ba1fb0b2eab0eab8df3ac6b3903db"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:66d8214b5bae3c3da6a7fcf8094dccc820b6afef840b0b36ee169a6692b76468"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6af70f56032da0ce277569c79fc36f3a1b9e7f31af8f09ff3347e59daa732091"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ca84faa3474399940a661d87cdd34336d87d4f9e3190e177fbd95190db0e4d19"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:545d414d3acaa524eccc934d14e5ef5fc671cea48679e8482a97f3a4b978e1e1"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:291cd00f037faa225a247acfcdd94a5d9a91ae48a26276778f4ec668a8683c0a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f66059994ec9898d5d2a84a3624ca285803019e69a67997599c575f5684bc4b5"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:de2fddfddf0ea37c2b9cd626df9f41240ce08e4bcf3aa086d81f704dc1b141fe"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1967fc5c8c1e3a64cdc5db580c2c1c3f89db19bf99ec49188379b5aaa3c6b44d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:245580573fbb0cb09e1337c5be8a39e3a4dbb9b0d207bafbf81958341903042f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:42e87543d981d35f9dec14a41ac451b9df0c8047ff8d44e396005f67235fc3c4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:64924dbda7105bd8d49aceb97424d665f7a851726a8e2ca3cd191a3366e05ea4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:261632fdafe051d0ed403195f6c76e94df635577bd58c81b3d796835b950c08d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:4da75fdc00de334694e1d5068d81a16bee1454abe37e96c9d4cd29c630e3e783"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:65919d382101ffc1d7c9e012024cc365e168956b9fd7218c0d0b3046f470afab"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c1449fd3c0283a5dae151df4d1650650f9e019ecb5d7f9c0475c927d52a51bb3"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a2b3e196bdfcd917c7fa33ab05ff55bb2376e524a51d9b58feba3d208369b457"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:97a3a84dd7442d4e4d533ce637a4d783fe643b52257ee4026fdd0101f44ef356"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0ad93cfe211797f553b8b57ecddd081367fa99afac4bbd6096399044ee0b209b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bbc1ab6524a1663557de69cb785225d5ce5bc3ecb22586c1caeb26a8027aa03e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f808783b87e3d430a05ab6df5635a04e4764d6700bdd0df58b4e20fcc9a0d3a9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:30f9c095c92016dbca7d8232239e3b5178f1faa6c03f1e76798a23a778056eb0"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:224e3921152ee84ef691ffa1767021bb2d5d9e7c1e0941ed44f119d8cb6997cc"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:13195cf7de7866c754ca8ce7c850decc062659785dc46631597c14aaaf37fd97"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ecbfc433d8fd5e4ca7578b4ce0a6b4123b6f493773c2dff3c01c69a949dbf061"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:22ca0f17795f804b181e3c71748338a8400dc758daf2e97f50298582ae583621"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bf2740788656271b0051abc5eb1c9d073ea4ccefd798015a294ba9487a10b844"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f3d70964e26c52b70764055fd805e2d4118e11f69b13300cde1bec37c8e8e47c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:62c62516ac1cdb79e2c0b9b5f1dc9732972c0ba1f5a1752ece7ab327892d0cc7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c96c7193badcffe1edddac279514552d42b3c6838d75825bcad2f148e07385dc"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f85e05685a9ec38cff058adf06da00f952eec175e4ccb3d396e151050c0defe7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6974884f50bdd651a4ca17341393a00ee697c7d39ba9f6415876003a2ba04335"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:70a75037fc9647cd938a13cf03bf87fb5323354c23a855e174432415e31860d6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:52c0e5229751f4dbc4f55ebcd23aee762da4d3adb1ee0bb4a60970ef75d9a25b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c076695f2a555adb911fc6c34d7d6373a6e8c3dce3c12ea8a5db57c2d4f27ae9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:388bb7b8baba37c37a36b4c4d34342043fb57a8aae556699d493f6f758204bd9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8fae803a61bbab0b9c4e85f8a4183f46687d4554dfc065753dd08ec4aafb6ac9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7cede49fa16f4efd2904c29a8aef04efe6fab140958c2048402786cdd625e1da"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f84a456a95a43eea99ffee0c349937aa5024e1c1dabf46a7aa2cdb35ce9112c0"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8439b6bb3cf9b0329a42abb8a3b450feac04acf249e875f8661420cba691f41c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5196e170148b6961b407809fb1ca7b21166c75aff8da0348c890c9f8631e258f"
+          }
+        ],
+        "scope": "automated pre-review screen only",
+        "source": "runs\\controlled-requalification-002\\quality\\export\\golden.jsonl",
+        "uncovered_constructs": [
+          "case",
+          "distinct",
+          "exists",
+          "having",
+          "limit",
+          "union"
+        ],
+        "uncovered_release_edges": [
+          "duplicate_events",
+          "duplicates",
+          "empty_result",
+          "multiple_matching_rows",
+          "multiple_purchases",
+          "negative_values",
+          "no_events",
+          "null_values",
+          "retention_boundaries",
+          "same_timestamp_steps",
+          "single_row_groups",
+          "ties",
+          "window_end_boundary",
+          "zero_values"
+        ],
+        "unrecognized_families": []
+      },
+      "run_dir": "runs\\controlled-requalification-002",
+      "tasks": 0,
+      "verifications": 57
+    },
+    "production-001": {
+      "artifact_hashes": {
+        "__pycache__\\run_generation.cpython-312.pyc": "sha256:1084e0b86593ecbace19f1e8ebd6a4fca9757b97adb55f75216a3f1d3fde7c85",
+        "__pycache__\\run_pipeline.cpython-312.pyc": "sha256:0190c1c70183d04632f10504e4b75a1a1bedcb6efb1b6e9cb8c47eb8dc4e8d46",
+        "audit\\audit-report.md": "sha256:e932b45b400fcd709c3a67095c5a6f51405644bcd77b32e84f9b5cbfea4da81f",
+        "audit\\census.json": "sha256:8e2972cdcd48c26f7609b927dca07f52ce3cff8f60a1cfee40e6dc6e6b33172a",
+        "audit\\quarantine-pilot001-outlier.json": "sha256:5b2c45903ba10091985d80dda4a3159223ceca29537d962a0faa44d3fec379cc",
+        "audit\\quarantine.json": "sha256:a62ccb16dfa49cb975a88928068606c929c707700cad8c2983002bd9c6f620fa",
+        "audit\\row-manifest.jsonl": "sha256:865e2043db67ec850dba1a20274b3779a3d296af450de5e03d2dddc513ce73f1",
+        "candidates\\candidates.jsonl": "sha256:cf84c9ae1acd0de05658900c5a1647342abb99bff235cbd1e2a9823b300f61b7",
+        "execution\\triples.jsonl": "sha256:a092e1bd01bc68c30eff4ea7563d8484ce06d67a88f435b6c9bc1a25b2e062c2",
+        "logs\\generation-progress.jsonl": "sha256:24caa7d44dfe42546566a078e7e3b00cc1b97ce6590dcbabebfc7efd58ea4773",
+        "logs\\generation.stderr.log": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "logs\\generation.stdout.log": "sha256:f809f0f9cf54f59f1869c58f9b2273442448bc842880655887ca7c824c7fb7fd",
+        "logs\\pipeline-progress.jsonl": "sha256:0ee3107291dc7990e0dc164d7dedfd7136fec674b9c1ff3585a0d63a9fe616ca",
+        "logs\\pipeline.stderr.log": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "logs\\pipeline.stdout.log": "sha256:0ee3107291dc7990e0dc164d7dedfd7136fec674b9c1ff3585a0d63a9fe616ca",
+        "provenance\\bundle\\activities.jsonl": "sha256:01a10941e6666d771d83364608edca5d49e7edb2264b8402948c4fb3ee58291a",
+        "provenance\\bundle\\artifacts.jsonl": "sha256:08219d8e3a79283fc5e420e231b9d5691aff6f513963734784e280ec67ecc2ab",
+        "provenance\\bundle\\completeness.json": "sha256:7e804eeb56ca954a39ff7df6a73f05b6e2851ae89de05e787c6b318da1883974",
+        "provenance\\bundle\\edges.jsonl": "sha256:8e888075fc59bc33f45315205d4ac61a4895e42f1cf5b382efcc0d2511ccdc73",
+        "provenance\\bundle\\golden_records.jsonl": "sha256:a1991558ec6ee35075fd1f6e772eac4f8867b423feec9f111a5b67548f168561",
+        "provenance\\bundle\\manifest.json": "sha256:a8db991eb9dbbae536371b7494b651d89e98cd2ff6472d9ac655c5c02d04ccd2",
+        "provenance\\bundle\\nodes.jsonl": "sha256:f5c3756e93c65318eb63b6eef4a4e0c92b5f4f86227aea8dfdf00a2ef28e811a",
+        "provenance\\bundle\\reproducibility.json": "sha256:50458e2eeb72b831bba70776e481071bdd86915350a6328f820c485aa33bab36",
+        "provenance\\bundle\\reproduction.json": "sha256:30240e5bced1bdf06c0386dfc2a8a06f638e9823e485c2899430188bfec103b5",
+        "provenance\\bundle\\snapshot.json": "sha256:ce1f6c719c4918f44b291a0824951d5674993c4a33607ea4a4eb0964db6757c5",
+        "quality\\export\\audit_required.jsonl": "sha256:fa9a53bd86bec36459b072c96420a6e5c01c8d1b962bf18772c9ebe2d4500c16",
+        "quality\\export\\audit_sample.jsonl": "sha256:e293109bd4a8a1147194c4b140a1b4f0b775d721f7d2145957bd34a9489b5ead",
+        "quality\\export\\dataset_health.json": "sha256:22725a96e2536dc9ec91f61c7c70df60b6bbcdc5a42d0394484c275c07f84def",
+        "quality\\export\\excluded.jsonl": "sha256:a61d3c5e0836a5d635e1ec2b86a5ba6ca6561af0b96ddad0bb5e5a89ae9858a2",
+        "quality\\export\\golden.jsonl": "sha256:af738a391f9bed0a367ef424b225a819c339aaa7ffcb5f91f02d3e5c76de7c16",
+        "quality\\export\\inconclusive.jsonl": "sha256:99ddde52176ed4cfeba2f54702a5de38bcced9d7a1c44c2b6463d88c127c5704",
+        "quality\\join_records.py": "sha256:02258b5e54465525adf96f1688e81058fe153deabfd8f341e4d9dc3cd43a5b00",
+        "quality\\qualities.json": "sha256:ef67bf091748c3da8b8baef4f15177e18d0649dd67b468fdec68865dd11cd82a",
+        "quality\\qualities.jsonl": "sha256:70313042bf384fb2bfbba2e81da50807decc95550ba03c83962e23d171ca9c3e",
+        "quality\\records.jsonl": "sha256:c0d3b85c798bab3ab5dc7470cb97a2c910260555c2b2d0db94cd1d56a8309e75",
+        "run_generation.py": "sha256:6c681a17b2583c08b71f78c2d43ff4834b81c86c8ab12784a794e31086583f71",
+        "run_pipeline.py": "sha256:2e3db2ca8bc6013d37de776f1039c7db791606d9c567040c80d2e372d5ca2b3f",
+        "supply-chain.json": "sha256:671f6c5ee8c591645e62f6645d29d270eaf1396a250e44abe7c0ee07e1ec07d8",
+        "tasks\\__pycache__\\generate_tasks.cpython-312.pyc": "sha256:3e1df3c9481a1c10b29795c816ece0c61d636b9bd2759db6f5e88817045fb308",
+        "tasks\\generate_tasks.py": "sha256:a461094a1066a884784d25ef90d126c82c909f6f42252a461fdac6652cf8172c",
+        "tasks\\manifest.json": "sha256:e09d690bdda1df617c3efc5609353032b173b69a494eeb69d35ca0a55f58bcf2",
+        "tasks\\tasks.jsonl": "sha256:788f46c3e2d5f9eb3c674689d2da2056d86f3cd6fb240231056661ce327e2740",
+        "verification\\verification.jsonl": "sha256:702ca3a4fdd36c288d8d87891e4afcf94f59323c9bb3870588f74a3a5c925649"
+      },
+      "candidate_bundles": 500,
+      "candidates": 1500,
+      "executions": 1500,
+      "failure_summary": {
+        "EXECUTION_FAILED": 327,
+        "HIDDEN_MISMATCH": 20,
+        "RESULT_MISMATCH": 156,
+        "SANDBOX_INFRA_ERROR": 2,
+        "WEAK_SUITE": 175
+      },
+      "family_results": {
+        "aggregation": {
+          "GOLDEN": 23,
+          "PASS": 150
+        },
+        "cte": {
+          "FAIL": 150
+        },
+        "deduplication": {
+          "FAIL": 43,
+          "GOLDEN": 35,
+          "INCONCLUSIVE": 2,
+          "PASS": 105
+        },
+        "funnel": {
+          "FAIL": 142,
+          "GOLDEN": 8,
+          "PASS": 8
+        },
+        "multi_joins": {
+          "GOLDEN": 50,
+          "PASS": 150
+        },
+        "retention": {
+          "FAIL": 18,
+          "GOLDEN": 45,
+          "INCONCLUSIVE": 1,
+          "PASS": 131
+        },
+        "simple_joins": {
+          "GOLDEN": 38,
+          "PASS": 150
+        },
+        "subqueries": {
+          "GOLDEN": 33,
+          "INCONCLUSIVE": 24,
+          "PASS": 126
+        },
+        "temporal": {
+          "FAIL": 150
+        },
+        "window_functions": {
+          "INCONCLUSIVE": 150
+        }
+      },
+      "generation_failures": 0,
+      "generation_successes": 1500,
+      "golden": 232,
+      "golden_sha256": "sha256:af738a391f9bed0a367ef424b225a819c339aaa7ffcb5f91f02d3e5c76de7c16",
+      "premium_screen": {
+        "automated_pre_review_gates_pass": false,
+        "candidate_sibling_exact_overlap_flags": 0,
+        "excluded_mutants_for_inspection": [],
+        "flagged_record_ids": [
+          "sha256:0090349255277b9ac347da7f9e23d7e663bf5549c1e35b3f53397d651a4fc82e",
+          "sha256:00f2dc24ea4e7ae1516826a81d5e573ddf8dcb583f3741d7dce3a24f2353f141",
+          "sha256:030c92923d1b60f9c46c8b76833d4f5fa801b904c7a8e49eba312af09b8e8b85",
+          "sha256:033f20ca3a18fa2aae21b7b18cc1cfe47cbbec38c7e3e77f5e944f3a92ad7a20",
+          "sha256:05360e3e8136820bf0a61751603bcc34b03d11bc83471888d990dbe66280581e",
+          "sha256:0650be49c6025b9ec07d31f68956b1374f8faccf040c07d28d178c0bc6768f26",
+          "sha256:06823a8cc44aa11644f66c9bfb6be6ec5da5849991db1b07e2d845707a6998b4",
+          "sha256:07416eb08027932f893b99bcdca387034efc3183aea78c078e7da6ae989c85d7",
+          "sha256:077daf834694a5548f93db18b3f5f5a4b551dca75a4b77d03b649033f28e805e",
+          "sha256:07a545eab2ac07e7fc27497a1cc41cf7d0b64fdfcffca37d1bd9d04f6b69d99a",
+          "sha256:085290d6b564684ec4200ff5c5730356350d49c69630d0df0014808b464ca5db",
+          "sha256:08fc13febabdc7973e4b08afaea7194d9f18cab52e6a9d7ecc3f544b71f25381",
+          "sha256:0c509a91e05138b73ea77ba307f4949c632f0d57640e4908b22b2288cd4c8918",
+          "sha256:0c58fb78988108847e529e8381fd3c0246a4f1e51940baa763e203909b0e880a",
+          "sha256:0c930d18d1659b48e496cfa6a81445f76fe4e8182ead13cd3d173ecd47e71c31",
+          "sha256:0d768475416f17b0a2c8821961fc67a35f52cc619ab946d032d7aeca21b0a3ea",
+          "sha256:1059abb3dae360757d614d02b70c5defbe9bd0e29b9b729e2ec51cd5f73cea81",
+          "sha256:10755c4bc8263b630635014bb9a359db747907f18b0df3e00ebf1d884ef12b2b",
+          "sha256:11cfeee1e0b2832aa2d45988c1fdd70733522be51c7e47f8dd5483c1246add84",
+          "sha256:13062007e1efa67d1a493e23e9527ab129ff8ccb837c10c03805e80c4bf05189",
+          "sha256:138eb46d8de61071e96b1f09005d8720e83be175d60b5eb90f152d496c56090b",
+          "sha256:14a4e336748a713704aa19d9cd2baec3437f6b58ee201efbe4fdb748ded6429b",
+          "sha256:14a67623ae037e48bba4763a37906257187ccf04bebb0db5601ae1cf11453829",
+          "sha256:15aefa5fd64ec471234d0b0987e5a07f60a5fc2e87b11bb3a1be20c2da0b1945",
+          "sha256:1653e2e69a302e582e1c51aa676c78f4e8c7de0d4613cfb6013022816a3787f9",
+          "sha256:172bee4ace6d25beb13543009e904f56db6c255f791475e21d9dc39a6c563217",
+          "sha256:1773014778e16548575f0c25e703e0890df95a4686df7df197ef5f8e2e14f89a",
+          "sha256:1908227ca8d57f60547e06fe978c86c401e0bd1a40317efce29f1734c6a87f60",
+          "sha256:1b454ec33a6669c47636020345a48ffd45688c62b93ca51cdc03c886290251df",
+          "sha256:1c880395cbed77f8d0483f1424d573bf7b905bf87ee7af9831767cc7a275808d",
+          "sha256:1e312802beef2e861907b2400937388e1ec6f51ee442e35a9555c00ca7fe2b76",
+          "sha256:1e6d497d3d42e25c7d6151acf3a3a1add7e104228ba55d67ffa4eefc8c2f0e4e",
+          "sha256:1f1048c2738c265ead76d0fc8ecddfc77f223c6236b95a695aaf47127bb53b37",
+          "sha256:2001fcedfb00092300cfd0d8b0385b2e5a909190c8572f65bb32d2027cbb3549",
+          "sha256:20e1273c40851e5f1763132039c86fb6a7b5f94d1d8265d7e934299f6eb1321c",
+          "sha256:255168b8a0d6013b55aa80ec8d82c0701e3e1d25800e1391e96aea8ba0f7a482",
+          "sha256:287b8efc00954a8c36fd27ba7b458a5b30f47ff2c97fe880579760c037743197",
+          "sha256:2a791e39a46b17417ef6313f1c418276e0b6fc61ad356ac461e9135849d0e6af",
+          "sha256:2b3416fcd9fe59286f08055ba2c38fc10d270683b3a6201bd000a7ed894d2a28",
+          "sha256:2b73f7c7f5073a6566bb71bb21a2f76f7e96ff9406ecabacefdac57f2989a999",
+          "sha256:2cc07a19603dc70ad4b52f5a3979ae94872e90c5ef986150ea4e30f1441e3426",
+          "sha256:2ee4436ee07d58f2e40af7a64161b2928debf9e402567937fd5e5af2f27a2613",
+          "sha256:2f27d3cd4fa3ff4a41ca842888f3569503f4b07389309b4efbe0f451f0d75ab4",
+          "sha256:2f585612164877fc00c3bec62e0dbdbf4dd3d7ebc0eb8d581f42fdb6b0f9d494",
+          "sha256:2f68aaaf481b2b32c7f697f36e913d09a106a1b8a0c9069e3a074cae96158423",
+          "sha256:302b704866dc147090bb39259b4d10f203b4d9a525e4efc8d8fa159d9cf520d8",
+          "sha256:31c911fc29bb171b0650301a3239bea7508c15d82ea45d2e1903a36ed71f7c37",
+          "sha256:33b6460f0f4447a3274ff862c160555c1f8b3755e49ea8930d68a0f8c5f9187c",
+          "sha256:34bb8662469e65515c26fca4e8817493e5377fb13b32c41cbe52a163a11f7963",
+          "sha256:34e09f172a21506d08656d3e29879b54b5ea58b066218a1ee05ca5c09f77cdeb",
+          "sha256:3626697a5af1a54662c4f4dd9a5e368e4c13946471bb3208d54bce3edf3c24e4",
+          "sha256:36d6ace00851a2d205b66cb93af11ebe37c1f3dd52515796837b2efe1a9ae7b5",
+          "sha256:39df8ff11c307ba820ef60391160fda805221e4a950e49eed3000627c7e66bc0",
+          "sha256:3bc8a47b8999584ddf1ee150477eb9c3f33d2be1412151e07803092c7a1052e3",
+          "sha256:3d14cb2be0f6d96995a6e3e2e74d10b46a76f4b13b45f7493df3058954da97f0",
+          "sha256:3d1b214715f0cfd6db220ae01dd4d679dcb5b49b152dd1769d09df06a802b0ed",
+          "sha256:3f0576d2535bee9c279b187d8e4a8cb4dbaf2f5439eea593ec90d4f926a59687",
+          "sha256:3f1c8f06ba4bb559d3667d4741247c8bcc34f49900abd6752c15e50efe126929",
+          "sha256:3f38a82ca3c0da40d4bda217f0b95aae742fa0c58e2d7b7cc821301b88b39e16",
+          "sha256:4237b9b8561ebdb413ee8451260492cf3aa496897c32cf02f3acad27971034c7",
+          "sha256:426377e12aeef84bfd33e88ab1ed53a03f74c7975cebfcbfcfd2e16b5187871f",
+          "sha256:435230db637ab381a35912664fef6a101eb49b39a95dc1202d5e9f7ab42a4900",
+          "sha256:485dd3d6038b5ebde607fe860fe0e5f9ccb4e5f61439b8c4e3d770053a3d133e",
+          "sha256:48820d2c0a2d8ff88291323c3ca901179402b40fc281bca4fc4dc30f270cb446",
+          "sha256:490873660bea1004c8b49706fdf2cb46f3f83141208fc999bc85866e1d2147ba",
+          "sha256:4e99b5cabe16f0e764a21980f5f5fa0154506b3bb5c0166766b3b96190c139c8",
+          "sha256:4fe4128a2d4f39d3e5e7b010aa9b3e3c548cdd21f09214103a986b1d0d4ce9cd",
+          "sha256:5042e4d183271057e07336e5b1180430df015bf5a83b86afca4ebed5ca33441c",
+          "sha256:5243bfb9bd50ebb8fe1a682f7b406461f9af3bac10509272303d837cf3cc2367",
+          "sha256:54d5bca282372878b06bd88765006d731bce86c05c6ac9300e2359247cefc3e6",
+          "sha256:5558a5ab54d6d0585adf064a103b425392b7ad46270a6948b4fe8272f4e066b9",
+          "sha256:56a76808ffe1a462501bf59fc6c9b822d03845f982f1ce68fadadab69937464b",
+          "sha256:56c02b7177ff3233f6d582ffdd17b84a4f5c48bc72ee74cf8f918fe5b8b5add0",
+          "sha256:56ed5f92f1a00381b8fad5401fed2ec2615416dd5ad2af0054d99c0d7374bf94",
+          "sha256:5700a9cf5f682a5afe987c1812bfb13706a8a0b47c748b6573d75916dc4cf842",
+          "sha256:5743d250aa1b585a2c0beecdc14fc8caf9509cffc03b8b1bd3f74112c89f02df",
+          "sha256:57512f8b389f875a1b040eb47978c76dce5604c243cd20c6b97c5823a11e2759",
+          "sha256:5829c9bd4de6f3d5ea1421f9f76d7c390e71c7db77562ca34fae1c3f6baca937",
+          "sha256:5852fd64fedfc52db3fe940f1697184e26f83a1a6122954a0d5fc3559ec7baa3",
+          "sha256:58c9a52b3b2f28d58222fc666b4adbc5ed291193a1b1c239b8370ce97e1ccf50",
+          "sha256:59addd738001ba5d342c97fe16c42058c59e88614ef7333ec552f9b869a49c16",
+          "sha256:5a45ca72761421e54f473265537638d2ad51a6460490b6577bf131daa86b7a13",
+          "sha256:5bff29f4320419b698828fdbd0ca3b68bbe46c99b9bf8dd756d608284c3e9661",
+          "sha256:5c1e7d9d0e2a69f901f4ca4fbc491cad954ba4980912ed050b630209ed07a469",
+          "sha256:5cce752186d749291546b89b387ea4b2f71463d7bc1677fe1e320944107ab68d",
+          "sha256:5f57862e5e41fb52e696f9a12565d5f18442eb209243b21f9770765ec4564b3d",
+          "sha256:60c129ee5d1c0e0d14a4c9c830afb9487056251090bc59bc799ca1b2f702487e",
+          "sha256:6100536398848552ebd5ecfcc299dec40b59390ca5d59186e7c4bb0850cb527a",
+          "sha256:6183a49f20c0d8184f560d4e79443cf09560eceeca91d38f76e8eab2a9a1379e",
+          "sha256:6203bf49ba059a5a13bf51ce05d729a0470d283c258d1d05e8c600970c165214",
+          "sha256:642991aa0b3dbf388b93726656e0ab8537ab0bcad348f3e38d5d333e2943f651",
+          "sha256:64e4d074ab6b0fa1883b7f1edd9f13b82c079780f52b99c6800f7b5f9c9678dd",
+          "sha256:661f0714c475a476305f22ddc42d42b50f7edd3fdbb7b84f017f7b34e2eaf72f",
+          "sha256:674a0590059368f3b85303c36763206e587023183b14ca7316f80cb5591e2339",
+          "sha256:6762c0872dabc368aadefa52827e9cdc9ace36b699ad860ad0e20a85c38d8d52",
+          "sha256:67d7f0b6f8be589a91e7427b59549785fbe49eed8fddee0c4f5ebd74fd76181d",
+          "sha256:6982b877150712b9ab4b2f91ed855cac86de20d443a207beafe90591de73bf67",
+          "sha256:6a540b1881c48796f2338e232bd485a82de20d12fa975d6b23ab18bf8a9d0258",
+          "sha256:6cdf83225bc188ce924514543da8e91458d0a4ba5d8e6227fa88c0927ac553cd",
+          "sha256:6d14135630991d788ab9b4edda7593209b41dddffd062898e7f1d6985f85810a",
+          "sha256:6dde4224fce939e9f1d3a570eb4716791dce1604a4ab4c1af96744d1b3582db6",
+          "sha256:6fe5b74cc4e00b421197be496c30e3a365465c5c43013fb2ec72e1dbde54d423",
+          "sha256:6ffeb48386acd1b14d82fc0467d67e0a831111b37287556fb5f560d164fdb84f",
+          "sha256:7000219afc3e559d21a38ccb9ad15eb16b6027887a7648c9c35a14de0b350585",
+          "sha256:70480961c7731bfc4d85b1b18cb3d095777ca9ce9de0fb6b8ba3f396043438fa",
+          "sha256:714afd08e8e0b0539b84ec86c91d813cbcf40d7070759b368135a6e3852a76e9",
+          "sha256:719869f157181b4f57369087b58699f0dfa5d575a7c2af632cd05acf6deaa05c",
+          "sha256:7374a215f84f55fb1878031637d5c5e43d93a25d690aefe1d04ef6d59917d67e",
+          "sha256:73f99425f2f19551f58d6ad5eb25c988d227af29853694552f4ebef63b3a50d6",
+          "sha256:74b27cee1d4835a36eb16a888ee1a5dded8578ec0160e7ea56931cf1c66d6b6a",
+          "sha256:76a82ca6f522dfd02a634bd903a205acb0c9195714fc2bce8ec63d6a39a82920",
+          "sha256:76d4ad8f814b3a8181167615642c6186772fd99da33afb68cfe295a6de966476",
+          "sha256:7797cdfda93029072c413a6a8986cc27254870ae4063a42c6a6161eda7030911",
+          "sha256:77b08f25e8059b6f6ee21f3c968cdde668cd225d00d89593b1ef1e6a30639c29",
+          "sha256:77befd909f49c4a8bed207a84a62cc82d925d18989a1fadbd9fc76cdab3ebcc3",
+          "sha256:77d9d029cac3d637f805cd16f097beee2837115d3c2b1c1a6dc9c869d3094dfb",
+          "sha256:7987468f6690bf39604dace7d43ac58eea1f0485bb9a394442ff2685756da5cf",
+          "sha256:7a3bbbab0b9ad756eab4e2b576b13b8d72265f0e542af7a79ae73a73e9266444",
+          "sha256:7b0bde7e85e76c228e2ac49ac8a1fa272fcdc226e9f8a1c43f26340a7f486af6",
+          "sha256:7ce8ec6817c62d3b8e28d6e07cde5342a9e79da1dc7b57e80186cb2f01a900f1",
+          "sha256:7d4f7a1d4f6b8aa06fa38068682c519ce11428fc6880f766ad084a76874f5d66",
+          "sha256:8032fca42f4fbb0843f134fa423037edd0bd93a097ed265de2a9703c07741218",
+          "sha256:806b93c5c80a429469817ef733806302567016902490178fe209eac8b8c9a04a",
+          "sha256:83153c5dcb47da860a2c1518019e7ffef93233c9855373984b25d70713a1824a",
+          "sha256:83abe701426e823848794a48f64ba9281e69bdbd996b8cf546d442ac0424b938",
+          "sha256:84d73e5373bdcf2e39b45692f24084c20431a79d709232957406f8e08da5e68e",
+          "sha256:868aa950f8929ddf4fa27680000d7a27c5262fd6f3c5077cf3e1be42988dcc8f",
+          "sha256:87072360bc0be6c8d2a326203b5c599ca0e144393d85ff5b4b6be27b9a2bd1b6",
+          "sha256:874532f8b7254912a9f42a2cbe2b530bfbb61a77cf13e3d7a8f2d36357ec464c",
+          "sha256:8960731e44a841e7eb387851fef816912ac6a6f5f17148ac46feea5bb6e2fcbf",
+          "sha256:8a758d2058887d4946c2a6b4a7026fea8481ddb333bc220d6917f104bc7d98c1",
+          "sha256:8cb5077decb22003fd5791cbeca638a4f74a7a9cde68c4ff7557f84847f82b2f",
+          "sha256:8cfb687695277df45c0e74372d46b96a163094a99809166d1e1f1c6972913b19",
+          "sha256:8d6b3747b07084df36851b052bd5bd416a798533e16a280039d222fc0b355459",
+          "sha256:8fdf0e161a66e6ae377d30d06343105c8ae9d419a153db70d53041ff616464a6",
+          "sha256:921fa6f9f68d9c55f063f8acf09111ad2c4bcf5ab8646241d1921e54b17559cc",
+          "sha256:94f3604f74ef63c7b36c7fe3fabad9bbf3ff579c7a889281e40955b05f51d45e",
+          "sha256:956db0833d99c5afdd2ca9551cbf273bbdb5b70402f63a1479f6e8f3dca46b62",
+          "sha256:971bde5438f9d55bbdf82b1a36e1bc27ffbd497a527efc267dd2f00cfd03d2fc",
+          "sha256:97e1035b69750ab411176d3775203a175671630c3bd2fe70011527b954ae40c1",
+          "sha256:982a0bd43f6af3b296a2d9579c5a7f7ad5ec06b4d6c59dd2a96895b323f0e3dc",
+          "sha256:98cfd2f78fef374fe404dd21b4847963ffec84cb14956becad8a8c37ccca9882",
+          "sha256:9d6533fb801917495026df07e2cf643fc183f293e861346cb78f605ed4b3d51c",
+          "sha256:9f57563e7f539c3135302bdee5bd27d64a69d333f15a02e0ed90d54104865816",
+          "sha256:9fbd2af57fdc3610c20fb5416d502a2758e0ca8b545d34bd776a7ba7a8c9d789",
+          "sha256:a0f4178dade512dfab465e2dc5864ff3c766e881c26288e811a2db93e97b7f52",
+          "sha256:a5705f742a64752932221f5d90de2a27632db9a8bcbbcec2d4765e3dd380712e",
+          "sha256:a6717d038742d7d03d146482144e51565bdc35ccc41e7ae1cb6b9a33a484a7a9",
+          "sha256:a72b5f37b11417abfe11dfbea63424c23cfe9133a161f90013a8dc2786dd9b00",
+          "sha256:a7d4dd483cfd64275aca1c68451f941206a88418de93a18742b6389faa78ab1f",
+          "sha256:a7ef601414269da2e7c55336507e92cc5d4b1cc38ff39ea3aba1873520814beb",
+          "sha256:aa6d546b49d0af6764e9aa9de8ebcdfacc057f759ab33ef69275ede9625b7d70",
+          "sha256:b0442a17678d857c05d96f8498470646722ab628d5dff533aa1ce45933bac776",
+          "sha256:b0b1213e539dbb21efda062870fa2a5e24fe6a28b29d7340f6193a4abce5cb08",
+          "sha256:b12b50c8c1af691a688271e0da45dadc410cfae5823243ede2f0c842872b5183",
+          "sha256:b236deb62ae09b236e1e97bf1da1a388737d649955cc103efa772dc337f18070",
+          "sha256:b30dde0d46338545ece5001be90d3306b9fc223d619c8f6883de60f470512de9",
+          "sha256:b3787a1d6b4b5f74a76ea702356e059580502fe65edfb5e3adf707b5a844b15f",
+          "sha256:b37e7274181d1c1f94b4f5f0edd27b36d625c9732dc55a80a34ca274d4176097",
+          "sha256:b41d5fae80132696cb19d97bb44257ea9192ad706d2e8b3c5b69b60f876199b7",
+          "sha256:b59c772409ccebc34775f2485a7a765e1ac0e87ee9ed9c99d072261ceb665705",
+          "sha256:b5b730d88f3d5fba80cb522449bba626b038fda5e8fa526cc128d6dc2c466c46",
+          "sha256:b89699ecd90547af8b8259b06ce4ef7c3fa0ac553fa67f114c7d83c01b0673a4",
+          "sha256:b8a1d23ee84ea29b9ba94edc79de5e2abfa8db0ad008e587586f72ec7415a885",
+          "sha256:b981be808aa1ef09b955409f861571e2d672ffb76b1fc5497bf963fbc530afc7",
+          "sha256:b9e7962357a07a4f4b656897294a9592a2a2606b7fbd24e1725864a6ed6fe41a",
+          "sha256:bab6e9e272a4b76851bafd44a0586e1e655b1407cd84492bef1cdba45711e98f",
+          "sha256:bb4ca03ae069667c46bc36f739d38171ede9afd2e80c3e0cabb1569600c24080",
+          "sha256:bbfcb099b0e94fbf3e32f923fbc117b804939f8d7924c4783e2481f6916d1318",
+          "sha256:bcded1688a774948954dc9362cc9c92ce5b7b28bbad9af5b34ebe8431dd25344",
+          "sha256:bebfa56c3017175a8e7095f90b2325b68cb0313d59dae39b6d6478267b77d703",
+          "sha256:bf7ce554962967c57152d3e5eabe221e4eeda3d5e90ca429dc35e1e7f8d06029",
+          "sha256:c0dc12a446fba29815142d0d2bbba1588db96b2a41df617609538429a4257924",
+          "sha256:c0fa0965ade6f130777fbc8624a093034b5caeee3c4d09269fbebb06b3266886",
+          "sha256:c12c01fb9decf082936e022d9e46a85b3b76bc060232edf62c7c7f6b3f94877b",
+          "sha256:c1fdeb7bf5de26e7991746ff1d864a44c7796453c57dc86f707c35e9b1c55e2b",
+          "sha256:c45875b43f5edce323ea4760f078c4240de708ddeec5c537fccd206beb7f4dfa",
+          "sha256:c4efb878aa2157b18e4acf0187fc883254f09af59d800faf07a8c1ca16154bb8",
+          "sha256:c73d7963821e8cf9df65f40275afa4ddc60a3bd6d9b11e5d7043abd9ba56289d",
+          "sha256:cb295919cfad8095cea0caf63ce9e3d128974f049b4775240f8dceb7b7873c4a",
+          "sha256:cc35a831f9c8b4937f8b940665ea90befe52bf34c06e94fc6500120065370507",
+          "sha256:ce35ce4de8c0eb08df8809b0cf67456e39fa5fe08378318d1ec35749f67b63b9",
+          "sha256:cf74b103b6dde8d8820640e0def04fb50fe1576ceb26a9505b20c76a72939d7e",
+          "sha256:cfbea3b0c86e48cf30fec05998ba5203d520e654bcb63635cec819dbba1081bf",
+          "sha256:d0d18cfe087f06bc03f8cac2255819c77ee2f3cdf080dc9f80141ff609a6c742",
+          "sha256:d11dba031bf4e003eef35c766db86c071b31d690dbc16d836d6b79f0f9a771db",
+          "sha256:d1f70dc6ef11a3d3e90cb6295c924172310d8f20d2ce65be359e78a217f99f36",
+          "sha256:d32e385599bd326809eb2a79303832b3bc3cba289133ab9ffb89fddc18138aec",
+          "sha256:d5bbe62657a35053f4bb09275813357e26f131ea77dfe02798258ad5a6ffae33",
+          "sha256:d726cf8ee0fe8fb65afa4191bb0c0e2c1c60816ff1bf9fe1f3c4002e29d600c4",
+          "sha256:d7a53a7709c7c79a47afa62657fe04b2c76b8bc769c80b4bb9708ffe0f697876",
+          "sha256:d80d5b617dc1392a6d7d196194fd1a49d2b0dd32ce835122613e565c23ba4b03",
+          "sha256:d8a7140fbe2931885aade696c656f3e16e7cd271daeb0aeabd34897155fe73ba",
+          "sha256:d9adbd77b9b598150f778ba19fad0fe155208e4713459f314c3db7a98bb78673",
+          "sha256:da130242277f701e07bdc196df23b318f4bd180a51ce01ff9c28d0e8e6fa9422",
+          "sha256:dacef241b5b9e7259bfbb24a98a427c0934ed6daebe107ad9698b15719638f39",
+          "sha256:db138b065ac80274adc7edc69193dc8aeb3bff31fb37900fbe9c21aae2f87f42",
+          "sha256:dc4ec2e2722e75bd4b64a42ed416de35a94cd7b52738309fa7912cb74e4638ee",
+          "sha256:de084fa104b8d0e93950a4582e25ff0da0617d9d5b93fbbf014ebd4d0c3a8e75",
+          "sha256:de5ada73af87649ae12a4d8fe3c2d623bc9083ca01202c49174e60db0a58ab8e",
+          "sha256:e10a4460905f2d53f97267c1a2d012d09ce5bbfaba6fa2a31450da23398b8b4d",
+          "sha256:e114aabaded7196e692ed680e89abc3bb044b4a375290043f979124e405b6a56",
+          "sha256:e196219e2bdd5c644a14dea7120fc23304d5fd6a5e3facfc0d385acd2bcd84fd",
+          "sha256:e20e5e7caece9a6a338200fe26aa1cc5b3a2447b67112efbef430f373a7c179a",
+          "sha256:e29a3549d47cb50f4a1743f7617164f14e62c3fa6c717956e6227e26ba114b66",
+          "sha256:e36ecc3e859c31b5a6a09b1451dc087861479cd5c3342f40a7087eca3a2a99e4",
+          "sha256:e3a3c805016b90748a09dcd6a670c12681c59ac629dcf2597eef45c29fe53eb6",
+          "sha256:e3c9cc17abadbfeaeb2ef7750cf3b4c3036b977b206c52c73ede5467ef52b851",
+          "sha256:e4655ca12e048926d5100699cea925167bee8f03aa94597cf0ec181129d52f86",
+          "sha256:e728298919437798f25275313ad28539e04868a2cde6efc0e107ef4a2d15dd20",
+          "sha256:e8d09a5d573e60a5630c7a6cd18733ad471d79d2246be4cf36d91f390596b038",
+          "sha256:e9c560c28c46b4b9973f283044e82b2077bc8acc0729c378fe4f9984bb0cc9a8",
+          "sha256:eaecfe1ec26334a9f0f1736ff61981d0698680796a1de342efc8273824ea6d5f",
+          "sha256:ebed645d30014343a9e486428ca6624a1385798ed809eee6b54bb1b7c44e4882",
+          "sha256:ee11a76b521607578f070b7f8b182848eb867aef80cce8211c1baaedb9b83c5a",
+          "sha256:f08ce5c93e47408726408c91b42355452d442cf516531e475895ec2ba751b1a7",
+          "sha256:f2c0d4777a57eb7ba9f22d0be8769f865a059af559ea99f2fa8b448ae1c72894",
+          "sha256:f2ef3ec7865ef25f6e3f15afe2839d73e50ba718574834e5f1f6f781bbb2f175",
+          "sha256:f4839454d88e1f7f27a22d752844e9a259fab45cca1aaf6af72855c0f9521275",
+          "sha256:f48b04051825561081dddb7cd2bded66d2d5a3a01d2e71f8fd30ee711a6d2360",
+          "sha256:f80bb0f13bc3ae88bed845f1c8f638683bf784be275074a711dfe89a7ad9c3a7",
+          "sha256:f8713c77d605689fd028ae9477bdea716552ca8a26750841cd5785839689f92d",
+          "sha256:f8753dfc83128052f3b4d9fb0ba3b42c41dac71178b2335bee954ea57e12034e",
+          "sha256:f9158c69d30252d9bbd4435f6b6c5f64a1e679f00ae0c4ad95eb51e77e89af3c",
+          "sha256:f93e5bfd57cf4506a9f5786230c975b0b07baddf9eea80e34889d6c30739f5d8",
+          "sha256:f9b17d4ea03472136f5f65770ce53334c0a0cd1f7e5316a2ca3da0ec361de924",
+          "sha256:f9c9303ef4191489bcb187c8633dc8548cf729da826e7fcfb4a6937c6cbacaac",
+          "sha256:fa2ad5dcef65a3c320d95e1f9242ef576f072a4b847b6fdad0bbcc7505d0981c",
+          "sha256:fb538a691058ba20d1b095e6ab4bdad8fa21954afe19954297a29b4fa99b4f8a",
+          "sha256:fc0b111c9f6aba5278804543aabd067ae207a7f75ebb13fd55640a723db11b50",
+          "sha256:fd2697e287a74cb50bc02afcf9d904b4ccd166c66067213b9b0a96014ed56b29",
+          "sha256:ff519ae73551b8e4ad4c4adb2f7e5d6e35cc2670ca8afb25c4101ef93f1eaa4a"
+        ],
+        "gates": {
+          "automated_row_evidence": {
+            "actual": 232,
+            "passed": false,
+            "target": "zero failed rows"
+          },
+          "construct_coverage": {
+            "actual": 12,
+            "passed": false,
+            "target": 16
+          },
+          "domain_variety": {
+            "actual": 0,
+            "passed": false,
+            "target": "at least 5 explicit domains"
+          },
+          "edge_coverage": {
+            "actual": 12,
+            "passed": false,
+            "target": "at least 15 of 17"
+          },
+          "exact_instruction_variety": {
+            "actual": 7,
+            "passed": false,
+            "target": "at least 40; material difference still needs review"
+          },
+          "family_balance": {
+            "actual": {
+              "aggregation": 23,
+              "cte": 0,
+              "deduplication": 35,
+              "funnel": 8,
+              "multi_joins": 50,
+              "retention": 45,
+              "simple_joins": 38,
+              "subqueries": 33,
+              "temporal": 0,
+              "window_functions": 0
+            },
+            "passed": false,
+            "target": "8 per family"
+          },
+          "normalized_sql_text_variety": {
+            "actual": 44,
+            "passed": false,
+            "target": "80 distinct normalized SQL texts; AST and semantic novelty not measured"
+          },
+          "one_selected_row_per_task": {
+            "actual": 214,
+            "passed": false,
+            "target": 232
+          },
+          "row_count": {
+            "actual": 232,
+            "passed": false,
+            "target": 80
+          },
+          "schema_concentration": {
+            "actual": 71,
+            "passed": false,
+            "target": "at most 12 rows per schema"
+          },
+          "schema_variety": {
+            "actual": 5,
+            "passed": false,
+            "target": "at least 10"
+          },
+          "selected_semantic_collision_members": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero among selected rows; fingerprint is a screening heuristic"
+          },
+          "selected_structural_collision_members": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero among selected rows; fingerprint is a screening heuristic"
+          },
+          "template_floor": {
+            "actual": 0,
+            "passed": false,
+            "target": "at least 4 IDs per family"
+          },
+          "unique_record_and_candidate_ids": {
+            "actual": {
+              "candidates": 232,
+              "records": 232
+            },
+            "passed": true,
+            "target": 232
+          },
+          "unresolved_contamination_flags": {
+            "actual": 232,
+            "passed": false,
+            "target": "zero or independently resolved"
+          }
+        },
+        "not_measured": [
+          "material semantic difference among instructions",
+          "normalized SQL AST and semantic equivalence",
+          "external benchmark contamination",
+          "human validation of adversarial fixture design and independence",
+          "schema and column description completeness",
+          "full provenance graph and clean-environment replay",
+          "schema relationship realism and empirical difficulty",
+          "reviewer judgments, rights, clean-environment replay, and utility"
+        ],
+        "row_failures": [
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5829c9bd4de6f3d5ea1421f9f76d7c390e71c7db77562ca34fae1c3f6baca937"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:10755c4bc8263b630635014bb9a359db747907f18b0df3e00ebf1d884ef12b2b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c12c01fb9decf082936e022d9e46a85b3b76bc060232edf62c7c7f6b3f94877b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:dacef241b5b9e7259bfbb24a98a427c0934ed6daebe107ad9698b15719638f39"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:287b8efc00954a8c36fd27ba7b458a5b30f47ff2c97fe880579760c037743197"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2b73f7c7f5073a6566bb71bb21a2f76f7e96ff9406ecabacefdac57f2989a999"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b0b1213e539dbb21efda062870fa2a5e24fe6a28b29d7340f6193a4abce5cb08"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:94f3604f74ef63c7b36c7fe3fabad9bbf3ff579c7a889281e40955b05f51d45e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2cc07a19603dc70ad4b52f5a3979ae94872e90c5ef986150ea4e30f1441e3426"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:aa6d546b49d0af6764e9aa9de8ebcdfacc057f759ab33ef69275ede9625b7d70"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1b454ec33a6669c47636020345a48ffd45688c62b93ca51cdc03c886290251df"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:84d73e5373bdcf2e39b45692f24084c20431a79d709232957406f8e08da5e68e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f2c0d4777a57eb7ba9f22d0be8769f865a059af559ea99f2fa8b448ae1c72894"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7d4f7a1d4f6b8aa06fa38068682c519ce11428fc6880f766ad084a76874f5d66"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bab6e9e272a4b76851bafd44a0586e1e655b1407cd84492bef1cdba45711e98f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3bc8a47b8999584ddf1ee150477eb9c3f33d2be1412151e07803092c7a1052e3"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0c58fb78988108847e529e8381fd3c0246a4f1e51940baa763e203909b0e880a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:34bb8662469e65515c26fca4e8817493e5377fb13b32c41cbe52a163a11f7963"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:77d9d029cac3d637f805cd16f097beee2837115d3c2b1c1a6dc9c869d3094dfb"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:077daf834694a5548f93db18b3f5f5a4b551dca75a4b77d03b649033f28e805e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d7a53a7709c7c79a47afa62657fe04b2c76b8bc769c80b4bb9708ffe0f697876"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f9158c69d30252d9bbd4435f6b6c5f64a1e679f00ae0c4ad95eb51e77e89af3c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:642991aa0b3dbf388b93726656e0ab8537ab0bcad348f3e38d5d333e2943f651"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c45875b43f5edce323ea4760f078c4240de708ddeec5c537fccd206beb7f4dfa"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:64e4d074ab6b0fa1883b7f1edd9f13b82c079780f52b99c6800f7b5f9c9678dd"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8960731e44a841e7eb387851fef816912ac6a6f5f17148ac46feea5bb6e2fcbf"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:14a4e336748a713704aa19d9cd2baec3437f6b58ee201efbe4fdb748ded6429b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:87072360bc0be6c8d2a326203b5c599ca0e144393d85ff5b4b6be27b9a2bd1b6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e4655ca12e048926d5100699cea925167bee8f03aa94597cf0ec181129d52f86"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:868aa950f8929ddf4fa27680000d7a27c5262fd6f3c5077cf3e1be42988dcc8f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d11dba031bf4e003eef35c766db86c071b31d690dbc16d836d6b79f0f9a771db"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6183a49f20c0d8184f560d4e79443cf09560eceeca91d38f76e8eab2a9a1379e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b0442a17678d857c05d96f8498470646722ab628d5dff533aa1ce45933bac776"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8032fca42f4fbb0843f134fa423037edd0bd93a097ed265de2a9703c07741218"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7797cdfda93029072c413a6a8986cc27254870ae4063a42c6a6161eda7030911"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:4e99b5cabe16f0e764a21980f5f5fa0154506b3bb5c0166766b3b96190c139c8"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e196219e2bdd5c644a14dea7120fc23304d5fd6a5e3facfc0d385acd2bcd84fd"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:15aefa5fd64ec471234d0b0987e5a07f60a5fc2e87b11bb3a1be20c2da0b1945"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3f0576d2535bee9c279b187d8e4a8cb4dbaf2f5439eea593ec90d4f926a59687"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a72b5f37b11417abfe11dfbea63424c23cfe9133a161f90013a8dc2786dd9b00"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:83abe701426e823848794a48f64ba9281e69bdbd996b8cf546d442ac0424b938"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b89699ecd90547af8b8259b06ce4ef7c3fa0ac553fa67f114c7d83c01b0673a4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b41d5fae80132696cb19d97bb44257ea9192ad706d2e8b3c5b69b60f876199b7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:34e09f172a21506d08656d3e29879b54b5ea58b066218a1ee05ca5c09f77cdeb"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6a540b1881c48796f2338e232bd485a82de20d12fa975d6b23ab18bf8a9d0258"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:cf74b103b6dde8d8820640e0def04fb50fe1576ceb26a9505b20c76a72939d7e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:59addd738001ba5d342c97fe16c42058c59e88614ef7333ec552f9b869a49c16"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0d768475416f17b0a2c8821961fc67a35f52cc619ab946d032d7aeca21b0a3ea"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:20e1273c40851e5f1763132039c86fb6a7b5f94d1d8265d7e934299f6eb1321c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f80bb0f13bc3ae88bed845f1c8f638683bf784be275074a711dfe89a7ad9c3a7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2ee4436ee07d58f2e40af7a64161b2928debf9e402567937fd5e5af2f27a2613"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:085290d6b564684ec4200ff5c5730356350d49c69630d0df0014808b464ca5db"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8d6b3747b07084df36851b052bd5bd416a798533e16a280039d222fc0b355459"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1c880395cbed77f8d0483f1424d573bf7b905bf87ee7af9831767cc7a275808d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:76d4ad8f814b3a8181167615642c6186772fd99da33afb68cfe295a6de966476"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:661f0714c475a476305f22ddc42d42b50f7edd3fdbb7b84f017f7b34e2eaf72f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2f585612164877fc00c3bec62e0dbdbf4dd3d7ebc0eb8d581f42fdb6b0f9d494"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e29a3549d47cb50f4a1743f7617164f14e62c3fa6c717956e6227e26ba114b66"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:302b704866dc147090bb39259b4d10f203b4d9a525e4efc8d8fa159d9cf520d8"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ff519ae73551b8e4ad4c4adb2f7e5d6e35cc2670ca8afb25c4101ef93f1eaa4a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:57512f8b389f875a1b040eb47978c76dce5604c243cd20c6b97c5823a11e2759"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5700a9cf5f682a5afe987c1812bfb13706a8a0b47c748b6573d75916dc4cf842"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5f57862e5e41fb52e696f9a12565d5f18442eb209243b21f9770765ec4564b3d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:674a0590059368f3b85303c36763206e587023183b14ca7316f80cb5591e2339"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:956db0833d99c5afdd2ca9551cbf273bbdb5b70402f63a1479f6e8f3dca46b62"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:11cfeee1e0b2832aa2d45988c1fdd70733522be51c7e47f8dd5483c1246add84"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e10a4460905f2d53f97267c1a2d012d09ce5bbfaba6fa2a31450da23398b8b4d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:dc4ec2e2722e75bd4b64a42ed416de35a94cd7b52738309fa7912cb74e4638ee"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6ffeb48386acd1b14d82fc0467d67e0a831111b37287556fb5f560d164fdb84f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e114aabaded7196e692ed680e89abc3bb044b4a375290043f979124e405b6a56"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7b0bde7e85e76c228e2ac49ac8a1fa272fcdc226e9f8a1c43f26340a7f486af6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3f1c8f06ba4bb559d3667d4741247c8bcc34f49900abd6752c15e50efe126929"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e728298919437798f25275313ad28539e04868a2cde6efc0e107ef4a2d15dd20"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5042e4d183271057e07336e5b1180430df015bf5a83b86afca4ebed5ca33441c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c1fdeb7bf5de26e7991746ff1d864a44c7796453c57dc86f707c35e9b1c55e2b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:cc35a831f9c8b4937f8b940665ea90befe52bf34c06e94fc6500120065370507"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5852fd64fedfc52db3fe940f1697184e26f83a1a6122954a0d5fc3559ec7baa3"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e36ecc3e859c31b5a6a09b1451dc087861479cd5c3342f40a7087eca3a2a99e4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:33b6460f0f4447a3274ff862c160555c1f8b3755e49ea8930d68a0f8c5f9187c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:39df8ff11c307ba820ef60391160fda805221e4a950e49eed3000627c7e66bc0"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6100536398848552ebd5ecfcc299dec40b59390ca5d59186e7c4bb0850cb527a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:77b08f25e8059b6f6ee21f3c968cdde668cd225d00d89593b1ef1e6a30639c29"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7987468f6690bf39604dace7d43ac58eea1f0485bb9a394442ff2685756da5cf"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:07a545eab2ac07e7fc27497a1cc41cf7d0b64fdfcffca37d1bd9d04f6b69d99a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bf7ce554962967c57152d3e5eabe221e4eeda3d5e90ca429dc35e1e7f8d06029"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2a791e39a46b17417ef6313f1c418276e0b6fc61ad356ac461e9135849d0e6af"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d726cf8ee0fe8fb65afa4191bb0c0e2c1c60816ff1bf9fe1f3c4002e29d600c4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:56a76808ffe1a462501bf59fc6c9b822d03845f982f1ce68fadadab69937464b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5bff29f4320419b698828fdbd0ca3b68bbe46c99b9bf8dd756d608284c3e9661"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:cb295919cfad8095cea0caf63ce9e3d128974f049b4775240f8dceb7b7873c4a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e8d09a5d573e60a5630c7a6cd18733ad471d79d2246be4cf36d91f390596b038"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c4efb878aa2157b18e4acf0187fc883254f09af59d800faf07a8c1ca16154bb8"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1e6d497d3d42e25c7d6151acf3a3a1add7e104228ba55d67ffa4eefc8c2f0e4e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b981be808aa1ef09b955409f861571e2d672ffb76b1fc5497bf963fbc530afc7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:db138b065ac80274adc7edc69193dc8aeb3bff31fb37900fbe9c21aae2f87f42"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1059abb3dae360757d614d02b70c5defbe9bd0e29b9b729e2ec51cd5f73cea81"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f08ce5c93e47408726408c91b42355452d442cf516531e475895ec2ba751b1a7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1f1048c2738c265ead76d0fc8ecddfc77f223c6236b95a695aaf47127bb53b37"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:de084fa104b8d0e93950a4582e25ff0da0617d9d5b93fbbf014ebd4d0c3a8e75"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bcded1688a774948954dc9362cc9c92ce5b7b28bbad9af5b34ebe8431dd25344"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0c930d18d1659b48e496cfa6a81445f76fe4e8182ead13cd3d173ecd47e71c31"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1773014778e16548575f0c25e703e0890df95a4686df7df197ef5f8e2e14f89a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:9f57563e7f539c3135302bdee5bd27d64a69d333f15a02e0ed90d54104865816"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5a45ca72761421e54f473265537638d2ad51a6460490b6577bf131daa86b7a13"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:485dd3d6038b5ebde607fe860fe0e5f9ccb4e5f61439b8c4e3d770053a3d133e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b12b50c8c1af691a688271e0da45dadc410cfae5823243ede2f0c842872b5183"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8fdf0e161a66e6ae377d30d06343105c8ae9d419a153db70d53041ff616464a6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2f27d3cd4fa3ff4a41ca842888f3569503f4b07389309b4efbe0f451f0d75ab4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:435230db637ab381a35912664fef6a101eb49b39a95dc1202d5e9f7ab42a4900"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:fd2697e287a74cb50bc02afcf9d904b4ccd166c66067213b9b0a96014ed56b29"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:70480961c7731bfc4d85b1b18cb3d095777ca9ce9de0fb6b8ba3f396043438fa"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:cfbea3b0c86e48cf30fec05998ba5203d520e654bcb63635cec819dbba1081bf"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6dde4224fce939e9f1d3a570eb4716791dce1604a4ab4c1af96744d1b3582db6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:13062007e1efa67d1a493e23e9527ab129ff8ccb837c10c03805e80c4bf05189"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:76a82ca6f522dfd02a634bd903a205acb0c9195714fc2bce8ec63d6a39a82920"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:255168b8a0d6013b55aa80ec8d82c0701e3e1d25800e1391e96aea8ba0f7a482"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b30dde0d46338545ece5001be90d3306b9fc223d619c8f6883de60f470512de9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b9e7962357a07a4f4b656897294a9592a2a2606b7fbd24e1725864a6ed6fe41a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:77befd909f49c4a8bed207a84a62cc82d925d18989a1fadbd9fc76cdab3ebcc3"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:971bde5438f9d55bbdf82b1a36e1bc27ffbd497a527efc267dd2f00cfd03d2fc"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:921fa6f9f68d9c55f063f8acf09111ad2c4bcf5ab8646241d1921e54b17559cc"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:fc0b111c9f6aba5278804543aabd067ae207a7f75ebb13fd55640a723db11b50"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:98cfd2f78fef374fe404dd21b4847963ffec84cb14956becad8a8c37ccca9882"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a0f4178dade512dfab465e2dc5864ff3c766e881c26288e811a2db93e97b7f52"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:de5ada73af87649ae12a4d8fe3c2d623bc9083ca01202c49174e60db0a58ab8e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7ce8ec6817c62d3b8e28d6e07cde5342a9e79da1dc7b57e80186cb2f01a900f1"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c0dc12a446fba29815142d0d2bbba1588db96b2a41df617609538429a4257924"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:9d6533fb801917495026df07e2cf643fc183f293e861346cb78f605ed4b3d51c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b236deb62ae09b236e1e97bf1da1a388737d649955cc103efa772dc337f18070"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b59c772409ccebc34775f2485a7a765e1ac0e87ee9ed9c99d072261ceb665705"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6d14135630991d788ab9b4edda7593209b41dddffd062898e7f1d6985f85810a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e9c560c28c46b4b9973f283044e82b2077bc8acc0729c378fe4f9984bb0cc9a8"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f48b04051825561081dddb7cd2bded66d2d5a3a01d2e71f8fd30ee711a6d2360"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6982b877150712b9ab4b2f91ed855cac86de20d443a207beafe90591de73bf67"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bebfa56c3017175a8e7095f90b2325b68cb0313d59dae39b6d6478267b77d703"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3d14cb2be0f6d96995a6e3e2e74d10b46a76f4b13b45f7493df3058954da97f0"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6762c0872dabc368aadefa52827e9cdc9ace36b699ad860ad0e20a85c38d8d52"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:08fc13febabdc7973e4b08afaea7194d9f18cab52e6a9d7ecc3f544b71f25381"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:172bee4ace6d25beb13543009e904f56db6c255f791475e21d9dc39a6c563217"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7000219afc3e559d21a38ccb9ad15eb16b6027887a7648c9c35a14de0b350585"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:07416eb08027932f893b99bcdca387034efc3183aea78c078e7da6ae989c85d7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8a758d2058887d4946c2a6b4a7026fea8481ddb333bc220d6917f104bc7d98c1"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f9b17d4ea03472136f5f65770ce53334c0a0cd1f7e5316a2ca3da0ec361de924"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:54d5bca282372878b06bd88765006d731bce86c05c6ac9300e2359247cefc3e6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b8a1d23ee84ea29b9ba94edc79de5e2abfa8db0ad008e587586f72ec7415a885"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0090349255277b9ac347da7f9e23d7e663bf5549c1e35b3f53397d651a4fc82e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d1f70dc6ef11a3d3e90cb6295c924172310d8f20d2ce65be359e78a217f99f36"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:138eb46d8de61071e96b1f09005d8720e83be175d60b5eb90f152d496c56090b"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:9fbd2af57fdc3610c20fb5416d502a2758e0ca8b545d34bd776a7ba7a8c9d789"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:030c92923d1b60f9c46c8b76833d4f5fa801b904c7a8e49eba312af09b8e8b85"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0650be49c6025b9ec07d31f68956b1374f8faccf040c07d28d178c0bc6768f26"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:0c509a91e05138b73ea77ba307f4949c632f0d57640e4908b22b2288cd4c8918"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e3a3c805016b90748a09dcd6a670c12681c59ac629dcf2597eef45c29fe53eb6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:4fe4128a2d4f39d3e5e7b010aa9b3e3c548cdd21f09214103a986b1d0d4ce9cd"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d32e385599bd326809eb2a79303832b3bc3cba289133ab9ffb89fddc18138aec"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:033f20ca3a18fa2aae21b7b18cc1cfe47cbbec38c7e3e77f5e944f3a92ad7a20"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6203bf49ba059a5a13bf51ce05d729a0470d283c258d1d05e8c600970c165214"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a7ef601414269da2e7c55336507e92cc5d4b1cc38ff39ea3aba1873520814beb"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:97e1035b69750ab411176d3775203a175671630c3bd2fe70011527b954ae40c1"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f8713c77d605689fd028ae9477bdea716552ca8a26750841cd5785839689f92d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8cb5077decb22003fd5791cbeca638a4f74a7a9cde68c4ff7557f84847f82b2f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:56ed5f92f1a00381b8fad5401fed2ec2615416dd5ad2af0054d99c0d7374bf94"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:490873660bea1004c8b49706fdf2cb46f3f83141208fc999bc85866e1d2147ba"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6fe5b74cc4e00b421197be496c30e3a365465c5c43013fb2ec72e1dbde54d423"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:60c129ee5d1c0e0d14a4c9c830afb9487056251090bc59bc799ca1b2f702487e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:fa2ad5dcef65a3c320d95e1f9242ef576f072a4b847b6fdad0bbcc7505d0981c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f4839454d88e1f7f27a22d752844e9a259fab45cca1aaf6af72855c0f9521275"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f9c9303ef4191489bcb187c8633dc8548cf729da826e7fcfb4a6937c6cbacaac"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:74b27cee1d4835a36eb16a888ee1a5dded8578ec0160e7ea56931cf1c66d6b6a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5cce752186d749291546b89b387ea4b2f71463d7bc1677fe1e320944107ab68d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5558a5ab54d6d0585adf064a103b425392b7ad46270a6948b4fe8272f4e066b9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2001fcedfb00092300cfd0d8b0385b2e5a909190c8572f65bb32d2027cbb3549"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3626697a5af1a54662c4f4dd9a5e368e4c13946471bb3208d54bce3edf3c24e4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d80d5b617dc1392a6d7d196194fd1a49d2b0dd32ce835122613e565c23ba4b03"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a6717d038742d7d03d146482144e51565bdc35ccc41e7ae1cb6b9a33a484a7a9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:73f99425f2f19551f58d6ad5eb25c988d227af29853694552f4ebef63b3a50d6"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e20e5e7caece9a6a338200fe26aa1cc5b3a2447b67112efbef430f373a7c179a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:4237b9b8561ebdb413ee8451260492cf3aa496897c32cf02f3acad27971034c7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d8a7140fbe2931885aade696c656f3e16e7cd271daeb0aeabd34897155fe73ba"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ebed645d30014343a9e486428ca6624a1385798ed809eee6b54bb1b7c44e4882"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1908227ca8d57f60547e06fe978c86c401e0bd1a40317efce29f1734c6a87f60"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3f38a82ca3c0da40d4bda217f0b95aae742fa0c58e2d7b7cc821301b88b39e16"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b3787a1d6b4b5f74a76ea702356e059580502fe65edfb5e3adf707b5a844b15f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ce35ce4de8c0eb08df8809b0cf67456e39fa5fe08378318d1ec35749f67b63b9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5743d250aa1b585a2c0beecdc14fc8caf9509cffc03b8b1bd3f74112c89f02df"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:56c02b7177ff3233f6d582ffdd17b84a4f5c48bc72ee74cf8f918fe5b8b5add0"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:719869f157181b4f57369087b58699f0dfa5d575a7c2af632cd05acf6deaa05c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f2ef3ec7865ef25f6e3f15afe2839d73e50ba718574834e5f1f6f781bbb2f175"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:36d6ace00851a2d205b66cb93af11ebe37c1f3dd52515796837b2efe1a9ae7b5"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bbfcb099b0e94fbf3e32f923fbc117b804939f8d7924c4783e2481f6916d1318"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a5705f742a64752932221f5d90de2a27632db9a8bcbbcec2d4765e3dd380712e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c73d7963821e8cf9df65f40275afa4ddc60a3bd6d9b11e5d7043abd9ba56289d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:426377e12aeef84bfd33e88ab1ed53a03f74c7975cebfcbfcfd2e16b5187871f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d0d18cfe087f06bc03f8cac2255819c77ee2f3cdf080dc9f80141ff609a6c742"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:e3c9cc17abadbfeaeb2ef7750cf3b4c3036b977b206c52c73ede5467ef52b851"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:05360e3e8136820bf0a61751603bcc34b03d11bc83471888d990dbe66280581e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:06823a8cc44aa11644f66c9bfb6be6ec5da5849991db1b07e2d845707a6998b4"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:14a67623ae037e48bba4763a37906257187ccf04bebb0db5601ae1cf11453829"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d9adbd77b9b598150f778ba19fad0fe155208e4713459f314c3db7a98bb78673"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:31c911fc29bb171b0650301a3239bea7508c15d82ea45d2e1903a36ed71f7c37"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:58c9a52b3b2f28d58222fc666b4adbc5ed291193a1b1c239b8370ce97e1ccf50"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a7d4dd483cfd64275aca1c68451f941206a88418de93a18742b6389faa78ab1f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1e312802beef2e861907b2400937388e1ec6f51ee442e35a9555c00ca7fe2b76"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:48820d2c0a2d8ff88291323c3ca901179402b40fc281bca4fc4dc30f270cb446"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bb4ca03ae069667c46bc36f739d38171ede9afd2e80c3e0cabb1569600c24080"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5c1e7d9d0e2a69f901f4ca4fbc491cad954ba4980912ed050b630209ed07a469"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f8753dfc83128052f3b4d9fb0ba3b42c41dac71178b2335bee954ea57e12034e"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:8cfb687695277df45c0e74372d46b96a163094a99809166d1e1f1c6972913b19"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2f68aaaf481b2b32c7f697f36e913d09a106a1b8a0c9069e3a074cae96158423"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:1653e2e69a302e582e1c51aa676c78f4e8c7de0d4613cfb6013022816a3787f9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:ee11a76b521607578f070b7f8b182848eb867aef80cce8211c1baaedb9b83c5a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:83153c5dcb47da860a2c1518019e7ffef93233c9855373984b25d70713a1824a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:982a0bd43f6af3b296a2d9579c5a7f7ad5ec06b4d6c59dd2a96895b323f0e3dc"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:f93e5bfd57cf4506a9f5786230c975b0b07baddf9eea80e34889d6c30739f5d8"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:eaecfe1ec26334a9f0f1736ff61981d0698680796a1de342efc8273824ea6d5f"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:d5bbe62657a35053f4bb09275813357e26f131ea77dfe02798258ad5a6ffae33"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:5243bfb9bd50ebb8fe1a682f7b406461f9af3bac10509272303d837cf3cc2367"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7a3bbbab0b9ad756eab4e2b576b13b8d72265f0e542af7a79ae73a73e9266444"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:874532f8b7254912a9f42a2cbe2b530bfbb61a77cf13e3d7a8f2d36357ec464c"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:fb538a691058ba20d1b095e6ab4bdad8fa21954afe19954297a29b4fa99b4f8a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b37e7274181d1c1f94b4f5f0edd27b36d625c9732dc55a80a34ca274d4176097"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:c0fa0965ade6f130777fbc8624a093034b5caeee3c4d09269fbebb06b3266886"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:da130242277f701e07bdc196df23b318f4bd180a51ce01ff9c28d0e8e6fa9422"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:6cdf83225bc188ce924514543da8e91458d0a4ba5d8e6227fa88c0927ac553cd"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:00f2dc24ea4e7ae1516826a81d5e573ddf8dcb583f3741d7dce3a24f2353f141"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:3d1b214715f0cfd6db220ae01dd4d679dcb5b49b152dd1769d09df06a802b0ed"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:2b3416fcd9fe59286f08055ba2c38fc10d270683b3a6201bd000a7ed894d2a28"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:806b93c5c80a429469817ef733806302567016902490178fe209eac8b8c9a04a"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:67d7f0b6f8be589a91e7427b59549785fbe49eed8fddee0c4f5ebd74fd76181d"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:b5b730d88f3d5fba80cb522449bba626b038fda5e8fa526cc128d6dc2c466c46"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:714afd08e8e0b0539b84ec86c91d813cbcf40d7070759b368135a6e3852a76e9"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:7374a215f84f55fb1878031637d5c5e43d93a25d690aefe1d04ef6d59917d67e"
+          }
+        ],
+        "scope": "automated pre-review screen only",
+        "source": "runs\\production-001\\quality\\export\\golden.jsonl",
+        "uncovered_constructs": [
+          "cte",
+          "distinct",
+          "having",
+          "union"
+        ],
+        "uncovered_release_edges": [
+          "empty_result",
+          "negative_values",
+          "retention_boundaries",
+          "same_timestamp_steps",
+          "window_end_boundary"
+        ],
+        "unrecognized_families": []
+      },
+      "run_dir": "runs\\production-001",
+      "tasks": 500,
+      "verifications": 1500
+    },
+    "smoke-qualification-001": {
+      "artifact_hashes": {
+        "candidates\\candidates.jsonl": "sha256:33edcb6bc42ddf2b92562dce6d0a89efd9825fc3c008c44065e99a8dad67ac6b",
+        "execution\\triples.jsonl": "sha256:678f784688eea4809d2e99a9d4bde072f72f7b534830e10e6442a34704248d8f",
+        "manifests\\run-manifest.json": "sha256:c703de4aadfab63446c40ba17b50d54d1818710f389fd4a7d3f3bc9d82219326",
+        "manifests\\run-state.json": "sha256:87695ba6dd2db1d8d6c20432decfce04daea95d7b46500405485de4ce5ff22cb",
+        "quality\\export\\audit_required.jsonl": "sha256:1c44e7e4985b65a422a47f842dad9a400267a2485675afe639e7b0660d13bf9a",
+        "quality\\export\\audit_sample.jsonl": "sha256:b730eb480b564383d0c59262675b09d72b4148109a0604987980765038288875",
+        "quality\\export\\dataset_health.json": "sha256:7f75546563874099df2684d870347607e6dcd01b2320065c58930df07b6091da",
+        "quality\\export\\excluded.jsonl": "sha256:35e759cd25ee9940fbf753ac9237cc05be5ce82dc921d4c1f175ceac9cacfe0f",
+        "quality\\export\\golden.jsonl": "sha256:2d068d7ee42fc7a39eafabddd5cafb56934e877141db911df1b4becae4ea0f86",
+        "quality\\export\\inconclusive.jsonl": "sha256:86a65365f53eb61c90c4b06e5bd1a2d996087bf07ec5b5417c0af7c47b1653d6",
+        "reports\\failure-summary.json": "sha256:ca75b3d0d31d3a82ed79fba7b943abf173905e9c4b6e208d0e8e184e859335d1",
+        "reports\\family-results.json": "sha256:e01dfd8561d3552f597ac07314766c6b2da1c23cc16009fd4fa5e3a54f306615",
+        "reports\\production-report.json": "sha256:c84335569fc17a01ee15bb48d58336ce246a2a879d9b645f1b6e4f9c90f24112",
+        "reports\\production-report.md": "sha256:6b39e6e77480f024cc21eef9e662787b0a6422220229c4a8474b963eb38b6e28",
+        "reports\\quality-summary.json": "sha256:319e40215e7006c93d2c2f82b9eefc17c614485f0041e8750ae16b50d6050040",
+        "tasks\\tasks.jsonl": "sha256:6f17139a2c53210196cdf13a5fecae7db288680ff6b8965e6564f98c79f228ac",
+        "verification\\verification.jsonl": "sha256:e37e40489378c9b8eb3950d667f18feac9374c458f2a8076dbe04f843b1373c5"
+      },
+      "candidate_bundles": 10,
+      "candidates": 30,
+      "executions": 30,
+      "failure_summary": {
+        "EXECUTION_FAILED": 1,
+        "RESULT_MISMATCH": 2,
+        "WEAK_SUITE": 3
+      },
+      "family_results": {
+        "aggregation": {
+          "PASS": 3
+        },
+        "cte": {
+          "PASS": 3
+        },
+        "deduplication": {
+          "GOLDEN": 1,
+          "PASS": 3
+        },
+        "funnel": {
+          "FAIL": 3
+        },
+        "multi_joins": {
+          "GOLDEN": 1,
+          "PASS": 3
+        },
+        "retention": {
+          "GOLDEN": 1,
+          "PASS": 3
+        },
+        "simple_joins": {
+          "GOLDEN": 1,
+          "PASS": 3
+        },
+        "subqueries": {
+          "INCONCLUSIVE": 3
+        },
+        "temporal": {
+          "GOLDEN": 1,
+          "PASS": 3
+        },
+        "window_functions": {
+          "GOLDEN": 1,
+          "PASS": 3
+        }
+      },
+      "generation_failures": 0,
+      "generation_successes": 30,
+      "golden": 6,
+      "golden_sha256": "sha256:2d068d7ee42fc7a39eafabddd5cafb56934e877141db911df1b4becae4ea0f86",
+      "manifest": {
+        "config_version": "1.0-smoke",
+        "endpoint": "http://localhost:11434/v1",
+        "governance_status": "REVIEW_REQUIRED_NON_COMMERCIAL",
+        "model_id": "alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest",
+        "model_revision": "ollama-digest:a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+        "production_config_id": "sha256:818d2da9cc83ecd0f891c22ea0edfa4ee19f0c5b608bc3ca6ad2496f7af71741",
+        "prompt_version": "sql-v2",
+        "provider": "devstral",
+        "run_name": "smoke-qualification-001"
+      },
+      "manifest_sha256": "sha256:c703de4aadfab63446c40ba17b50d54d1818710f389fd4a7d3f3bc9d82219326",
+      "premium_screen": {
+        "automated_pre_review_gates_pass": false,
+        "candidate_sibling_exact_overlap_flags": 0,
+        "excluded_mutants_for_inspection": [
+          {
+            "inconclusive": 1,
+            "invalid": 0,
+            "record_id": "sha256:345095613a130f9bb598e6499aca0e9baec2e62a432cc018fe7cae451af66734"
+          },
+          {
+            "inconclusive": 0,
+            "invalid": 1,
+            "record_id": "sha256:28a97acbf4051700b464938044ffcb3c4f21f8b70dc2da50d8b9add923aa9ea7"
+          }
+        ],
+        "flagged_record_ids": [
+          "sha256:28a97acbf4051700b464938044ffcb3c4f21f8b70dc2da50d8b9add923aa9ea7",
+          "sha256:345095613a130f9bb598e6499aca0e9baec2e62a432cc018fe7cae451af66734",
+          "sha256:9c924983e37cce5eb2f79130cdff7d579f5b1588f29bd5b62b2a2b5f8e702cf5",
+          "sha256:a1d5df6a9c9f0469907edcfca38efd034f3d17aa793057a57874d593c6fb1296",
+          "sha256:bc9584173350901ab4aa9841b39fe02b8e0bf6d7164a9c6e5af2f12e0c4e5fa4",
+          "sha256:de99821bbf68e3f7fbf5cb2d33abd0e61011e55369b994eb51ad9955ed8e02f8"
+        ],
+        "gates": {
+          "automated_row_evidence": {
+            "actual": 6,
+            "passed": false,
+            "target": "zero failed rows"
+          },
+          "construct_coverage": {
+            "actual": 12,
+            "passed": false,
+            "target": 16
+          },
+          "domain_variety": {
+            "actual": 0,
+            "passed": false,
+            "target": "at least 5 explicit domains"
+          },
+          "edge_coverage": {
+            "actual": 12,
+            "passed": false,
+            "target": "at least 15 of 17"
+          },
+          "exact_instruction_variety": {
+            "actual": 6,
+            "passed": false,
+            "target": "at least 40; material difference still needs review"
+          },
+          "family_balance": {
+            "actual": {
+              "aggregation": 0,
+              "cte": 0,
+              "deduplication": 1,
+              "funnel": 0,
+              "multi_joins": 1,
+              "retention": 1,
+              "simple_joins": 1,
+              "subqueries": 0,
+              "temporal": 1,
+              "window_functions": 1
+            },
+            "passed": false,
+            "target": "8 per family"
+          },
+          "normalized_sql_text_variety": {
+            "actual": 6,
+            "passed": true,
+            "target": "80 distinct normalized SQL texts; AST and semantic novelty not measured"
+          },
+          "one_selected_row_per_task": {
+            "actual": 6,
+            "passed": true,
+            "target": 6
+          },
+          "row_count": {
+            "actual": 6,
+            "passed": false,
+            "target": 80
+          },
+          "schema_concentration": {
+            "actual": 2,
+            "passed": true,
+            "target": "at most 12 rows per schema"
+          },
+          "schema_variety": {
+            "actual": 5,
+            "passed": false,
+            "target": "at least 10"
+          },
+          "selected_semantic_collision_members": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero among selected rows; fingerprint is a screening heuristic"
+          },
+          "selected_structural_collision_members": {
+            "actual": 0,
+            "passed": true,
+            "target": "zero among selected rows; fingerprint is a screening heuristic"
+          },
+          "template_floor": {
+            "actual": 0,
+            "passed": false,
+            "target": "at least 4 IDs per family"
+          },
+          "unique_record_and_candidate_ids": {
+            "actual": {
+              "candidates": 6,
+              "records": 6
+            },
+            "passed": true,
+            "target": 6
+          },
+          "unresolved_contamination_flags": {
+            "actual": 6,
+            "passed": false,
+            "target": "zero or independently resolved"
+          }
+        },
+        "not_measured": [
+          "material semantic difference among instructions",
+          "normalized SQL AST and semantic equivalence",
+          "external benchmark contamination",
+          "human validation of adversarial fixture design and independence",
+          "schema and column description completeness",
+          "full provenance graph and clean-environment replay",
+          "schema relationship realism and empirical difficulty",
+          "reviewer judgments, rights, clean-environment replay, and utility"
+        ],
+        "row_failures": [
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:9c924983e37cce5eb2f79130cdff7d579f5b1588f29bd5b62b2a2b5f8e702cf5"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:de99821bbf68e3f7fbf5cb2d33abd0e61011e55369b994eb51ad9955ed8e02f8"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:345095613a130f9bb598e6499aca0e9baec2e62a432cc018fe7cae451af66734"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:28a97acbf4051700b464938044ffcb3c4f21f8b70dc2da50d8b9add923aa9ea7"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:a1d5df6a9c9f0469907edcfca38efd034f3d17aa793057a57874d593c6fb1296"
+          },
+          {
+            "reason": "independent adversarial runtime case is missing or did not pass",
+            "record_id": "sha256:bc9584173350901ab4aa9841b39fe02b8e0bf6d7164a9c6e5af2f12e0c4e5fa4"
+          }
+        ],
+        "scope": "automated pre-review screen only",
+        "source": "runs\\smoke-qualification-001\\quality\\export\\golden.jsonl",
+        "uncovered_constructs": [
+          "distinct",
+          "having",
+          "limit",
+          "union"
+        ],
+        "uncovered_release_edges": [
+          "empty_result",
+          "negative_values",
+          "same_timestamp_steps",
+          "single_row_groups",
+          "zero_values"
+        ],
+        "unrecognized_families": []
+      },
+      "run_dir": "runs\\smoke-qualification-001",
+      "tasks": 10,
+      "verifications": 30
+    }
+  },
+  "historical_artifacts_unchanged": {
+    "controlled-requalification-002": true,
+    "production-001": true,
+    "smoke-qualification-001": true
+  },
+  "human_review": "PENDING",
+  "implementation_id": "sha256:cba9b13594eb1a2f5c4c7d9d57643039ce8f93c691a882a17baec3d36cead986",
+  "independent_replay": "NOT_MEASURED",
+  "label": "MEASURED; not commercial release approval or readiness score",
+  "new_run": {
+    "artifact_hashes": {
+      "candidates\\attempt-reservations.jsonl": "sha256:021f89fa90908c4d8ff40fdaf5eb976964af58c4b2ccbd7cfcb288d52281b9f0",
+      "candidates\\candidates.jsonl": "sha256:d09050d4cb8b08782fb29293b4295b5b45cb9f7dd397d52bad80647912b544a5",
+      "execution\\triples.jsonl": "sha256:e73ddf5ab696a92c68735a8967e4314e3c30cb29876b2d4630ea1c1f1121f329",
+      "manifests\\run-manifest.json": "sha256:42b151f7133d79cecfdaa1673648c076d19b91f0bc95b1d7099b19b3487133e7",
+      "manifests\\run-state.json": "sha256:36c542054ab75646cfa4264df774021edf11f41b5ff78b933044123cc26e45c9",
+      "quality\\export\\audit_required.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "quality\\export\\audit_sample.jsonl": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "quality\\export\\dataset_health.json": "sha256:d76f6455d7e4df6281a26640d04d7ec7d240a13e4ebc4fafba925cc9fd2d09d0",
+      "quality\\export\\excluded.jsonl": "sha256:a1e7aa681a527bb7a540587508622f5af12b5f5c742a2ffa6150719e8a3b638f",
+      "quality\\export\\golden.jsonl": "sha256:d4dac86c5d5e74562b55d19021ae4a1268eb41808d8cf4e99d76087f6a0d06e6",
+      "quality\\export\\inconclusive.jsonl": "sha256:94845e8ba1a261258fef1e6db0b61ceea604631e03b3b4c3930e5a1e1ccdaa09",
+      "quality\\export\\population_metrics.json": "sha256:741ef63b6979ea48a338b0a9d204bffee58adbb6c8952f893371d0a2d17c13ca",
+      "quality\\export\\review_queue.jsonl": "sha256:1e77c237749afa2c585420ee41dde93c04aac6db15f94da8712ea80025b27fe2",
+      "tasks\\tasks.jsonl": "sha256:676471f9ee01949caea43bbda0812f3cc6ebbee0988f75a6461ad5e0ecf2d4bc",
+      "verification\\verification.jsonl": "sha256:ab14e6178cf6dc1687b314fb50ed03bfb71c7d09802741fa3f7f4f87559de79e"
+    },
+    "candidate_bundles": 43,
+    "candidates": 129,
+    "executions": 129,
+    "failure_summary": {
+      "EXECUTION_FAILED": 7,
+      "HIDDEN_MISMATCH": 2,
+      "RESULT_MISMATCH": 51,
+      "WEAK_SUITE": 1
+    },
+    "family_results": {
+      "aggregation": {
+        "FAIL": 4,
+        "GOLDEN": 5,
+        "PASS": 14
+      },
+      "cte": {
+        "FAIL": 2,
+        "GOLDEN": 4,
+        "PASS": 10
+      },
+      "deduplication": {
+        "FAIL": 8,
+        "GOLDEN": 2,
+        "PASS": 4
+      },
+      "funnel": {
+        "FAIL": 12
+      },
+      "multi_joins": {
+        "FAIL": 1,
+        "GOLDEN": 4,
+        "PASS": 11
+      },
+      "retention": {
+        "FAIL": 4,
+        "GOLDEN": 3,
+        "PASS": 8
+      },
+      "simple_joins": {
+        "FAIL": 2,
+        "GOLDEN": 4,
+        "PASS": 10
+      },
+      "subqueries": {
+        "FAIL": 11,
+        "GOLDEN": 1,
+        "INCONCLUSIVE": 1,
+        "PASS": 3
+      },
+      "temporal": {
+        "FAIL": 9,
+        "GOLDEN": 1,
+        "PASS": 3
+      },
+      "window_functions": {
+        "FAIL": 7,
+        "GOLDEN": 2,
+        "PASS": 5
+      }
+    },
+    "generation_failures": 0,
+    "generation_successes": 129,
+    "golden": 26,
+    "golden_sha256": "sha256:d4dac86c5d5e74562b55d19021ae4a1268eb41808d8cf4e99d76087f6a0d06e6",
+    "manifest": {
+      "config_version": "5.0-final-diagnostic-coverage",
+      "endpoint": "http://localhost:11434/v1",
+      "governance_status": "REVIEW_REQUIRED_NON_COMMERCIAL",
+      "implementation_id": "sha256:cba9b13594eb1a2f5c4c7d9d57643039ce8f93c691a882a17baec3d36cead986",
+      "model_id": "alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest",
+      "model_revision": "ollama-digest:a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+      "policy_file_hashes": {
+        "product": "sha256:81660baca2dbcb3c88bbc64b095d7130ebafefd17ed0e16b9870aff2faa725c4",
+        "provenance": "sha256:d731c0a1f7cf2d5e8edb536876183d9ea8400060c6f4341ecb090ff3237f7bda",
+        "quality": "sha256:3ee559bcafc3ab70bd48bae15992935ea8ed7053cd9eba14b085313e5afc0218",
+        "sandbox": "sha256:cd429b9f60e88b7aa7be58740f3d71484127fdc9ac2982714aa7c835e44efd09"
+      },
+      "production_config_id": "sha256:3067cba33e7bc08084cf8408373ac8bb14ec7ae71a5e8e95f7ef19ed1b039aba",
+      "prompt_version": "sql-v2",
+      "provider": "devstral",
+      "run_name": "diverse-smoke-005",
+      "template_catalog_id": "sha256:ff014b0db0482dd627ca40dcbd96893b5a863370082e4d8f42df5c395ecf76a3"
+    },
+    "manifest_sha256": "sha256:42b151f7133d79cecfdaa1673648c076d19b91f0bc95b1d7099b19b3487133e7",
+    "premium_screen": {
+      "automated_pre_review_gates_pass": false,
+      "candidate_sibling_exact_overlap_flags": 26,
+      "excluded_mutants_for_inspection": [],
+      "flagged_record_ids": [],
+      "gates": {
+        "automated_row_evidence": {
+          "actual": 0,
+          "passed": true,
+          "target": "zero failed rows"
+        },
+        "construct_coverage": {
+          "actual": 16,
+          "passed": true,
+          "target": 16
+        },
+        "domain_variety": {
+          "actual": 8,
+          "passed": true,
+          "target": "at least 5 explicit domains"
+        },
+        "edge_coverage": {
+          "actual": 16,
+          "passed": true,
+          "target": "at least 15 of 17"
+        },
+        "exact_instruction_variety": {
+          "actual": 26,
+          "passed": false,
+          "target": "at least 40; material difference still needs review"
+        },
+        "family_balance": {
+          "actual": {
+            "aggregation": 5,
+            "cte": 4,
+            "deduplication": 2,
+            "funnel": 0,
+            "multi_joins": 4,
+            "retention": 3,
+            "simple_joins": 4,
+            "subqueries": 1,
+            "temporal": 1,
+            "window_functions": 2
+          },
+          "passed": false,
+          "target": "8 per family"
+        },
+        "normalized_sql_text_variety": {
+          "actual": 26,
+          "passed": true,
+          "target": "80 distinct normalized SQL texts; AST and semantic novelty not measured"
+        },
+        "one_selected_row_per_task": {
+          "actual": 26,
+          "passed": true,
+          "target": 26
+        },
+        "row_count": {
+          "actual": 26,
+          "passed": false,
+          "target": 80
+        },
+        "schema_concentration": {
+          "actual": 3,
+          "passed": true,
+          "target": "at most 12 rows per schema"
+        },
+        "schema_variety": {
+          "actual": 24,
+          "passed": true,
+          "target": "at least 10"
+        },
+        "selected_semantic_collision_members": {
+          "actual": 0,
+          "passed": true,
+          "target": "zero among selected rows; fingerprint is a screening heuristic"
+        },
+        "selected_structural_collision_members": {
+          "actual": 0,
+          "passed": true,
+          "target": "zero among selected rows; fingerprint is a screening heuristic"
+        },
+        "template_floor": {
+          "actual": 0,
+          "passed": false,
+          "target": "at least 4 IDs per family"
+        },
+        "unique_record_and_candidate_ids": {
+          "actual": {
+            "candidates": 26,
+            "records": 26
+          },
+          "passed": true,
+          "target": 26
+        },
+        "unresolved_contamination_flags": {
+          "actual": 0,
+          "passed": true,
+          "target": "zero or independently resolved"
+        }
+      },
+      "not_measured": [
+        "material semantic difference among instructions",
+        "normalized SQL AST and semantic equivalence",
+        "external benchmark contamination",
+        "human validation of adversarial fixture design and independence",
+        "schema and column description completeness",
+        "full provenance graph and clean-environment replay",
+        "schema relationship realism and empirical difficulty",
+        "reviewer judgments, rights, clean-environment replay, and utility"
+      ],
+      "row_failures": [],
+      "scope": "automated pre-review screen only",
+      "source": "runs\\diverse-smoke-005\\quality\\export\\golden.jsonl",
+      "uncovered_constructs": [],
+      "uncovered_release_edges": [
+        "same_timestamp_steps"
+      ],
+      "unrecognized_families": []
+    },
+    "run_dir": "runs\\diverse-smoke-005",
+    "tasks": 43,
+    "verifications": 129
+  },
+  "premium_preflight": {
+    "checks": {
+      "configuration": {
+        "message": "validated",
+        "ok": true
+      },
+      "docker": {
+        "ok": true,
+        "version": "29.7.2"
+      },
+      "model": {
+        "available": true,
+        "digest": "a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4",
+        "ok": true
+      },
+      "pipeline": {
+        "components": [
+          "Task Engine",
+          "Generation",
+          "Sandbox",
+          "Verifier",
+          "Quality",
+          "Provenance",
+          "Products"
+        ],
+        "ok": true
+      },
+      "sandbox": {
+        "actual_digest": "sha256:6ee6badb20867c6426abb0b2ced747a126178f0a99b5bf4d94e65a62c236f7ac",
+        "expected_digest": "sha256:6ee6badb20867c6426abb0b2ced747a126178f0a99b5bf4d94e65a62c236f7ac",
+        "image": "verified-data-factory-sandbox:1.0",
+        "ok": true,
+        "stale_vdf_containers": []
+      },
+      "secrets": {
+        "message": "no inline API key fields",
+        "ok": true
+      },
+      "storage": {
+        "free_bytes": 601844146176,
+        "ok": true
+      },
+      "template_diversity": {
+        "available_per_family": {
+          "aggregation": 6,
+          "cte": 4,
+          "deduplication": 4,
+          "funnel": 4,
+          "multi_joins": 4,
+          "retention": 4,
+          "simple_joins": 4,
+          "subqueries": 5,
+          "temporal": 4,
+          "window_functions": 4
+        },
+        "ok": true,
+        "required_per_family": 4
+      }
+    },
+    "ok": true,
+    "production_config_id": "sha256:41655ffc848d54b4b420ddcba086fc77b6afef70bee0beb70dee17f68a38bf53"
+  },
+  "recorded_at": "2026-10-01T17:32:02.027849+00:00",
+  "template_ids_by_family": {
+    "aggregation": [
+      "sql.aggregation.grouped",
+      "sql.aggregation.manufacturing_line_scrap",
+      "sql.aggregation.payment_net_settled",
+      "sql.aggregation.support_sla_breaches",
+      "sql.aggregation.top_category_sales",
+      "sql.aggregation.warehouse_throughput"
+    ],
+    "cte": [
+      "sql.cte.inventory_net_flow",
+      "sql.cte.logistics_depot_delay",
+      "sql.cte.monthly",
+      "sql.cte.saas_mrr_changes"
+    ],
+    "deduplication": [
+      "sql.dedup.education_grade_revisions",
+      "sql.dedup.latest",
+      "sql.dedup.payments_latest_profile",
+      "sql.dedup.refund_prefer_approved"
+    ],
+    "funnel": [
+      "sql.funnel.completion",
+      "sql.funnel.logistics_parcel_delivery",
+      "sql.funnel.saas_activation_payment",
+      "sql.funnel.support_resolution_chain"
+    ],
+    "multi_joins": [
+      "sql.joins.education_completed_enrollment",
+      "sql.joins.logistics_final_leg",
+      "sql.joins.manufacturing_approved_supplier",
+      "sql.joins.multi"
+    ],
+    "retention": [
+      "sql.retention.30_day",
+      "sql.retention.clinic_followup_window",
+      "sql.retention.media_week_two_return",
+      "sql.retention.saas_repeat_payment"
+    ],
+    "simple_joins": [
+      "sql.joins.clinic_scheduled_clinician",
+      "sql.joins.payments_country_transfer",
+      "sql.joins.saas_paid_invoices",
+      "sql.joins.simple"
+    ],
+    "subqueries": [
+      "sql.subqueries.customer_outreach",
+      "sql.subqueries.education_all_required",
+      "sql.subqueries.exists",
+      "sql.subqueries.payments_no_settlement",
+      "sql.subqueries.support_unresolved_reopen"
+    ],
+    "temporal": [
+      "sql.temporal.clinic_weekly_visits",
+      "sql.temporal.inventory_daily_stock",
+      "sql.temporal.monthly",
+      "sql.temporal.saas_trial_activation"
+    ],
+    "window_functions": [
+      "sql.windows.logistics_previous_stop",
+      "sql.windows.media_previous_play",
+      "sql.windows.payments_risk_rank",
+      "sql.windows.ranked"
+    ]
+  },
+  "template_versions": 52,
+  "versions": {
+    "duckdb": "1.5.5",
+    "httpx": "0.28.1",
+    "pyarrow": "25.0.1",
+    "pydantic": "2.13.5",
+    "pyyaml": "6.0.3"
+  }
+}

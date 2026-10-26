@@ -1,0 +1,313 @@
+{
+  "difficulty": {
+    "attempts_per_template": 3,
+    "by_family": {
+      "aggregation": {
+        "attempts": 18,
+        "passes": 14,
+        "solve_rate": 0.7778
+      },
+      "cte": {
+        "attempts": 12,
+        "passes": 10,
+        "solve_rate": 0.8333
+      },
+      "deduplication": {
+        "attempts": 12,
+        "passes": 4,
+        "solve_rate": 0.3333
+      },
+      "funnel": {
+        "attempts": 12,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "multi_joins": {
+        "attempts": 12,
+        "passes": 11,
+        "solve_rate": 0.9167
+      },
+      "retention": {
+        "attempts": 12,
+        "passes": 8,
+        "solve_rate": 0.6667
+      },
+      "simple_joins": {
+        "attempts": 12,
+        "passes": 10,
+        "solve_rate": 0.8333
+      },
+      "subqueries": {
+        "attempts": 15,
+        "passes": 3,
+        "solve_rate": 0.2
+      },
+      "temporal": {
+        "attempts": 12,
+        "passes": 3,
+        "solve_rate": 0.25
+      },
+      "window_functions": {
+        "attempts": 12,
+        "passes": 5,
+        "solve_rate": 0.4167
+      }
+    },
+    "by_template": {
+      "sql.aggregation.grouped": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.aggregation.manufacturing_line_scrap": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.aggregation.payment_net_settled": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.aggregation.support_sla_breaches": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.aggregation.top_category_sales": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.aggregation.warehouse_throughput": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.cte.inventory_net_flow": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.cte.logistics_depot_delay": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.cte.monthly": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.cte.saas_mrr_changes": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.dedup.education_grade_revisions": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.dedup.latest": {
+        "attempts": 3,
+        "passes": 1,
+        "solve_rate": 0.3333
+      },
+      "sql.dedup.payments_latest_profile": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.dedup.refund_prefer_approved": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.funnel.completion": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.funnel.logistics_parcel_delivery": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.funnel.saas_activation_payment": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.funnel.support_resolution_chain": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.joins.clinic_scheduled_clinician": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.joins.education_completed_enrollment": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.joins.logistics_final_leg": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.joins.manufacturing_approved_supplier": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.joins.multi": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.joins.payments_country_transfer": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.joins.saas_paid_invoices": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.joins.simple": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.retention.30_day": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.retention.clinic_followup_window": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.retention.media_week_two_return": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.retention.saas_repeat_payment": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.subqueries.customer_outreach": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.subqueries.education_all_required": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.subqueries.exists": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.subqueries.payments_no_settlement": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.subqueries.support_unresolved_reopen": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.temporal.clinic_weekly_visits": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.temporal.inventory_daily_stock": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.temporal.monthly": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      },
+      "sql.temporal.saas_trial_activation": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.windows.logistics_previous_stop": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.windows.media_previous_play": {
+        "attempts": 3,
+        "passes": 2,
+        "solve_rate": 0.6667
+      },
+      "sql.windows.payments_risk_rank": {
+        "attempts": 3,
+        "passes": 0,
+        "solve_rate": 0.0
+      },
+      "sql.windows.ranked": {
+        "attempts": 3,
+        "passes": 3,
+        "solve_rate": 1.0
+      }
+    },
+    "method": "EMPIRICAL",
+    "note": "Fixed three attempts per task; solve rates are measured, not declared."
+  },
+  "external_overlap": {
+    "corpora": {
+      "reference-corpus-2026.json": {
+        "instruction_overlap": 0,
+        "items": 10,
+        "sha256": "b1d3818abe2be156f78ce1d736a42c2ada3d1bfc3920ae3f1d9ceccb9e0274c1",
+        "sql_overlap": 0
+      }
+    },
+    "note": "Overlap is against the named corpora only; it cannot prove absence from all benchmarks.",
+    "status": "MEASURED",
+    "unresolved_hard_matches": []
+  },
+  "golden_records": 26,
+  "run": "runs\\diverse-smoke-005",
+  "splits": {
+    "group_isolation_violations": [],
+    "leakage": {
+      "instruction_fingerprint_overlap": [],
+      "sql_fingerprint_overlap": [],
+      "template_overlap": []
+    },
+    "leakage_report": "PASS",
+    "note": "Split is by template (schema/group), not by row. Exposed dev rows are not relabelled as untouched eval.",
+    "policy": {
+      "group_by": "template",
+      "private_eval": 0.3,
+      "seed": 394005,
+      "train": 0.7
+    },
+    "splits": {
+      "benchmark": 0,
+      "private_eval": 11,
+      "public_eval": 0,
+      "train": 15
+    }
+  }
+}
