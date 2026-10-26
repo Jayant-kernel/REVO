@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>What to learn to build trustworthy datasets · Revo</title>
+  <style>
+    :root {
+      font-family: "Trebuchet MS", Verdana, sans-serif;
+      color-scheme: light;
+      --page: #edece5;
+      --surface: #fcfbf7;
+      --ink: #182a27;
+      --muted: #566b63;
+      --line: #cdd6ca;
+      --accent: #126b50;
+      --accent-soft: #e4efe5;
+      --code: #e9eee7;
+      --signal: #df763e;
+      --shadow: 0 24px 68px rgb(17 45 32 / 10%);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --page: #10201b;
+      --surface: #192b24;
+      --ink: #f1f1e7;
+      --muted: #bbccbf;
+      --line: #385247;
+      --accent: #81ddaa;
+      --accent-soft: #264538;
+      --code: #294439;
+      --signal: #eda46f;
+      --shadow: 0 24px 68px rgb(0 0 0 / 23%);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--page); color: var(--ink); line-height: 1.7; background-image: radial-gradient(circle at 15% 0%, rgb(220 178 97 / 13%), transparent 28rem), linear-gradient(90deg, transparent 97%, rgb(22 73 47 / 3%) 97%); background-size: auto, 28px 28px; }
+    a { color: var(--accent); text-underline-offset: .2em; }
+    a:hover { text-decoration-thickness: .12em; }
+    button { font: inherit; cursor: pointer; }
+    .progress { position: fixed; z-index: 10; inset: 0 auto auto 0; width: 0; height: 4px; background: var(--accent); }
+    .topbar { border-bottom: 1px solid var(--line); background: var(--surface); position: relative; z-index: 2; }
+    .topbar-inner { max-width: 1280px; margin: auto; padding: .8rem clamp(1rem, 3vw, 2rem); display: flex; gap: 1rem; align-items: center; justify-content: space-between; }
+    .brand { font-size: .9rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+    .top-actions { display: flex; align-items: center; gap: .7rem; }
+    .source { font-size: .85rem; }
+    .theme-button { border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); padding: .35rem .8rem; }
+    .layout { max-width: 1380px; margin: auto; padding: clamp(1rem, 3vw, 2.5rem); display: grid; grid-template-columns: 265px minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+    .sidebar { position: sticky; top: 1.5rem; max-height: calc(100vh - 3rem); overflow: auto; padding: .75rem 0; }
+    .sidebar-title { margin: 0 0 .7rem; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .toc { display: grid; gap: .15rem; }
+    .toc a { display: block; border-left: 2px solid transparent; padding: .32rem .7rem; color: var(--muted); text-decoration: none; font-size: .87rem; line-height: 1.35; }
+    .toc a:hover, .toc a.active { border-left-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .toc a[hidden] { display: none; }
+    .document { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px 28px 6px 28px; padding: clamp(1.3rem, 4.2vw, 4.2rem); box-shadow: var(--shadow); }
+    .eyebrow { margin: 0 0 1rem; color: var(--accent); font-weight: 800; font-size: .77rem; letter-spacing: .13em; text-transform: uppercase; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.16; letter-spacing: -.035em; }
+    h1 { max-width: 15ch; margin: 0 0 1.1rem; font-size: clamp(2.3rem, 5vw, 4.2rem); }
+    h2 { margin-top: 3.5rem; padding-top: .6rem; border-top: 1px solid var(--line); font-size: clamp(1.45rem, 2.7vw, 2rem); scroll-margin-top: 2rem; }
+    h2[id^="section-"] { padding-right: 8rem; }
+    p, li { max-width: 78ch; }
+    p { margin: 1rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: .38rem 0; }
+    strong { color: var(--ink); }
+    code { border-radius: .3rem; padding: .12rem .28rem; background: var(--code); font-size: .91em; }
+    .table-wrap { overflow-x: auto; margin: 1.4rem 0; border: 1px solid var(--line); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: .92rem; line-height: 1.5; }
+    th, td { padding: .7rem .85rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    th { background: var(--accent-soft); }
+    .footer { color: var(--muted); border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 1rem; font-size: .85rem; }
+    .hero { position: relative; overflow: hidden; margin: -1rem -1rem 2rem; padding: clamp(1.4rem, 4vw, 3rem); border: 1px solid var(--line); border-radius: 2px 24px 2px 24px; background: linear-gradient(120deg, var(--accent-soft), var(--surface) 68%); }
+    .hero::after { content: "{ }"; position: absolute; right: 1rem; top: -.45rem; font: 700 clamp(7rem, 18vw, 16rem)/1 Georgia, serif; color: var(--accent); opacity: .09; pointer-events: none; }
+    .hero-kicker { color: var(--accent); font-size: .74rem; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    .hero h1 { position: relative; z-index: 1; margin: .5rem 0 1rem; max-width: 14ch; }
+    .hero p { position: relative; z-index: 1; max-width: 60ch; margin: 0; color: var(--muted); }
+    .hero-stats { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.5rem; }
+    .hero-stats span { border: 1px solid var(--line); background: var(--surface); padding: .3rem .65rem; font-size: .75rem; font-weight: 700; }
+    .control-row { display: grid; grid-template-columns: 1fr auto; gap: .8rem; align-items: center; margin: 1.5rem 0; }
+    .search { width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); padding: .75rem 1rem; font: inherit; }
+    .search:focus-visible, button:focus-visible, a:focus-visible, textarea:focus-visible { outline: 3px solid var(--signal); outline-offset: 2px; }
+    .search-summary { color: var(--muted); font-size: .8rem; white-space: nowrap; }
+    .completion-card, .study-card { border: 1px solid var(--line); background: var(--surface); padding: 1rem; margin: 1rem 0; border-radius: 3px 15px 3px 15px; }
+    .completion-title { margin: 0; font-size: .8rem; letter-spacing: .08em; font-weight: 800; text-transform: uppercase; }
+    .completion-count { margin: .25rem 0 .7rem; color: var(--muted); font-size: .83rem; }
+    .meter { width: 100%; height: .45rem; border-radius: 999px; background: var(--line); overflow: hidden; }
+    .meter > span { display: block; height: 100%; width: 0; background: var(--signal); transition: width .3s ease; }
+    .section { position: relative; }
+    .section.hidden { display: none; }
+    .section-button { position: absolute; top: 3.8rem; right: 0; border: 1px solid var(--line); background: var(--surface); color: var(--muted); padding: .35rem .65rem; border-radius: 999px; font-size: .75rem; }
+    .section-button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+    .toc a.done::after { content: " ✓"; color: var(--accent); }
+    .interactive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    .study-card { margin: 0; min-width: 0; }
+    .study-card h3 { margin: 0 0 .45rem; font: 700 1.3rem Georgia, serif; }
+    .study-card p { margin: .55rem 0; }
+    .mini-label { color: var(--accent); letter-spacing: .12em; text-transform: uppercase; font-size: .68rem; font-weight: 800; }
+    .study-action { display: inline-block; border: 1px solid var(--accent); border-radius: 6px; color: var(--accent); background: transparent; margin-top: .55rem; padding: .4rem .7rem; font-size: .84rem; font-weight: 700; }
+    .study-action:hover { background: var(--accent-soft); }
+    .flash-term { font: 700 1.35rem Georgia, serif; min-height: 2.1rem; }
+    .flash-definition { min-height: 4.5rem; color: var(--muted); }
+    .notes { width: 100%; min-height: 7rem; resize: vertical; border: 1px solid var(--line); border-radius: 6px; background: var(--page); color: var(--ink); font: inherit; padding: .65rem; }
+    .quiz { margin: 2rem 0; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--line); border-left: 6px solid var(--signal); background: var(--accent-soft); }
+    .quiz h3 { margin: 0 0 .4rem; font: 700 1.6rem Georgia, serif; }
+    .quiz-options { display: grid; gap: .55rem; margin: 1.2rem 0; }
+    .quiz-options button { text-align: left; border: 1px solid var(--line); border-radius: 6px; padding: .7rem .9rem; background: var(--surface); color: var(--ink); }
+    .quiz-options button:hover { border-color: var(--accent); }
+    .quiz-feedback { min-height: 2.5rem; font-size: .9rem; }
+    @media (max-width: 850px) { .interactive-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) { .control-row { grid-template-columns: 1fr; } h2[id^="section-"] { padding-right: 0; } .section-button { position: static; margin: .4rem 0 .6rem; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .meter > span { transition: none; } }
+    @media (max-width: 850px) { .layout { display: block; } .sidebar { position: static; max-height: none; padding: 0 0 1.5rem; } .toc { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); } .toc a { border-left: 0; border-bottom: 2px solid transparent; } .toc a.active { border-bottom-color: var(--accent); } }
+    @media (max-width: 520px) { .source { display: none; } .document { border-radius: 12px; } }
+    @media print { :root, :root[data-theme="dark"] { color-scheme: light; --page: #fff; --surface: #fff; --ink: #111; --muted: #444; --line: #bbb; --accent: #075b4f; --accent-soft: #eee; --code: #eee; --shadow: none; } body { background: #fff; } .topbar, .sidebar, .progress, .footer, .interactive-grid, .control-row, .quiz, .section-button { display: none; } .section.hidden { display: block; } .layout { display: block; padding: 0; } .document { border: 0; padding: 0; } h2[id^="section-"] { padding-right: 0; } h2 { break-after: avoid; } table { min-width: 0; } tr { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="#top">Revo / Field manual</a><div class="top-actions"><a class="source" href="dataset-factory-learning-guide.md">Markdown source</a><button class="theme-button" id="theme-button" type="button" aria-label="Toggle dark mode">Dark mode</button></div></div></header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="On this page">
+      <p class="sidebar-title">Your study map</p>
+      <div class="completion-card"><p class="completion-title">Reading progress</p><p class="completion-count" id="completion-count" aria-live="polite">0 of 14 sections complete</p><div class="meter" role="progressbar" aria-label="Sections complete" aria-valuemin="0" aria-valuemax="14" aria-valuenow="0" id="completion-meter"><span id="completion-fill"></span></div></div>
+      <nav class="toc" id="toc"></nav>
+    </aside>
+    <main class="document" id="top">
+      <div class="hero"><span class="hero-kicker">An interactive field guide</span><h1>Build datasets people can trust.</h1><p>Learn the ideas behind strong SQL datasets, then put them to work in the Revo factory. Track your progress and test yourself as you go.</p><div class="hero-stats"><span>14 lessons</span><span>3 comparison tables</span><span>1 hands-on project</span><span>Offline friendly</span></div></div>
+      <div class="control-row"><label><span class="mini-label">Find a topic</span><input class="search" id="section-search" type="search" placeholder="Search SQL, provenance, NULL, licensing…" autocomplete="off"></label><span class="search-summary" id="search-summary" aria-live="polite">Showing all lessons</span></div>
+      <div class="interactive-grid">
+        <div class="study-card"><span class="mini-label">Tap to recall</span><h3>Term card</h3><p class="flash-term" id="flash-term">Oracle</p><p class="flash-definition" id="flash-definition">Try to define this term before revealing it.</p><button type="button" class="study-action" id="flash-reveal">Reveal answer</button> <button type="button" class="study-action" id="flash-next">Next term</button></div>
+        <div class="study-card"><span class="mini-label">Saved in this browser</span><h3>Your notes</h3><textarea class="notes" id="study-notes" aria-label="Your study notes" placeholder="Write one idea to revisit or a question to investigate…"></textarea><p id="notes-status" class="mini-label" aria-live="polite">Notes stay on this device</p></div>
+      </div>
+      <article id="guide">
+<p>This guide is for someone starting with little background. It covers dataset creation in general, then applies those ideas to Revo's Verified SQL Data Factory. You do <strong>not</strong> need to master every topic before helping. Learn the first three sections, build a small example, and return to the later sections as the work demands.</p>
+<p>The central question is simple: <strong>If someone uses a row from our dataset, why should they trust its meaning, answer, origin, and usefulness?</strong> A successful SQL execution answers only a small part of that question.</p>
+<h2>1. First, understand what a dataset is</h2>
+<p>A dataset is a collection of records made for a purpose. A record might be a sales transaction, an image and its label, or a question paired with an SQL answer. The same records can be useful for one purpose and unsuitable for another.</p>
+<p>Learn these ideas first:</p>
+<table>
+<thead>
+<tr>
+  <th>Idea</th>
+  <th>Plain meaning</th>
+  <th>Question to ask</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Unit of observation</td>
+  <td>What one row represents</td>
+  <td>Is this one customer, one order, one SQL task, or one model attempt?</td>
+</tr>
+<tr>
+  <td>Field and type</td>
+  <td>A named value and its allowed form</td>
+  <td>Is <code>amount</code> money, a count, or a string? Can it be NULL?</td>
+</tr>
+<tr>
+  <td>Population</td>
+  <td>The full group you want to describe</td>
+  <td>Are we measuring all generated attempts or only accepted rows?</td>
+</tr>
+<tr>
+  <td>Sample</td>
+  <td>The records actually examined</td>
+  <td>Was the sample selected fairly, or chosen because it looked good?</td>
+</tr>
+<tr>
+  <td>Label or target</td>
+  <td>The answer the dataset claims is correct</td>
+  <td>Who or what established that answer?</td>
+</tr>
+<tr>
+  <td>Split</td>
+  <td>A separate role for records</td>
+  <td>Could information from training appear in evaluation?</td>
+</tr>
+<tr>
+  <td>Version</td>
+  <td>A stable identity for data and rules</td>
+  <td>Can we reconstruct what a past result meant?</td>
+</tr>
+</tbody>
+</table>
+<p>For any dataset, write a one-paragraph <strong>data specification</strong> before collecting rows: intended users, intended use, record structure, inclusion and exclusion rules, label definition, source, quality gates, known limits, and who may access it.</p>
+<p>Practice: take a small spreadsheet and describe what one row means, which values are missing, which rows are duplicates, and what conclusion the sheet <em>cannot</em> support.</p>
+<h2>2. Learn to ask precise business questions</h2>
+<p>Data quality begins before SQL. A vague question produces a vague answer even when the code runs perfectly.</p>
+<p>For each task, identify:</p>
+<ul>
+<li><strong>Entity:</strong> customer, invoice, shipment, playback, visit, or another real-world thing.</li>
+<li><strong>Grain:</strong> one output row per what? For example, per customer and month.</li>
+<li><strong>Measure:</strong> what is counted, summed, averaged, or compared, including units.</li>
+<li><strong>Population:</strong> which source rows qualify? Define status and eligibility filters.</li>
+<li><strong>Time rule:</strong> timezone, inclusive/exclusive endpoints, event date, and reporting period.</li>
+<li><strong>Relationship rule:</strong> what happens when a related row is missing or repeated?</li>
+<li><strong>Tie rule:</strong> if two events have the same timestamp, which wins?</li>
+<li><strong>Output rule:</strong> columns, types, ordering if relevant, and empty-result behavior.</li>
+</ul>
+<p>Example: “Show paid invoices by account” leaves open whether cancelled invoices count, whether duplicate account rows multiply results, and whether accounts with no paid invoices appear. A useful specification answers those questions. Never invent the answer just to make a verifier pass; ask for the business rule or keep the task unresolved.</p>
+<p>Practice: write three different questions about the same <code>accounts</code> and <code>invoices</code> tables. Make their business meanings genuinely different, rather than changing table names or wording.</p>
+<h2>3. Learn SQL and relational data deeply</h2>
+<p>Start with tables, rows, columns, keys, types, filtering, sorting, <code>GROUP BY</code>, aggregates, and joins. Then learn CTEs, subqueries, <code>EXISTS</code>, window functions, deduplication, and date/time logic. For Revo, learn the behavior of <strong>DuckDB</strong>, because SQL dialects differ.</p>
+<p>These are the traps that matter most for correctness:</p>
+<table>
+<thead>
+<tr>
+  <th>Trap</th>
+  <th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Bag semantics</td>
+  <td>SQL normally keeps duplicate rows. A join may multiply rows and totals.</td>
+</tr>
+<tr>
+  <td>NULL and three-valued logic</td>
+  <td><code>NULL = NULL</code> is not true; filters and aggregates can behave unexpectedly.</td>
+</tr>
+<tr>
+  <td>Join fanout</td>
+  <td>Joining one account to many invoices and many payments can count each combination.</td>
+</tr>
+<tr>
+  <td>Ties</td>
+  <td><code>ROW_NUMBER()</code> without a complete ordering may select an arbitrary winner.</td>
+</tr>
+<tr>
+  <td>Time boundaries</td>
+  <td>Midnight, timezones, week starts, and inclusive endpoints change answers.</td>
+</tr>
+<tr>
+  <td>Empty groups and missing links</td>
+  <td>A correct query may need zero-valued groups or may omit them; the contract decides.</td>
+</tr>
+<tr>
+  <td>Numeric types</td>
+  <td>Currency precision, rounding, negative values, and integer overflow matter.</td>
+</tr>
+<tr>
+  <td>Ordering</td>
+  <td>Rows are not guaranteed to appear in a particular order without <code>ORDER BY</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Practice: create tiny tables where a plausible wrong query returns the same answer as the correct query on ordinary data, then add one duplicate, NULL, missing relation, or boundary timestamp that exposes the difference. This is more valuable than memorizing syntax alone.</p>
+<p>Read in this repo: <a href="task-semantics.md">task semantics</a>, <a href="golden-record.md">golden record</a>, and the relevant YAML task under <code>templates/sql/</code>. Treat the public task contract as the source of business meaning.</p>
+<h2>4. Learn how a dataset is produced</h2>
+<p>The general pipeline is <strong>define → collect or generate → validate → label → select → split → package → monitor</strong>. For Revo, a task specification and fixtures go to a candidate generator; candidate SQL runs in a sandbox; independent checks decide whether it is eligible; quality and provenance gates decide whether it enters a dataset.</p>
+<p>Know the difference between these objects:</p>
+<ul>
+<li><strong>Task:</strong> the question, schema, constraints, and expected behavior.</li>
+<li><strong>Fixture:</strong> a small synthetic database used to exercise behavior.</li>
+<li><strong>Candidate:</strong> SQL produced for a task. One task may have several candidates.</li>
+<li><strong>Oracle:</strong> an independently designed way to determine the expected result.</li>
+<li><strong>Verification receipt:</strong> evidence that particular checks ran against particular versions.</li>
+<li><strong>Golden:</strong> a selected candidate that passed the applicable automated gates.</li>
+<li><strong>Dataset:</strong> a versioned collection of eligible, appropriately diverse records.</li>
+<li><strong>Review package:</strong> a presentation of selected records and evidence for a reviewer.</li>
+</ul>
+<p>A row can pass an execution check and still be wrong. A qualification fixture is evidence about a task; it is not automatically a model-generated dataset row. A partial Golden in a smoke run is not an accepted complete product.</p>
+<p>Read in this repo: <a href="architecture.md">architecture</a> for the intended layers, then the current <a href="production/company-sample-continuation-prompt-20261010.md">production continuation prompt</a> for the present acceptance target. The architecture file contains historical planning language, so verify status against current source and receipts.</p>
+<h2>5. Learn verification, not just testing</h2>
+<p>Testing asks whether a program behaves as expected on selected inputs. Verification in this factory combines several ways to catch wrong business answers:</p>
+<table>
+<thead>
+<tr>
+  <th>Method</th>
+  <th>Simple explanation</th>
+  <th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Execution</td>
+  <td>Does the SQL parse and run safely?</td>
+  <td>A wrong query can run.</td>
+</tr>
+<tr>
+  <td>Result comparison</td>
+  <td>Does the result match an expected result?</td>
+  <td>A weak fixture may hide a mistake.</td>
+</tr>
+<tr>
+  <td>Independent oracle</td>
+  <td>Is there a separately designed reference answer?</td>
+  <td>Shared assumptions can make both sides wrong.</td>
+</tr>
+<tr>
+  <td>Hidden tests</td>
+  <td>Does the query work on cases unseen during generation?</td>
+  <td>Hidden cases may still be too narrow.</td>
+</tr>
+<tr>
+  <td>Property tests</td>
+  <td>Does a required invariant hold?</td>
+  <td>The property must reflect the business rule.</td>
+</tr>
+<tr>
+  <td>Metamorphic tests</td>
+  <td>If data changes in a controlled way, does the result change as required?</td>
+  <td>A relation that never distinguishes wrong SQL adds little value.</td>
+</tr>
+<tr>
+  <td>Mutation tests</td>
+  <td>Can the tests catch plausible incorrect SQL changes?</td>
+  <td>Invalid SQL and infrastructure failures are not semantic kills.</td>
+</tr>
+<tr>
+  <td>Differential tests</td>
+  <td>Do alternative formulations agree on many inputs?</td>
+  <td>Agreement does not prove that their shared interpretation is right.</td>
+</tr>
+</tbody>
+</table>
+<p>Learn the words <strong>false acceptance</strong> (a wrong answer is approved), <strong>false rejection</strong> (a correct answer is rejected), <strong>abstention</strong> (the checker cannot establish enough), and <strong>execution failure</strong> (the infrastructure failed). Keep these counts separate. A checker that rejects everything has zero false acceptances but is useless.</p>
+<p>For each difficult task, try to produce both a correct alternative SQL query and a <em>plausible</em> wrong one. Find a small counterexample where they differ, and explain the business reason. That is the heart of Revo's quality claim.</p>
+<p>Read in this repo: <a href="verification-principles.md">verification principles</a>, <a href="quality-metrics.md">quality metrics</a>, and <a href="production/engineering-rubric.md">engineering rubric</a>.</p>
+<h2>6. Learn measurement and statistics</h2>
+<p>Always state the <strong>denominator</strong>. “223 wrong queries rejected” means something different from “223 of 223 curated wrong queries rejected,” and neither measures performance on every future SQL query.</p>
+<p>Useful measurements include:</p>
+<ul>
+<li><strong>Generation yield:</strong> accepted novel records ÷ physical model attempts, with retries included.</li>
+<li><strong>Verification outcomes:</strong> correct accepted, correct rejected, wrong accepted, wrong rejected, abstentions, and infrastructure failures.</li>
+<li><strong>Coverage:</strong> family, construct, schema, domain, difficulty, and edge-case counts.</li>
+<li><strong>Redundancy:</strong> exact and meaningful semantic duplicates among selected records.</li>
+<li><strong>Replay success:</strong> exported records reproduced successfully ÷ exported records attempted.</li>
+<li><strong>Cost:</strong> compute time or money per <em>novel accepted</em> record, not just per generated candidate.</li>
+</ul>
+<p>Study sampling bias, confidence intervals, held-out evaluation, data leakage, and the difference between a curated challenge set and real-world error frequency. Freeze an evaluation set before looking at its outcomes; if you use those cases to repair the checker, they become development cases and a new held-out set is needed.</p>
+<p>An engineering score, a dataset quality assessment, model accuracy, completion percentage, and sales readiness are <strong>different measures</strong>. Write down each rubric <em>before</em> scoring. The historical 52/100 assessment in this project measured a particular commercial-readiness product; it is not a current SQL accuracy score. The frozen engineering rubric requires its own executed inputs.</p>
+<p>Practice: report a small experiment as raw counts, denominators, selection method, and limitations before converting anything to a percentage.</p>
+<h2>7. Learn diversity and dataset design</h2>
+<p>More rows do not necessarily add more information. Changing a seed, table name, or sentence wording can produce another row with the same underlying business problem.</p>
+<p>Build a coverage matrix across business question, SQL family, schema shape, domain, edge case, and error type. Seek <em>material</em> differences: for example, invoice eligibility, shipment final-leg selection, event ordering, and grade revision identity are different business rules. A balanced dataset needs distinct problems within each category, not only one template repeated many times.</p>
+<p>Learn exact deduplication, semantic deduplication, train/evaluation leakage, public benchmark overlap, and role isolation. A high duplicate flag among sibling candidates does not automatically mean contamination from an external benchmark. Check the population and match source before making that claim.</p>
+<p>Revo's current internal target is 80 accepted records, eight in each of ten SQL families, with additional instruction, schema, domain, construct, edge, novelty, and verification gates. The exact current authority lives in the <a href="production/company-sample-continuation-prompt-20261010.md">continuation prompt</a> and frozen configuration; do not substitute the row count for quality.</p>
+<h2>8. Learn reproducibility and data engineering</h2>
+<p>Someone else should be able to answer: Which task, model, prompt, code, dependencies, fixtures, and checks produced this row? Can they replay it without your laptop or original checkout?</p>
+<p>Learn stable identifiers, content hashes, manifests, immutable run identities, append-only journals, versioned schemas, JSONL and Parquet, typed round trips, and atomic publication. A hash detects changes to recorded bytes; it does not prove that the original meaning was correct. Binding request and response hashes <strong>when the physical model call happens</strong> is stronger than adding them later.</p>
+<p>Also learn failure recovery: interrupted jobs, retries, duplicate spending, partial exports, stale source code, and missing receipts. Keep failed attempts. A later passing run does not erase an earlier unexplained failure.</p>
+<p>Practice: export one synthetic SQL example, copy it to another folder, replay it there, and then change its SQL. Your validation should accept the original and reject the changed copy.</p>
+<p>Read in this repo: <a href="provenance-model.md">provenance model</a>, <a href="reproducibility.md">reproducibility</a>, and <a href="production/artifact-retention.md">artifact retention</a>.</p>
+<h2>9. Learn secure execution and operational basics</h2>
+<p>Model-generated SQL is untrusted input. Learn why the factory limits filesystem and network access, CPU, memory, time, processes, and allowed SQL operations. Learn the difference between a SQL failure, a sandbox failure, a model-provider failure, and a policy rejection. A timeout or backend crash is not evidence that SQL is semantically wrong.</p>
+<p>The practical software skills are Python, Git, command-line work, reading logs, writing focused tests, type checking, linting, container basics, and debugging from a minimal reproducer. You do not need to become a security specialist immediately, but you must know which boundaries protect the host and which checks merely measure answer quality.</p>
+<p>Read in this repo: <a href="security.md">security</a>, <a href="technical-stack.md">technical stack</a>, and <a href="production/START_PRODUCTION.md">production start</a>.</p>
+<h2>10. Learn model use, rights, and privacy</h2>
+<p>If a model generates dataset content, record its exact identity, configuration, prompts, responses, call count, errors, and permitted use. Distinguish a locally installed model from a model whose license and output rights are cleared for a particular use. Internal experimentation, sending outputs to a company, and redistributing weights are different actions.</p>
+<p>Learn data minimization, synthetic data limits, personal information, copyright and license provenance, attribution, and contamination checks. Synthetic rows can still resemble sensitive or copyrighted material if their sources are not controlled. Keep hidden tests and reference answers out of model prompts and public samples.</p>
+<p>Read in this repo: <a href="licensing.md">licensing</a>, project governance records, and the intended dataset card. Legal decisions need a qualified human owner; a pipeline PASS cannot supply them.</p>
+<h2>11. Learn packaging and actual usefulness</h2>
+<p>A useful dataset must be understandable and testable by someone outside the project. Learn to write a dataset card: what it contains, how it was made, supported SQL dialect, intended uses, exclusions, provenance, known failure modes, rights status, and evaluation limits.</p>
+<p>For a technical reviewer, prepare a small, representative sample with question, schema meanings, SQL, typed expected result, one important edge case, and a replay command. Include whole-dataset statistics alongside the showcase so readers can see whether the attractive examples represent the population.</p>
+<p>To establish value, ask a prospective user what errors their SQL agent makes, whether this dataset detects those errors, and whether it integrates into their workflow. If you later claim training improvement, run a controlled baseline-versus-treatment study on separate evaluation data. A strong internal checker result alone does not prove customer value.</p>
+<p>Read in this repo: <a href="business-validation.md">business validation</a> and the <a href="production/company-sample-continuation-prompt-20261010.md">current company package prompt</a>.</p>
+<h2>A practical learning order</h2>
+<ol>
+<li><strong>Week 1: data and SQL basics.</strong> Define row grain, types, keys, joins, aggregates, NULLs, and bags. Build five tiny DuckDB databases and predict each query's output by hand.</li>
+<li><strong>Week 2: business semantics.</strong> Specify five analytical questions completely: eligible population, measure, time, ties, relationships, output. Write a correct query and a plausible wrong query for each.</li>
+<li><strong>Week 3: checking answers.</strong> Add normal, boundary, and adversarial fixtures. Find a counterexample for every wrong query. Compare correct alternatives and record failures honestly.</li>
+<li><strong>Week 4: dataset quality.</strong> Create a 10-record pilot with distinct business problems. Measure duplicates, coverage, accepted yield, and replay success with explicit denominators.</li>
+<li><strong>Then: production discipline.</strong> Add source-bound provenance, independent review of ambiguous semantics, held-out checker evaluation, safe execution, release packaging, and rights decisions.</li>
+</ol>
+<p>These are study blocks, not a promise that the full Revo project will finish in five weeks. You can work on real repo tasks while learning each block.</p>
+<h2>A small capstone project</h2>
+<p>Create a five-task synthetic SQL mini-dataset across at least two domains. For every task, provide a plain-language question, schema and column meanings, a correct SQL answer, expected typed result, three fixtures, one plausible wrong SQL query, and a minimal fixture that exposes it. Keep generation attempts and selected records separate. Export the selected tasks, replay them from a different folder, and write a one-page dataset card explaining what has and has not been established.</p>
+<p>If another person can understand the business rule, reproduce the output, and see <em>why</em> the wrong answer is wrong, you have learned the core of this field.</p>
+<h2>Quick glossary</h2>
+<ul>
+<li><strong>Contract:</strong> the exact behavior a task requires, including edge cases.</li>
+<li><strong>Fixture:</strong> a controlled set of input tables and rows.</li>
+<li><strong>Oracle:</strong> a reference method for deriving the expected result.</li>
+<li><strong>Counterexample:</strong> a small input on which plausible correct and wrong solutions disagree.</li>
+<li><strong>Semantic mutant:</strong> a valid SQL change that alters the business answer.</li>
+<li><strong>Mutation score:</strong> the share of applicable valid wrong variants the tests detect under a stated rule.</li>
+<li><strong>Golden:</strong> a selected record that passes the project's required automated gates.</li>
+<li><strong>Provenance:</strong> the trace of where a record and its evidence came from.</li>
+<li><strong>Replay:</strong> reproducing a recorded result from the recorded assets and versions.</li>
+<li><strong>Quarantine:</strong> keeping a task out of eligible use until a real issue is resolved.</li>
+<li><strong>Held-out set:</strong> evaluation material kept separate from development and tuning.</li>
+<li><strong>Dataset card:</strong> a concise description of a dataset's construction, uses, limits, and rights.</li>
+</ul>
+
+    </article>
+    <section class="quiz" aria-labelledby="quiz-title"><span class="mini-label">Check your understanding</span><h3 id="quiz-title">One quick question</h3><p id="quiz-question"></p><div class="quiz-options" id="quiz-options"></div><p class="quiz-feedback" id="quiz-feedback" aria-live="polite"></p><button type="button" class="study-action" id="quiz-next">Another question</button></section>
+    <div class="footer">Local reading copy · The complete text comes from <a href="dataset-factory-learning-guide.md">the Markdown guide</a>. Progress and notes are saved only in this browser.</div></main>
+  </div>
+  <script>
+    const article = document.getElementById('guide');
+    const toc = document.getElementById('toc');
+    const headings = [...article.querySelectorAll('h2')];
+    const saved = {
+      get(key, fallback = '') { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } },
+      set(key, value) { try { localStorage.setItem(key, value); } catch { /* Browser storage may be disabled. */ } }
+    };
+    const sections = [];
+    const progressKey = 'revo-learning-guide-complete-v1';
+    let completed;
+    try { completed = new Set(JSON.parse(saved.get(progressKey, '[]'))); } catch { completed = new Set(); }
+    headings.forEach((heading, index) => {
+      heading.id = `section-${index + 1}`;
+      const section = document.createElement('section');
+      section.className = 'section';
+      section.setAttribute('aria-labelledby', heading.id);
+      article.insertBefore(section, heading);
+      const nextHeading = headings[index + 1];
+      let node = heading;
+      while (node && node !== nextHeading) {
+        const next = node.nextSibling;
+        section.appendChild(node);
+        node = next;
+      }
+      sections.push(section);
+      const link = document.createElement('a');
+      link.href = `#${heading.id}`;
+      link.textContent = heading.textContent;
+      toc.appendChild(link);
+      const completeButton = document.createElement('button');
+      completeButton.type = 'button';
+      completeButton.className = 'section-button';
+      completeButton.textContent = 'Mark complete';
+      completeButton.setAttribute('aria-label', `Mark ${heading.textContent} complete`);
+      completeButton.addEventListener('click', () => {
+        if (completed.has(heading.id)) completed.delete(heading.id);
+        else completed.add(heading.id);
+        saved.set(progressKey, JSON.stringify([...completed]));
+        updateCompletion();
+      });
+      heading.insertAdjacentElement('afterend', completeButton);
+    });
+    const links = [...toc.querySelectorAll('a')];
+    function updateCompletion() {
+      const count = headings.filter(heading => completed.has(heading.id)).length;
+      document.getElementById('completion-count').textContent = `${count} of ${headings.length} sections complete`;
+      const meter = document.getElementById('completion-meter');
+      meter.setAttribute('aria-valuemax', String(headings.length));
+      meter.setAttribute('aria-valuenow', String(count));
+      document.getElementById('completion-fill').style.width = `${count / headings.length * 100}%`;
+      headings.forEach((heading, index) => {
+        const done = completed.has(heading.id);
+        links[index].classList.toggle('done', done);
+        const button = sections[index].querySelector('.section-button');
+        button.setAttribute('aria-pressed', String(done));
+        button.textContent = done ? '✓ Completed' : 'Mark complete';
+        button.setAttribute('aria-label', `${done ? 'Mark incomplete' : 'Mark complete'}: ${heading.textContent}`);
+      });
+    }
+    updateCompletion();
+    article.querySelectorAll('table').forEach(table => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          links.forEach(link => link.classList.toggle('active', link.hash === `#${entry.target.id}`));
+        }
+      }
+    }, {rootMargin: '-15% 0px -72% 0px'});
+    headings.forEach(heading => observer.observe(heading));
+    const search = document.getElementById('section-search');
+    search.addEventListener('input', () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      let visible = 0;
+      sections.forEach((section, index) => {
+        const match = !query || section.textContent.toLocaleLowerCase().includes(query);
+        section.classList.toggle('hidden', !match);
+        links[index].hidden = !match;
+        if (match) visible++;
+      });
+      document.getElementById('search-summary').textContent = query ? `${visible} of ${sections.length} lessons found` : 'Showing all lessons';
+      updateProgress();
+    });
+    const progress = document.getElementById('progress');
+    function updateProgress() {
+      const distance = document.documentElement.scrollHeight - innerHeight;
+      progress.style.width = `${distance > 0 ? Math.min(100, scrollY / distance * 100) : 100}%`;
+    }
+    addEventListener('scroll', updateProgress, {passive: true});
+    addEventListener('resize', updateProgress);
+    updateProgress();
+    const themeButton = document.getElementById('theme-button');
+    const setTheme = dark => {
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      themeButton.textContent = dark ? 'Light mode' : 'Dark mode';
+      themeButton.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    };
+    setTheme(saved.get('revo-learning-guide-theme') === 'dark');
+    themeButton.addEventListener('click', () => {
+      const dark = document.documentElement.dataset.theme !== 'dark';
+      setTheme(dark);
+      saved.set('revo-learning-guide-theme', dark ? 'dark' : 'light');
+    });
+    const notes = document.getElementById('study-notes');
+    notes.value = saved.get('revo-learning-guide-notes');
+    notes.addEventListener('input', () => {
+      saved.set('revo-learning-guide-notes', notes.value);
+      document.getElementById('notes-status').textContent = 'Saved on this device';
+    });
+    const flashcards = [
+      ['Oracle', 'A separate reference method for finding the expected answer.'],
+      ['Fixture', 'A controlled set of input tables and rows used to test a task.'],
+      ['Counterexample', 'A small input where correct and plausible wrong solutions disagree.'],
+      ['Provenance', 'The trace of where a record and its evidence came from.'],
+      ['Held-out set', 'Evaluation material kept separate from development and tuning.'],
+      ['Golden', 'A selected record that passes the project’s required automated gates.']
+    ];
+    let flashIndex = 0;
+    let flashRevealed = false;
+    function renderFlashcard() {
+      document.getElementById('flash-term').textContent = flashcards[flashIndex][0];
+      document.getElementById('flash-definition').textContent = flashRevealed ? flashcards[flashIndex][1] : 'Try to define this term before revealing it.';
+      document.getElementById('flash-reveal').textContent = flashRevealed ? 'Hide answer' : 'Reveal answer';
+    }
+    document.getElementById('flash-reveal').addEventListener('click', () => { flashRevealed = !flashRevealed; renderFlashcard(); });
+    document.getElementById('flash-next').addEventListener('click', () => { flashIndex = (flashIndex + 1) % flashcards.length; flashRevealed = false; renderFlashcard(); });
+    const questions = [
+      { question: 'A SQL query runs without errors. What have you established?', choices: ['It has the right business answer', 'It can execute on that input', 'It is ready for customers'], answer: 1, why: 'Execution is the first check. Results and business rules still need verification.' },
+      { question: 'Two candidates share the same task text. Does that prove external benchmark contamination?', choices: ['Yes', 'No; first inspect the match source and population', 'Only if both queries pass'], answer: 1, why: 'Sibling repetition and external benchmark overlap are different measurements.' },
+      { question: 'What should a checker report when a correct answer cannot earn enough evidence?', choices: ['PASS with STRONG confidence', 'A semantic error', 'Abstention or insufficient evidence'], answer: 2, why: 'Insufficient evidence is not proof that the SQL is wrong.' },
+      { question: 'Which number best describes generation efficiency?', choices: ['All model outputs', 'Novel accepted records per physical attempt', 'The number of random seeds'], answer: 1, why: 'Accepted novel records reflect useful output; retries and repeated siblings still cost attempts.' }
+    ];
+    let questionIndex = 0;
+    function renderQuestion() {
+      const question = questions[questionIndex];
+      document.getElementById('quiz-question').textContent = question.question;
+      document.getElementById('quiz-feedback').textContent = 'Choose an answer to see why.';
+      const options = document.getElementById('quiz-options');
+      options.replaceChildren();
+      question.choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = `${String.fromCharCode(65 + index)}. ${choice}`;
+        button.addEventListener('click', () => {
+          document.getElementById('quiz-feedback').textContent = `${index === question.answer ? 'Correct.' : 'Try again later.'} ${question.why}`;
+          [...options.children].forEach(option => option.disabled = true);
+          button.style.borderColor = index === question.answer ? 'var(--accent)' : 'var(--signal)';
+        });
+        options.appendChild(button);
+      });
+    }
+    document.getElementById('quiz-next').addEventListener('click', () => { questionIndex = (questionIndex + 1) % questions.length; renderQuestion(); });
+    renderQuestion();
+  </script>
+</body>
+</html>
