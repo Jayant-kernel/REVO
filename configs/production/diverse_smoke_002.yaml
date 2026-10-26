@@ -1,0 +1,52 @@
+production:
+  config_version: '2.0-diverse-diagnostic'
+  run_name: diverse-smoke-002
+  target_golden_records: 20
+  initial_task_batch: 20
+  candidates_per_task: 3
+  max_batches: 1
+  batches_per_authorization: 1
+  output_dir: runs/diverse-smoke-002
+  seed: 194001
+  model:
+    model_id: alibilge/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated:latest
+    model_revision: ollama-digest:a2d26ea0b96b7a40afd673158d5cf44de25eff07fc8abf835e2cde5444632bc4
+    provider: devstral
+    governance_status: REVIEW_REQUIRED_NON_COMMERCIAL
+    endpoint: http://localhost:11434/v1
+    prompt_version: sql-v2
+    parser_version: '1.0'
+    temperature: 0.3
+    top_p: 0.9
+    max_tokens: 2048
+  budget:
+    max_total_tasks: 20
+    max_total_candidates: 60
+    max_wall_time_minutes: 120
+  family_distribution:
+    simple_joins: 2
+    multi_joins: 2
+    aggregation: 2
+    cte: 2
+    subqueries: 2
+    window_functions: 2
+    temporal: 2
+    deduplication: 2
+    retention: 2
+    funnel: 2
+  quality_config: configs/quality_premium_93.yaml
+  sandbox_config: configs/sandbox_production.yaml
+  provenance_config: configs/provenance_example.yaml
+  product_config: configs/product_example.yaml
+  review_pool_mode: true
+  min_distinct_templates_per_family: 2
+  audit:
+    sample_size: 20
+    risk_based_selection: true
+    seed: 194001
+  pause_conditions:
+    zero_golden_attempts: 60
+    execution_error_rate: 0.25
+    inconclusive_rate: 0.10
+    semantic_duplicate_rate: 0.50
+  business_hypothesis: INSUFFICIENT_EVIDENCE
