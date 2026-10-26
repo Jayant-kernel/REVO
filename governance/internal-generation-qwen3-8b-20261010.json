@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "scope": "local internal experimental generation only",
+  "model": "qwen3:8b",
+  "provider": "qwen",
+  "endpoint": "http://127.0.0.1:11434/v1",
+  "ollama_manifest_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "model_layer_digest": "a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f",
+  "license_layer_digest": "d18a5cc71b84bc4af394a31116bd3932b42241de70c77d2b76d69a314ec8aa12",
+  "quantization": "Q4_K_M",
+  "license": "Apache-2.0",
+  "primary_model": "Qwen/Qwen3-8B",
+  "primary_repository_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "sources": [
+    "https://huggingface.co/api/models/Qwen/Qwen3-8B",
+    "https://huggingface.co/Qwen/Qwen3-8B/raw/b968826d9c46dd6066d109eabc6255188de91218/LICENSE",
+    "https://huggingface.co/Qwen/Qwen3-8B/raw/b968826d9c46dd6066d109eabc6255188de91218/README.md",
+    "https://ollama.com/library/qwen3:8b",
+    "https://ollama.com/library/qwen3:8b/blobs/d18a5cc71b84"
+  ],
+  "evidence": [
+    "Installed Ollama /api/tags reports the full manifest digest and completion capability.",
+    "Local registry manifest binds the stated model and Apache license layers.",
+    "ollama show qwen3:8b --license returns Apache-2.0 with Alibaba Cloud copyright notice.",
+    "Primary pinned model license and distributor license grant reproduction and derivative-work permissions; no noncommercial-only or output-use restriction was observed in those license texts."
+  ],
+  "internal_generation": "PERMITTED_BY_OBSERVED_LICENSE_AND_USER_EXPERIMENT_SCOPE",
+  "external_evaluation_sharing": "BLOCKED_PENDING_RIGHTS_AND_USER_AUTHORIZATION",
+  "generated_output_distribution": "UNKNOWN_PENDING_OUTPUT_PROVENANCE_AND_PACKAGE_RIGHTS_REVIEW",
+  "model_weight_redistribution": "NOT_AUTHORIZED_BY_TASK; Apache section 4 conditions apply separately",
+  "commercially_cleared": false,
+  "human_approval_signoff": null,
+  "limitations": [
+    "Local quantized weight identity is pinned, but a byte-for-byte conversion mapping to the listed upstream revision has not been established.",
+    "Model license permissions do not establish ownership, noninfringement or distribution rights for every generated output.",
+    "The older Devstral component ledger remains unchanged and unresolved.",
+    "This record is an evidence-based internal-use disposition, not fabricated owner or legal signoff."
+  ],
+  "research_failure_retained": "Agent Reach Jina route returned a temporary Hugging Face domain 403; exact primary model/license pages were then read directly with the available read-only web tool."
+}
