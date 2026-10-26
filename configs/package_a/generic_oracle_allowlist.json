@@ -1,0 +1,23 @@
+{
+  "function": "expansion_total",
+  "purpose": "Phase 9 blast-radius inventory only; entries remain audit-required and are not qualified by this allowlist.",
+  "templates": [
+    "sql.aggregation.manufacturing_line_scrap@1",
+    "sql.cte.logistics_depot_delay@1",
+    "sql.cte.saas_mrr_changes@1",
+    "sql.dedup.payments_latest_profile@1",
+    "sql.dedup.refund_prefer_approved@1",
+    "sql.joins.clinic_scheduled_clinician@1",
+    "sql.joins.education_completed_enrollment@1",
+    "sql.joins.manufacturing_approved_supplier@1",
+    "sql.joins.payments_country_transfer@1",
+    "sql.retention.clinic_followup_window@1",
+    "sql.retention.media_week_two_return@1",
+    "sql.subqueries.payments_no_settlement@1",
+    "sql.subqueries.support_unresolved_reopen@1",
+    "sql.temporal.inventory_daily_stock@1",
+    "sql.temporal.saas_trial_activation@1",
+    "sql.windows.logistics_previous_stop@1",
+    "sql.windows.payments_risk_rank@1"
+  ]
+}

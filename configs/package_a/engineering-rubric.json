@@ -1,0 +1,70 @@
+{
+  "version": "engineering-1.0",
+  "official_historical_score": 52,
+  "target": 86,
+  "scoring": "Binary credit per criterion, summed to 100. Missing, stale or invalid evidence earns zero. No human, rights or commercial points.",
+  "population": "All latest builtin contract versions; quarantines remain in coverage denominators.",
+  "dimensions": [
+    {"id": "correctness", "weight": 20, "criteria": [
+      {"id": "typed_comparator", "points": 8, "metric": "typed_comparator_failures", "max": 0},
+      {"id": "typed_callers", "points": 4, "metric": "untyped_production_callers", "max": 0},
+      {"id": "contract_rules", "points": 8, "metric": "uncovered_or_violated_contract_rules", "max": 0}
+    ]},
+    {"id": "discrimination", "weight": 20, "criteria": [
+      {"id": "challenge_suite", "points": 8, "metric": "challenge_deficient_contracts", "max": 0},
+      {"id": "fixture_diversity", "points": 6, "metric": "contracts_with_fewer_than_four_distinct_fixtures", "max": 0},
+      {"id": "relations", "points": 6, "metric": "contracts_with_fewer_than_two_discriminating_relations", "max": 0}
+    ]},
+    {"id": "instructions", "weight": 10, "criteria": [
+      {"id": "public_rules", "points": 4, "metric": "missing_or_ambiguous_public_rules", "max": 0},
+      {"id": "schema_contracts", "points": 3, "metric": "incomplete_schema_contracts", "max": 0},
+      {"id": "output_contracts", "points": 3, "metric": "incomplete_output_contracts", "max": 0}
+    ]},
+    {"id": "diversity", "weight": 15, "criteria": [
+      {"id": "semantic_diversity", "points": 6, "metric": "undisposed_behavioral_duplicate_clusters", "max": 0},
+      {"id": "coverage", "points": 5, "metric": "missing_required_family_construct_or_edge_coverage", "max": 0},
+      {"id": "realism", "points": 4, "metric": "contracts_without_three_distinct_cardinality_and_boundary_profiles", "max": 0}
+    ]},
+    {"id": "pipeline", "weight": 10, "criteria": [
+      {"id": "path_parity", "points": 4, "metric": "fake_real_evaluator_parity_failures", "max": 0},
+      {"id": "recovery", "points": 3, "metric": "crash_retry_cap_or_accounting_failures", "max": 0},
+      {"id": "protocol", "points": 3, "metric": "missing_protocol_or_prompt_receipts", "max": 0}
+    ]},
+    {"id": "reproducibility", "weight": 10, "criteria": [
+      {"id": "dependency_manifests", "points": 4, "metric": "missing_dependency_manifests", "max": 0},
+      {"id": "replay", "points": 3, "metric": "counterexample_or_qualification_replay_failures", "max": 0},
+      {"id": "freshness", "points": 3, "metric": "stale_evidence_false_acceptances", "max": 0}
+    ]},
+    {"id": "isolation", "weight": 10, "criteria": [
+      {"id": "rename_isolation", "points": 4, "metric": "rename_isolation_failures", "max": 0},
+      {"id": "cross_product", "points": 3, "metric": "unresolved_cross_role_overlaps", "max": 0},
+      {"id": "prompt_boundary", "points": 3, "metric": "prompt_boundary_failures", "max": 0}
+    ]},
+    {"id": "export", "weight": 5, "criteria": [
+      {"id": "membership", "points": 2, "metric": "export_membership_or_empty_release_failures", "max": 0},
+      {"id": "typed_roundtrip", "points": 2, "metric": "typed_loader_roundtrip_failures", "max": 0},
+      {"id": "checksums", "points": 1, "metric": "checksum_completeness_failures", "max": 0}
+    ]}
+  ],
+  "thresholds": {
+    "hidden_seeds": [1, 43, 94001],
+    "minimum_distinct_fixtures_including_original": 4,
+    "minimum_discriminating_relations_per_contract": 2,
+    "minimum_valid_semantic_mutants_per_contract": 3,
+    "minimum_wrong_challenges_per_contract": 20,
+    "minimum_correct_alternatives_per_contract": 3,
+    "random_cases_per_seed": 300,
+    "mandatory_behavior_cases_per_seed": 20,
+    "maximum_unresolved_divergences": 0,
+    "maximum_unresolved_survivors": 0,
+    "minimum_families": 10,
+    "minimum_constructs": 16,
+    "minimum_release_edges": 15,
+    "minimum_distinct_instructions": 40,
+    "minimum_schema_roles": 10,
+    "minimum_domains": 5,
+    "maximum_rows_per_schema": 12,
+    "minimum_dataset_records": 80,
+    "records_per_family": 8
+  }
+}
