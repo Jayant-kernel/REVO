@@ -1,0 +1,15 @@
+{
+  "evidence_index_hash": "sha256:b00f0d8663574f38afaed1a72b7b66e79e82e2bfba21e914a091f1e2a5a21309",
+  "index_hash_valid": true,
+  "matrix_matches_index_rows": true,
+  "matrix_references_index": true,
+  "status": "PASS",
+  "totals": {
+    "contracts": 57,
+    "fully_verified": 49,
+    "fully_verified_funnels": 0,
+    "funnels": 8,
+    "not_ready": 1,
+    "quarantined": 7
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "diagnostic_version": "1.0",
+  "evidence_index": {
+    "index_hash": "sha256:a934caa02250bbc1b91be2a78eb1225e849a400303c8193fe24db7c7676b05b7",
+    "path": "scratch/funnel_experiment/evidence/phase10-contract-evidence-index.json",
+    "sha256": "ae5326aea46b276301efe9a9e7dec085e30e4b06c0516be553d2b58e3a924a11"
+  },
+  "generated_at": "2026-10-05",
+  "manifest": {
+    "manifest_hash": "sha256:13862f0fc6970ab8ccac221ea6c511e4d90367dcea4b862d1637e3b2929a1292",
+    "path": "manifests/phase3-contract-readiness.json",
+    "sha256": "58e683a12798d18e5c24117732091340fdb406df3f052804eaeed75f877a02e7",
+    "supersedes": {
+      "path": "manifests/phase3-contract-readiness.superseded-f589e0a70970.json",
+      "sha256": "f589e0a7097045592d4433d1bf87915121aa6e6d2efee665850c30256d9e0381"
+    }
+  },
+  "matrix": {
+    "matrix_hash": "sha256:7bd312c999a102b4fdb461b8fec882303874aac79954082a0865aeeb3485ea1f",
+    "path": "scratch/funnel_experiment/evidence/phase10-contract-matrix.json",
+    "sha256": "f904b45768eb34bda645f8230853a356e5fbf7b6050c7d154590c26480d3dbfa"
+  },
+  "status": "PASS",
+  "superseded_claim": "56 fully verified / all 7 funnels passed",
+  "totals": {
+    "contracts": 57,
+    "fully_verified": 50,
+    "fully_verified_funnels": 1,
+    "funnels": 8,
+    "not_ready": 0,
+    "quarantined": 7
+  }
+}
