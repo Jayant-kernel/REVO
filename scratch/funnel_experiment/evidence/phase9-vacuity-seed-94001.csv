@@ -1,0 +1,11 @@
+template_id,template_version,seed,expected_row_count,numeric_value_count,vacuity
+sql.funnel.checkout_paid_session,1,94001,4,8,NON_VACUOUS
+sql.funnel.completion,2,94001,13,26,NON_VACUOUS
+sql.funnel.completion,3,94001,13,26,NON_VACUOUS
+sql.funnel.curriculum_gate_completion,1,94001,3,3,NON_VACUOUS
+sql.funnel.kyc_document_approval,1,94001,2,2,NON_VACUOUS
+sql.funnel.logistics_parcel_delivery,1,94001,4,4,NON_VACUOUS
+sql.funnel.logistics_parcel_delivery,2,94001,4,4,NON_VACUOUS
+sql.funnel.parcel_exception_recovery,1,94001,2,4,NON_VACUOUS
+sql.funnel.saas_activation_payment,2,94001,2,2,NON_VACUOUS
+sql.funnel.support_resolution_chain,1,94001,2,2,NON_VACUOUS

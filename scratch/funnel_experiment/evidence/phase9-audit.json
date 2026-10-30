@@ -1,0 +1,127 @@
+{
+  "diversity_measurements": {
+    "exact_instruction_count": 29,
+    "family_counts": {
+      "aggregation": 5,
+      "cte": 5,
+      "deduplication": 3,
+      "multi_joins": 5,
+      "retention": 5,
+      "simple_joins": 5,
+      "subqueries": 3,
+      "temporal": 3,
+      "window_functions": 3
+    },
+    "golden_rows": 37,
+    "normalized_instruction_count": 29,
+    "schema_fingerprint_count": 28,
+    "status": "MEASURED_NOT_QUALIFIED",
+    "task_count_with_schema": 37
+  },
+  "generic_oracle_blast_radius": {
+    "allowlist_match": true,
+    "allowlist_path": "C:/Users/jayan/OneDrive/Desktop/Revo/configs/package_a/generic_oracle_allowlist.json",
+    "audit_required": [
+      "sql.aggregation.manufacturing_line_scrap@1",
+      "sql.cte.logistics_depot_delay@1",
+      "sql.cte.saas_mrr_changes@1",
+      "sql.dedup.payments_latest_profile@1",
+      "sql.dedup.refund_prefer_approved@1",
+      "sql.joins.clinic_scheduled_clinician@1",
+      "sql.joins.education_completed_enrollment@1",
+      "sql.joins.manufacturing_approved_supplier@1",
+      "sql.joins.payments_country_transfer@1",
+      "sql.retention.clinic_followup_window@1",
+      "sql.retention.media_week_two_return@1",
+      "sql.subqueries.payments_no_settlement@1",
+      "sql.subqueries.support_unresolved_reopen@1",
+      "sql.temporal.inventory_daily_stock@1",
+      "sql.temporal.saas_trial_activation@1",
+      "sql.windows.logistics_previous_stop@1",
+      "sql.windows.payments_risk_rank@1"
+    ],
+    "generic_function": "expansion_total",
+    "stale_allowlist_entries": [],
+    "status": "PASS",
+    "unexpected_generic_entries": []
+  },
+  "instruction_sufficiency": {
+    "findings": [
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.checkout_paid_session@1"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.completion@2"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.completion@3"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.curriculum_gate_completion@1"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.kyc_document_approval@1"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.logistics_parcel_delivery@1"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.logistics_parcel_delivery@2"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.parcel_exception_recovery@1"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.saas_activation_payment@2"
+      },
+      {
+        "missing_public_rules": [],
+        "status": "PASS",
+        "template": "sql.funnel.support_resolution_chain@1"
+      }
+    ],
+    "status": "PASS"
+  },
+  "paused_golden_overlap": {
+    "generic_task_count": 32,
+    "golden_count": 37,
+    "golden_generic_task_overlap": [
+      "sql.cte.logistics_depot_delay.v1.2386db4d58a9",
+      "sql.cte.saas_mrr_changes.v1.7411fce47f2f",
+      "sql.joins.clinic_scheduled_clinician.v1.a85bea37213f",
+      "sql.joins.education_completed_enrollment.v1.2dbac790b4e5",
+      "sql.joins.manufacturing_approved_supplier.v1.0e0d1e1ecca6",
+      "sql.joins.payments_country_transfer.v1.2a433042b614",
+      "sql.retention.clinic_followup_window.v1.3036e90f9c8d",
+      "sql.temporal.inventory_daily_stock.v1.7eb7e6e45705"
+    ],
+    "golden_generic_task_overlap_count": 8,
+    "mode": "READ_ONLY",
+    "status": "MEASURED_NOT_QUALIFIED"
+  },
+  "status": "PASS",
+  "three_seed_vacuity_csvs": [
+    "phase9-vacuity-seed-17.csv",
+    "phase9-vacuity-seed-43.csv",
+    "phase9-vacuity-seed-94001.csv"
+  ],
+  "three_seed_vacuous_rows": 0
+}
