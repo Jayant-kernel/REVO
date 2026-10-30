@@ -1,0 +1,16 @@
+{
+  "actual_file_count": 15,
+  "baseline_path": "scratch/paused-run.baseline.sha256.txt",
+  "checked_at": "2026-10-06T04:04:51.154273+00:00",
+  "expected_file_count": 15,
+  "mismatched": [],
+  "missing": [],
+  "source_tree_identity": {
+    "git_head": "22ecfeb4e8a92c7c4909c11197dee1e455c4f500",
+    "tracked_diff_sha256": "5c903194612084605616bdea28dd022acf3747bbecba1157fb2bf3b2ae0b7cde",
+    "untracked_manifest_sha256": "eb90745d558028a5a1a706d248122c2ff2dd9839846c181db6d2c82cc0836147",
+    "untracked_source_content_manifest_sha256": "79b19e450ac59c12f3446a46edba489c1bdffcf41ef370cc76f1eb3641f4a451"
+  },
+  "status": "PASS",
+  "unexpected": []
+}

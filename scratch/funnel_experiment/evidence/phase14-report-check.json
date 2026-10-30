@@ -1,0 +1,14 @@
+{
+  "active_evidence_count": 49,
+  "citation_count": 15,
+  "duplicate_citations": [
+    "phase13-authorized-current-runner-20261006-r3",
+    "phase14-full-regression-20261006"
+  ],
+  "exact_required_sections": true,
+  "inactive_or_unknown_citations": [],
+  "report_section_count": 15,
+  "required_section_count": 15,
+  "sections_without_citations": [],
+  "status": "PASS"
+}

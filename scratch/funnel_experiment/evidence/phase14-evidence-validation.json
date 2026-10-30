@@ -1,0 +1,96 @@
+{
+  "active_findings": [],
+  "findings": [
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase1-paused-run-guard-20261004",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase1-paused-run-guard-20261004-r2",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase2-saas-rule-matrix",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase5-private-saas-runner-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase5-status-checkpoint-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase5-status-checkpoint-20261005-r2",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase6-status-checkpoint-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase7-status-checkpoint-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase7-status-lineage-correction-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase8-gate-checklist-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase8-status-checkpoint-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase8-status-checkpoint-20261005-r2",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase9-gate-checklist-20261005",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase14-readiness-classification-20261006",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase14-gate-checklist-20261006",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase14-report-check-20261006",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase14-status-checkpoint-20261006",
+      "evidence_status": "SUPERSEDED"
+    },
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase14-status-checkpoint-20261006-r2",
+      "evidence_status": "SUPERSEDED"
+    }
+  ],
+  "status": "PASS"
+}
