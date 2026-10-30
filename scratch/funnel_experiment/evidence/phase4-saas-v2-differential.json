@@ -1,0 +1,23 @@
+{
+  "evidence_id": "phase4-saas-v2-differential-20261005",
+  "label": "DIFFERENTIAL_VERIFIED",
+  "contract": "sql.funnel.saas_activation_payment@2",
+  "authoritative_sql": "tests.test_business_tasks.SAAS_V2_CHAINED_JOIN_SQL",
+  "comparison": {
+    "oracle": "business_oracles.saas_activation_payment",
+    "recursive_reference": "tests.test_saas_v2_differential_sql.RECURSIVE_SQL",
+    "non_recursive_chained_join": "tests.test_business_tasks.SAAS_V2_CHAINED_JOIN_SQL",
+    "named_fixture": "business_adversarial.saas_activation_payment",
+    "named_fixture_expected_rows": [["east", 11], ["north", 0], ["west", 7], ["zero", 0]],
+    "fuzz_seeds": 40,
+    "mutants_killed": ["wrong_year", "trial_starts_funnel", "all_payments_count"]
+  },
+  "gate": {
+    "status": "PASS",
+    "command": "python -m pytest tests/test_saas_v2_differential_sql.py tests/test_saas_funnel_oracle.py tests/test_business_tasks.py -q",
+    "terminal": "249 passed in 68.82s (0:01:08)",
+    "full_regression_command": "python -m pytest -q",
+    "full_regression_terminal": "1063 passed in 1276.53s (0:21:16)"
+  },
+  "scope": "Phase 4 only; no model calls and no Phase 5 work."
+}
