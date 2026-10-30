@@ -1,0 +1,7 @@
+{
+  "behavior_minimum_per_seed": 20,
+  "cases_per_seed": 300,
+  "contract": "sql.funnel.saas_activation_payment@2",
+  "seeds": [1, 43, 94001],
+  "version": 1
+}

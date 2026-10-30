@@ -1,0 +1,82 @@
+{
+  "comparison": {
+    "chained_join": "tests.test_business_tasks.SAAS_V2_CHAINED_JOIN_SQL",
+    "oracle": "business_oracles.saas_activation_payment",
+    "recursive_reference": "tests.test_saas_v2_differential_sql.RECURSIVE_SQL"
+  },
+  "contract": "sql.funnel.saas_activation_payment@2",
+  "coverage": {
+    "1": {
+      "cancelled_ignored": 21,
+      "complete_sequence": 21,
+      "early_payment": 21,
+      "input_shuffle": 21,
+      "multiple_entities": 20,
+      "out_of_order_step": 21,
+      "out_of_scope_status": 22,
+      "payment_amount": 24,
+      "repeated_payment": 20,
+      "same_timestamp_sequence_order": 21,
+      "skipped_step": 21,
+      "unmatched_amount": 20,
+      "year_exclusion": 23,
+      "zero_completion_segment": 24
+    },
+    "43": {
+      "cancelled_ignored": 21,
+      "complete_sequence": 22,
+      "early_payment": 21,
+      "input_shuffle": 23,
+      "multiple_entities": 21,
+      "out_of_order_step": 21,
+      "out_of_scope_status": 20,
+      "payment_amount": 22,
+      "repeated_payment": 22,
+      "same_timestamp_sequence_order": 21,
+      "skipped_step": 20,
+      "unmatched_amount": 22,
+      "year_exclusion": 21,
+      "zero_completion_segment": 23
+    },
+    "94001": {
+      "cancelled_ignored": 22,
+      "complete_sequence": 21,
+      "early_payment": 21,
+      "input_shuffle": 20,
+      "multiple_entities": 21,
+      "out_of_order_step": 20,
+      "out_of_scope_status": 21,
+      "payment_amount": 20,
+      "repeated_payment": 23,
+      "same_timestamp_sequence_order": 22,
+      "skipped_step": 23,
+      "unmatched_amount": 21,
+      "year_exclusion": 23,
+      "zero_completion_segment": 22
+    }
+  },
+  "divergences": [],
+  "evidence_id": "phase6-saas-v2-coverage-aware-fuzz-20261005",
+  "invalid_inputs_rejected": {
+    "duplicate_order_key": "SaaS entity rows must have unique occurred_at and sequence",
+    "inconsistent_group": "each SaaS entity must have exactly one group_key"
+  },
+  "started_at": "2026-10-05T09:21:15.580521+00:00",
+  "status": "PASS",
+  "threshold": {
+    "content": {
+      "behavior_minimum_per_seed": 20,
+      "cases_per_seed": 300,
+      "contract": "sql.funnel.saas_activation_payment@2",
+      "seeds": [
+        1,
+        43,
+        94001
+      ],
+      "version": 1
+    },
+    "modified_at": "2026-10-05T09:17:39.119790+00:00",
+    "path": "scratch\\funnel_experiment\\evidence\\phase6-saas-v2-fuzz-threshold.json",
+    "sha256": "b6cceaf2c49ce517e207e8dfe5b038e41b8dd05755fadd7a316dec75c516f38c"
+  }
+}
