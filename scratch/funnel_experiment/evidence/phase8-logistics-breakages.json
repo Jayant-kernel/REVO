@@ -1,0 +1,110 @@
+[
+  {
+    "breakage": "drop_sequence_tie_break",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "ae2579f9d0a16330c856b6923cabe309db6bcc0e2b90a576d464512300e65a13",
+    "named_failing_test": "tests/test_logistics_funnel_v2.py::test_same_timestamp_uses_sequence",
+    "oracle_source_sha256": "a3aa24b7fad3b5a5f773f92559e03c0861ed830d6a0a1eb80ff2547409c5c905",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 0] != ['north', 7]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_logistics_funnel_v2.py:96: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_logistics_funnel_v2.py::test_same_timestamp_uses_sequence",
+      "1 failed in 0.36s"
+    ]
+  },
+  {
+    "breakage": "allow_non_consecutive_steps",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "b99543b308d080deb50e708344a6441e4cc59672692320f0cf8abfd8ce30312e",
+    "named_failing_test": "tests/test_logistics_funnel_v2.py::test_non_consecutive_in_scope_scan_interrupts_then_later_chain_counts",
+    "oracle_source_sha256": "a3aa24b7fad3b5a5f773f92559e03c0861ed830d6a0a1eb80ff2547409c5c905",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 0] != ['north', 8]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_logistics_funnel_v2.py:101: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_logistics_funnel_v2.py::test_non_consecutive_in_scope_scan_interrupts_then_later_chain_counts",
+      "1 failed in 0.15s"
+    ]
+  },
+  {
+    "breakage": "allow_gap_over_bound",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "90e5ad6a65bac79113701c4e092eeade2fb2bfaf2df3f33f04f3f5744f09dd9e",
+    "named_failing_test": "tests/test_logistics_funnel_v2.py::test_gap_at_boundary_counts_and_gap_over_boundary_does_not",
+    "oracle_source_sha256": "a3aa24b7fad3b5a5f773f92559e03c0861ed830d6a0a1eb80ff2547409c5c905",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 9] != ['north', 0]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_logistics_funnel_v2.py:109: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_logistics_funnel_v2.py::test_gap_at_boundary_counts_and_gap_over_boundary_does_not",
+      "1 failed in 0.28s"
+    ]
+  },
+  {
+    "breakage": "sum_later_complete_chain",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "725701b526e6359c568026960911628cdfcd842429b581f29fb27922c1c82cfb",
+    "named_failing_test": "tests/test_logistics_funnel_v2.py::test_first_complete_chain_per_parcel_is_used",
+    "oracle_source_sha256": "a3aa24b7fad3b5a5f773f92559e03c0861ed830d6a0a1eb80ff2547409c5c905",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 106] != ['north', 7]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_logistics_funnel_v2.py:114: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_logistics_funnel_v2.py::test_first_complete_chain_per_parcel_is_used",
+      "1 failed in 0.15s"
+    ]
+  },
+  {
+    "breakage": "drop_year_filter",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "9df90cf0f0f72d87dfa44e62e4603c1fb8d0aea45f36b16435a81ca579e14a24",
+    "named_failing_test": "tests/test_logistics_funnel_v2.py::test_year_and_out_of_scope_rows_do_not_create_depot",
+    "oracle_source_sha256": "a3aa24b7fad3b5a5f773f92559e03c0861ed830d6a0a1eb80ff2547409c5c905",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         Left contains one more item: ['north', 0]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_logistics_funnel_v2.py:118: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_logistics_funnel_v2.py::test_year_and_out_of_scope_rows_do_not_create_depot",
+      "1 failed in 0.15s"
+    ]
+  },
+  {
+    "breakage": "include_out_of_scope_depot",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "8da5b26f6ae25917b6e10be149304ce35617a2fac58e78ecd2a0afe94f7d383f",
+    "named_failing_test": "tests/test_logistics_funnel_v2.py::test_year_and_out_of_scope_rows_do_not_create_depot",
+    "oracle_source_sha256": "a3aa24b7fad3b5a5f773f92559e03c0861ed830d6a0a1eb80ff2547409c5c905",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         Left contains one more item: ['north', 0]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_logistics_funnel_v2.py:118: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_logistics_funnel_v2.py::test_year_and_out_of_scope_rows_do_not_create_depot",
+      "1 failed in 0.15s"
+    ]
+  }
+]
