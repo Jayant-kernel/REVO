@@ -1,0 +1,9 @@
+{
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\jayan\\AppData\\Local\\Temp\\opencode\\revo_delivery_v34_runtime.py\", line 43, in main\n    c.execute(run)\n  File \"C:\\Users\\jayan\\OneDrive\\Desktop\\Revo\\scripts\\company_generation_experiment.py\", line 281, in execute\n    raise ValueError(\"shared production preflight failed; no inference performed\")\nValueError: shared production preflight failed; no inference performed\n",
+  "budget": {
+    "physical_attempts": 28,
+    "generation_seconds": 400.48299999994197,
+    "unfinished_attempts": []
+  },
+  "elapsed_seconds": 62.464064598083496
+}

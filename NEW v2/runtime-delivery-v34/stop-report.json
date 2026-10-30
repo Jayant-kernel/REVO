@@ -1,0 +1,70 @@
+{
+  "status": "BLOCKED_BEFORE_INFERENCE",
+  "reason": "shared production preflight sandbox readiness rejected three stale exited VDF containers; image digest matches",
+  "renewal": {
+    "run": "runs/company-renewal-coverage-cpu-v34-001",
+    "stage": "FROZEN_PREFLIGHT_REJECTED",
+    "counts": {
+      "raw": 0,
+      "executable": 0,
+      "correct": 0,
+      "STRONG": 0,
+      "duplicate": 0,
+      "eligible": 0,
+      "admitted": 0,
+      "replayed": 0
+    },
+    "sql_verdict": "NOT_EVALUATED"
+  },
+  "queue": {
+    "stage": "NOT_FROZEN_NOT_EXECUTED_INFRASTRUCTURE_STOP",
+    "counts": {
+      "raw": 0,
+      "executable": 0,
+      "correct": 0,
+      "STRONG": 0,
+      "duplicate": 0,
+      "eligible": 0,
+      "admitted": 0,
+      "replayed": 0
+    },
+    "sql_verdict": "NOT_EVALUATED"
+  },
+  "preflight": {
+    "path": "runs/company-renewal-coverage-cpu-v34-001/preflight.json",
+    "sha256": "1f3ec5a80e94beeb4eeef0aecf3a42f871caf4432a421f20c3cec3d04d93916f"
+  },
+  "stale_containers": [
+    "94b67fd6be46",
+    "677acffde130",
+    "e456169bbb2f"
+  ],
+  "elapsed_seconds": 62.464064598083496,
+  "budget": {
+    "this_milestone_physical_calls": 0,
+    "this_milestone_generation_seconds": 0,
+    "milestone_remaining_calls": 12,
+    "cumulative": {
+      "physical_attempts": 28,
+      "generation_seconds": 400.48299999994197,
+      "unfinished_attempts": []
+    },
+    "program_remaining_calls": 332,
+    "program_remaining_generation_seconds": 13999.517000000058,
+    "planned_unspent_calls": 6
+  },
+  "quality_flags": "NOT_RUN_NO_CANDIDATES",
+  "strict_product": "NOT_BUILT_NO_ELIGIBLE_RECORDS",
+  "replay_anchor": "NONE_NO_RELEASE",
+  "reviewer_quality_sidecar": "NOT_APPLICABLE_NO_RELEASE",
+  "full_certificate": "BLOCKED_prior_full_3h_timeout_plus_repaired_test_tail_NOT_full_certification",
+  "accepted_frozen80": 0,
+  "company_examples": 0,
+  "score": "NOT_COMPUTABLE",
+  "human_review": "PENDING",
+  "external_sharing": "BLOCKED",
+  "source_changes": 0,
+  "retries": 0,
+  "registry_changes": 0,
+  "remediation": "Parent owns infrastructure resolution; do not resume this stopped run. Any authorized continuation needs unused run identity. No CORE SQL defect demonstrated."
+}

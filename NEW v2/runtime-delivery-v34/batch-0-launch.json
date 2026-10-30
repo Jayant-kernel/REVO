@@ -1,0 +1,12 @@
+{
+  "task": "sql.retention.renewal_coverage",
+  "run": "company-renewal-coverage-cpu-v34-001",
+  "before": {
+    "physical_attempts": 28,
+    "generation_seconds": 400.48299999994197,
+    "unfinished_attempts": []
+  },
+  "planned_calls": 3,
+  "at": 1792211922.5907335,
+  "protocol_sha256": "e5711a5fd95e1ba856786c8cf8ebbe1975e007a5591e9663a08b125f03dfebb7"
+}
