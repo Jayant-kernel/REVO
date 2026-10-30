@@ -1,0 +1,25 @@
+{
+  "artifacts": {
+    "phase5-private-saas-corpus.json": "f7eee90bae9eb06c7868d47dfbd1d3f52a25d42160c86f7043d3d88e8ba39246",
+    "phase5-saas-classifications.json": "8eb8f6c8384cc07606aed10c565f12a7230bd5278aee0f28f47b3079b8500548",
+    "run_phase5_private_corpus.py": "9ad61a132c97094c4716310a95c46bda203906b7dfe9f266eeb970ca1c3fcbcf"
+  },
+  "blocked_usages": [
+    "no model input or call",
+    "no fixture-output constants in accepted SQL",
+    "no frozen-run file mutation",
+    "no corpus result used as a release or model-quality claim"
+  ],
+  "contract": "sql.funnel.saas_activation_payment@2",
+  "lineage": {
+    "correct_formulations": [
+      "tests.test_saas_v2_differential_sql.RECURSIVE_SQL",
+      "tests.test_business_tasks.SAAS_V2_CHAINED_JOIN_SQL",
+      "phase5 LATERAL_JOIN_SQL"
+    ],
+    "fuzz": "deterministic private seeds 0..39",
+    "named_fixture": "verified_data_factory.verification.business_adversarial.business_adversarial",
+    "named_oracle": "verified_data_factory.verification.business_oracles.saas_activation_payment"
+  },
+  "phase": "5"
+}

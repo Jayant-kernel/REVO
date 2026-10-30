@@ -1,0 +1,241 @@
+{
+  "category_counts": {
+    "execution_failure": 9,
+    "known_wrong": 8,
+    "qualified_correct_alternative": 3
+  },
+  "contract": "sql.funnel.saas_activation_payment@2",
+  "outcome_counts": {
+    "CORRECT_ACCEPTED": 3,
+    "EXECUTION_FAILURE": 9,
+    "WRONG_REJECTED": 8
+  },
+  "queries": [
+    {
+      "category": "qualified_correct_alternative",
+      "fixture_constant_hits": [],
+      "fuzz": {
+        "matched": 40,
+        "required": 40
+      },
+      "id": "correct_recursive",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": true,
+        "rows_match": true
+      },
+      "outcome": "CORRECT_ACCEPTED",
+      "sql_sha256": "7908b70bcedcbedb94dc4b561787a90bef812b80ffd8a96ebeadc87bd864cd9e"
+    },
+    {
+      "category": "qualified_correct_alternative",
+      "fixture_constant_hits": [],
+      "fuzz": {
+        "matched": 40,
+        "required": 40
+      },
+      "id": "correct_chained_join",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": true,
+        "rows_match": true
+      },
+      "outcome": "CORRECT_ACCEPTED",
+      "sql_sha256": "2cafe10db2fda6dfe2b53c7326e63e2b3f548e25a5f7db63aeff997745ecc973"
+    },
+    {
+      "category": "qualified_correct_alternative",
+      "fixture_constant_hits": [],
+      "fuzz": {
+        "matched": 40,
+        "required": 40
+      },
+      "id": "correct_lateral_join",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": true,
+        "rows_match": true
+      },
+      "outcome": "CORRECT_ACCEPTED",
+      "sql_sha256": "95b6ad14738bb7a47c893617ebd1f542182b22861cb470185b0341f124843abd"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_year",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "0c7ae3486f0bc0a6ca4c14ca9e3eba70caec652944cf4aa5af665067dc9cdc08"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_start_step",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "cccf4a0e8062b053161820c512f28883b3cba0f57233e5acf11fdc92b7981666"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_all_payments",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "6b020c11ccb1b83c2b5c2f6f671d867c6a52cd812393323db604b005f6e204a6"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_eligible_aggregate",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "b6fa5009666223c8d54b7dd398887ff408088b82d097a87c21567e986b6e580d"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_completed_only",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "48d2b084decd9652ca015b6b98669f54ad06d03983aeebc54a272d0a6719117a"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_descending_order",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "a9677f49daf0b9b07462418636a893d20c0d405c6a28316e86ff37b54682d925"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_payment_sum",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "9f9c535cb97df92689538fbf033f49afa0cfe61be511e765e57c4dc2375c888c"
+    },
+    {
+      "category": "known_wrong",
+      "fixture_constant_hits": [],
+      "id": "wrong_unordered_chain",
+      "named_fixture": {
+        "columns_match": true,
+        "matches_oracle": false,
+        "rows_match": false
+      },
+      "outcome": "WRONG_REJECTED",
+      "sql_sha256": "6b020c11ccb1b83c2b5c2f6f671d867c6a52cd812393323db604b005f6e204a6"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Parser Error: SELECT clause without selection list",
+      "fixture_constant_hits": [],
+      "id": "failure_syntax",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "3cf265a290cdfa35200628cb3bbf3e9cb6a2f6ec6abba705b0abfc8dc2c344d4"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Catalog Error: Table with name missing_table does not exist!\nDid you mean \"pg_tables\"?\n\nLINE 1: SELECT group_key, SUM(amount) FROM missing_table GROUP BY group_key\n                                           ^",
+      "fixture_constant_hits": [],
+      "id": "failure_missing_table",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "3cb577c98321259c2df0a456c0a64966e381dcf8d1b892e133e1364d6609b27f"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Binder Error: Referenced column \"missing_column\" not found in FROM clause!\nCandidate bindings: \"sequence\"\n\nLINE 1: SELECT missing_column FROM account_funnel\n               ^",
+      "fixture_constant_hits": [],
+      "id": "failure_missing_column",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "e2258b18ccaa84898e7b37af9c880ebf193e1c68f404911356a58e409a948820"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Catalog Error: Scalar Function with name unknown_function does not exist!\nDid you mean \"now\"?\n\nLINE 1: SELECT unknown_function(amount) FROM account_funnel\n               ^",
+      "fixture_constant_hits": [],
+      "id": "failure_bad_function",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "df0cb0a8ca4044c9accae9f3c1c271f19b1b66f571a8b9c382b0d6a9349db767"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Conversion Error: Type VARCHAR with value 'signup' can't be cast to the destination type STRUCT(x INTEGER) when casting from source column status\n\nLINE 1: SELECT CAST(status AS STRUCT(x INTEGER)) FROM account_funnel\n               ^",
+      "fixture_constant_hits": [],
+      "id": "failure_bad_cast",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "d4d9709239e72bd16a75730a43cfb3a962d4d814e09254dd1b2ea66fb99e7ddf"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Binder Error: column \"amount\" must appear in the GROUP BY clause or must be part of an aggregate function.\nEither add it to the GROUP BY list, or use \"ANY_VALUE(amount)\" if the exact value of \"amount\" is not important.\n\nLINE 1: SELECT group_key, amount FROM account_funnel GROUP BY group_key\n                          ^",
+      "fixture_constant_hits": [],
+      "id": "failure_invalid_group",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "0256057e8edff240096e82c155104f0c5ffb4d51fbd2ba31a3738af6de037a0c"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Binder Error: Referenced column missing_window not found in FROM clause and can't find in alias map.\n\nLINE 1: SELECT * FROM account_funnel QUALIFY missing_window = 1\n                                             ^",
+      "fixture_constant_hits": [],
+      "id": "failure_bad_qualify",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "0123f1b11050e026c12cb5f9a7429ae7647d4a3bb3feb217fa864ae6fef7b479"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Binder Error: Referenced column \"INTERVAL\" not found in FROM clause!\nCandidate bindings: \"amount\"\n\nLINE 1: SELECT occurred_at + INTERVAL nonsense FROM account_funnel\n                             ^",
+      "fixture_constant_hits": [],
+      "id": "failure_bad_interval",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "b6258e2569cf83a487d440bcba703f1ee56c7179969e6b5ed50b02b3db8847d3"
+    },
+    {
+      "category": "execution_failure",
+      "execution_error": "Parser Error: syntax error at end of input",
+      "fixture_constant_hits": [],
+      "id": "failure_unclosed",
+      "named_fixture": "not_executed",
+      "outcome": "EXECUTION_FAILURE",
+      "sql_sha256": "442c42572afa911ca58afcedc1d9812f469bdcc0ad0951404abedce35a50de7f"
+    }
+  ],
+  "query_count": 20
+}
