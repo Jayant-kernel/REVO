@@ -1,0 +1,11 @@
+{
+  "active_findings": [],
+  "findings": [
+    {
+      "artifact_status": "STALE",
+      "evidence_id": "phase1-paused-run-guard-20261004",
+      "evidence_status": "SUPERSEDED"
+    }
+  ],
+  "status": "PASS"
+}
