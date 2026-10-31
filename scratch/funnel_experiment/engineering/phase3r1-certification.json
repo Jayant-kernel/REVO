@@ -1,0 +1,10 @@
+{
+  "phase": "3r1",
+  "completed_at": "2026-10-06T16:44:15.956285+00:00",
+  "regression_exit_code": 0,
+  "terminal_summary": "====================== 1179 passed in 1820.87s (0:30:20) ======================",
+  "identity_match": true,
+  "guard_exit_code": 0,
+  "lock_sha256": "95d3662456c8c6f5aab75e11c3261d5d7e98468fc140f9d4ea4557c9f5bf234e",
+  "status": "PASS"
+}
