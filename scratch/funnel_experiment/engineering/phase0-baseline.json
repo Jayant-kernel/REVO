@@ -1,0 +1,27 @@
+{
+  "measured_at": "2026-10-06T07:15:18.327325+00:00",
+  "lock_sha256": "95d3662456c8c6f5aab75e11c3261d5d7e98468fc140f9d4ea4557c9f5bf234e",
+  "contract_readiness_counts": {
+    "FULLY_VERIFIED": 50,
+    "QUARANTINED": 7
+  },
+  "readiness_is_historical_not_strict": true,
+  "test_count": 1093,
+  "frozen_run_files": {
+    "candidates/attempt-reservations.jsonl": "122da45bced95515e1c8af34e46c14ba1129c9b75c2578ca73b44cbf3c2db602",
+    "candidates/candidates.jsonl": "08749e08352e13930ae171942aecd2610c0ceb071317168265859bbf29c7f787",
+    "execution/triples.jsonl": "216fb5c9ab73a2a6ec86c912055e1a24a79e3c9636a90ef6fa45c93ae96d064c",
+    "manifests/run-manifest.json": "24c323088235c9badf76dcd529076acd1fd845ca04204723d91a4928d821ae67",
+    "manifests/run-state.json": "2f83798ed611b99307f2dd0fa3cd51ac9dc2d44f78a2d36b59c1d62f88073614",
+    "quality/export/audit_required.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quality/export/audit_sample.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quality/export/dataset_health.json": "5dd286f7b683abad667aafbeb3356e8136b1eef0d56a0c41ca8a0dffc4ead39e",
+    "quality/export/excluded.jsonl": "4b4ead70bc88f1b2375398aaee99a8ee4a58c8f05670241eee20b7f45e1fdca5",
+    "quality/export/golden.jsonl": "690361c4aefb67b220035fe4c1e0d7b40012a0bed792e7bf2507374a75873f18",
+    "quality/export/inconclusive.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quality/export/population_metrics.json": "90e3a71f2d2aa18a00e6adc4ab1c5afb8758f1fe6f3bdf75c40f13e965f12a46",
+    "quality/export/review_queue.jsonl": "f4d0e0388bc0f2da36ee9cece4e4a276ae66a8b9c17587164bb25e6babca29f2",
+    "tasks/tasks.jsonl": "29591ee50fa3c9d7faedd9945cd77208fd6da32fc7b9aaeb4e05bff9c7903e17",
+    "verification/verification.jsonl": "2e4004faebd2902968bb75fd2145ae672b6dae6b3a9e756cf3df98f3ca49d744"
+  }
+}
