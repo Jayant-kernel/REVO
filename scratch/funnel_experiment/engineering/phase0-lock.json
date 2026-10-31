@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-10-06T07:15:16.697805+00:00",
+  "rubric_version": "engineering-1.0",
+  "measurement_sources": {
+    "docs/production/engineering-rubric.md": "30cf263bd52940717d98a8716ed90850a4308393a872133f95bd11f6b8f90bfb",
+    "configs/package_a/engineering-rubric.json": "e18a82afc2635c9bc9ef09bda95600e8bb8af073d3adfd78b47597b28c70664e",
+    "scripts/engineering_score.py": "7c2ad45235fed0d8498c417fbc62dfe4ab12b5506462e1ada67cbbfc360bd729",
+    "tests/test_engineering_score.py": "99308f25d4381fbe51038a84b8d39aedbe949224f520f4849341ea58ae71ce0f"
+  },
+  "frozen_assets": {
+    "configs/production/premium_qualification_80.yaml": "612e004917b0d5e8b559a92c793e5111ea786e8dcaa9dd7860c49c33005cb9b0",
+    "configs/quality_premium_93.yaml": "3ee559bcafc3ab70bd48bae15992935ea8ed7053cd9eba14b085313e5afc0218",
+    "docs/release-93-spec.md": "bb8858ed377aff66ea21bf31609f5994707739790981d6c83b4d2eeeb93f9b4b",
+    "scratch/paused-run.baseline.sha256.txt": "0ca5263a95175055c3497acfee4b61c038c6d858a751e8cccbe83f49fe341f39"
+  }
+}
