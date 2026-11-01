@@ -1,0 +1,156 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\jayan\OneDrive\Desktop\Revo
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, flaky-3.8.1, hypothesis-6.168.1, cov-7.1.0, rerunfailures-16.7, split-0.11.0, timeout-2.4.0, xdist-3.8.0, requests-mock-1.12.1, xdoctest-1.3.2
+collected 1183 items
+
+tests\e2e\test_business_task_pipeline.py ............................... [  2%]
+................                                                         [  3%]
+tests\e2e\test_diverse_template_pipeline.py ....                         [  4%]
+tests\e2e\test_overfit_binding_e2e.py ..                                 [  4%]
+tests\e2e\test_phase3_phase4_pipeline.py ............................... [  7%]
+                                                                         [  7%]
+tests\e2e\test_semantics_e2e.py .....                                    [  7%]
+tests\integration\sandbox\test_docker_available.py .                     [  7%]
+tests\integration\sandbox\test_docker_sandbox.py ................        [  8%]
+tests\integration\verification\test_verify_e2e.py ................       [ 10%]
+tests\test_business_benchmark.py ......                                  [ 10%]
+tests\test_business_claims.py .......                                    [ 11%]
+tests\test_business_cli.py ....                                          [ 11%]
+tests\test_business_customer.py ......                                   [ 12%]
+tests\test_business_economics.py ......                                  [ 12%]
+tests\test_business_evidence.py .....                                    [ 13%]
+tests\test_business_experiments.py ......                                [ 13%]
+tests\test_business_pilot.py ...                                         [ 13%]
+tests\test_business_pipeline.py ..                                       [ 14%]
+tests\test_business_security.py ......                                   [ 14%]
+tests\test_business_stats.py .....                                       [ 15%]
+tests\test_business_tasks.py ........................................... [ 18%]
+........................................................................ [ 24%]
+........................................................................ [ 30%]
+..                                                                       [ 31%]
+tests\test_catalog.py ...                                                [ 31%]
+tests\test_coverage_templates.py .........                               [ 32%]
+tests\test_diverse_templates.py ......................                   [ 33%]
+tests\test_edge_representation.py ..........                             [ 34%]
+tests\test_engineering_comparator.py .....................               [ 36%]
+tests\test_engineering_hidden_diversity.py ............................. [ 38%]
+................................                                         [ 41%]
+tests\test_engineering_rejudge.py ....                                   [ 42%]
+tests\test_engineering_rule_qualification.py ....                        [ 42%]
+tests\test_engineering_score.py .......                                  [ 42%]
+tests\test_fixtures.py .........                                         [ 43%]
+tests\test_funnel_experiment_runner.py .....                             [ 44%]
+tests\test_funnel_generation_scratch.py ..                               [ 44%]
+tests\test_gen_batch.py ......                                           [ 44%]
+tests\test_gen_candidate.py .........                                    [ 45%]
+tests\test_gen_parser.py .........                                       [ 46%]
+tests\test_gen_prompt.py .......                                         [ 46%]
+tests\test_gen_provider.py ..............                                [ 48%]
+tests\test_identity.py ........                                          [ 48%]
+tests\test_instructions.py ...                                           [ 49%]
+tests\test_legacy_adversarial.py ..........                              [ 49%]
+tests\test_logistics_funnel_v2.py .......                                [ 50%]
+tests\test_models.py .......                                             [ 51%]
+tests\test_package_a_challenge_repair.py .                               [ 51%]
+tests\test_phase0_structure.py ...                                       [ 51%]
+tests\test_phase10_readiness.py ...                                      [ 51%]
+tests\test_phase12_fake_funnel_experiment.py ....                        [ 51%]
+tests\test_phase14_report.py ..                                          [ 52%]
+tests\test_phase3_breakage_evidence.py .                                 [ 52%]
+tests\test_phase3_diagnostic.py .                                        [ 52%]
+tests\test_phase3_scheduler.py .......                                   [ 52%]
+tests\test_phase6_saas_v2_fuzz.py .                                      [ 53%]
+tests\test_phase8_logistics_breakage_evidence.py .                       [ 53%]
+tests\test_phase9_audits.py ..                                           [ 53%]
+tests\test_pilot001_regressions.py ........                              [ 53%]
+tests\test_premium_candidate.py ...                                      [ 54%]
+tests\test_production_preparation.py ........................            [ 56%]
+tests\test_products_census.py ......                                     [ 56%]
+tests\test_products_cli.py ..                                            [ 56%]
+tests\test_products_config.py .....                                      [ 57%]
+tests\test_products_novelty_economics.py ......                          [ 57%]
+tests\test_products_release.py ....................                      [ 59%]
+tests\test_products_release_gates.py ......                              [ 60%]
+tests\test_products_row_manifest.py ......                               [ 60%]
+tests\test_products_serializers.py ........                              [ 61%]
+tests\test_products_splits.py ........                                   [ 61%]
+tests\test_products_visibility.py .....                                  [ 62%]
+tests\test_provenance_canonical.py ...........                           [ 63%]
+tests\test_provenance_checkpoint_swap.py ....                            [ 63%]
+tests\test_provenance_export.py ........                                 [ 64%]
+tests\test_provenance_graph.py ...........                               [ 65%]
+tests\test_provenance_hashing.py ...........                             [ 66%]
+tests\test_provenance_lineage.py .......                                 [ 66%]
+tests\test_provenance_reproducibility.py ...........                     [ 67%]
+tests\test_provenance_snapshots.py ..........                            [ 68%]
+tests\test_provenance_supply_chain.py ...........                        [ 69%]
+tests\test_quality_audit.py .........                                    [ 70%]
+tests\test_quality_cli.py ...                                            [ 70%]
+tests\test_quality_diversity.py .......                                  [ 71%]
+tests\test_quality_duplicates.py .......                                 [ 71%]
+tests\test_quality_export.py ........                                    [ 72%]
+tests\test_quality_golden.py ............                                [ 73%]
+tests\test_quality_mutation_gate.py .........                            [ 74%]
+tests\test_quality_population_metrics.py ..                              [ 74%]
+tests\test_quality_quarantine.py .....                                   [ 74%]
+tests\test_quality_records.py .......                                    [ 75%]
+tests\test_registry.py .......                                           [ 75%]
+tests\test_reproducibility.py ...........                                [ 76%]
+tests\test_review_package.py .......                                     [ 77%]
+tests\test_runner_integrity.py .........                                 [ 78%]
+tests\test_saas_funnel_oracle.py ................                        [ 79%]
+tests\test_saas_v2_differential_sql.py ................................. [ 82%]
+...........                                                              [ 83%]
+tests\test_sandbox_docker_cmd.py ........                                [ 83%]
+tests\test_sandbox_executor.py ...............                           [ 85%]
+tests\test_sandbox_fixture.py ..                                         [ 85%]
+tests\test_sandbox_harness.py ..                                         [ 85%]
+tests\test_sandbox_models.py .......                                     [ 86%]
+tests\test_sandbox_policy.py ........                                    [ 86%]
+tests\test_semantics.py ........                                         [ 87%]
+tests\test_serialization.py .......                                      [ 87%]
+tests\test_subquery_threshold_boundary.py .                              [ 88%]
+tests\test_templates.py ....                                             [ 88%]
+tests\test_validation.py ....                                            [ 88%]
+tests\test_verify_cli.py ..                                              [ 88%]
+tests\test_verify_comparator.py ........................                 [ 90%]
+tests\test_verify_determinism_fallback.py .....                          [ 91%]
+tests\test_verify_hidden.py .....                                        [ 91%]
+tests\test_verify_hypothesis.py .....                                    [ 92%]
+tests\test_verify_independence.py .......                                [ 92%]
+tests\test_verify_mutations.py ....................                      [ 94%]
+tests\test_verify_oracles.py ..............                              [ 95%]
+tests\test_verify_properties.py .................                        [ 97%]
+tests\test_verify_serialization.py .....                                 [ 97%]
+tests\test_verify_verdicts.py .............................              [100%]
+
+============================ slowest 25 durations =============================
+153.91s call     tests/e2e/test_phase3_phase4_pipeline.py::test_matrix_verdict[sql.joins.simple-correct-PASS]
+45.82s call     tests/test_quality_golden.py::test_dataset_selection_deterministic_and_quota_bounded
+40.18s call     tests/test_phase6_saas_v2_fuzz.py::test_phase6_fuzz_meets_committed_coverage_and_has_no_divergences
+30.25s call     tests/test_quality_duplicates.py::test_group_ids_stable_and_representative_deterministic
+30.10s call     tests/test_quality_export.py::test_export_bytes_identical
+29.53s call     tests/test_quality_audit.py::test_audit_sampling_deterministic_and_risk_ordered
+29.52s call     tests/test_quality_export.py::test_full_pipeline_twice_identical
+29.04s call     tests/test_provenance_checkpoint_swap.py::test_checkpoint_swap_changes_snapshot_identity
+28.77s call     tests/test_quality_mutation_gate.py::test_fixture_golden_set_unchanged_without_justifications
+28.56s call     tests/test_provenance_checkpoint_swap.py::test_same_checkpoint_reproduces_snapshot_identity
+28.49s call     tests/test_quality_diversity.py::test_coverage_deterministic
+17.04s call     tests/test_quality_diversity.py::test_declared_difficulty_preserved
+16.98s call     tests/test_quality_cli.py::test_quality_dataset_and_golden_cli
+16.57s call     tests/test_quality_export.py::test_record_id_binds_task_and_sql_content
+16.50s call     tests/test_quality_audit.py::test_known_source_registry_hit_blocks
+16.34s call     tests/test_quality_duplicates.py::test_duplicate_fields_populated_on_records
+16.32s call     tests/test_quality_audit.py::test_audit_result_recording_and_unknown_id
+16.08s call     tests/test_quality_audit.py::test_high_risk_records_selected
+15.98s call     tests/test_quality_golden.py::test_audit_failure_prevents_golden
+15.94s call     tests/test_quality_mutation_gate.py::test_scored_below_threshold_still_rejected
+15.67s call     tests/test_quality_duplicates.py::test_formatting_only_is_structural_not_exact
+15.66s call     tests/test_quality_diversity.py::test_coverage_counts_rates_and_uncovered
+15.61s call     tests/test_quality_audit.py::test_exact_overlap_private_eval_flagged_hard
+15.54s call     tests/test_quality_mutation_gate.py::test_zero_applicable_with_field_justification_permitted
+15.51s call     tests/test_quality_export.py::test_health_contamination_schema_preserves_counts_and_types
+====================== 1183 passed in 2383.14s (0:39:43) ======================
