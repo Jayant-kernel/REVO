@@ -1,0 +1,93 @@
+{
+  "quarantines": [
+    {
+      "contract_id": "sql.funnel.logistics_parcel_delivery",
+      "contract_version": 1,
+      "evidence_id": "phase1-legacy-saas-provenance-20261004",
+      "reason": "Contract-specific verification is reopened; the current contract lacks the required maximum-gap semantics and evidence.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.logistics_parcel_delivery",
+      "contract_version": 2,
+      "evidence_id": "phase8-logistics-verifier-inconclusive",
+      "reason": "Forward v2 has focused semantic evidence but the production verifier returned INCONCLUSIVE, so it is not eligible for selection.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.checkout_paid_session",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.curriculum_gate_completion",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.kyc_document_approval",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.parcel_exception_recovery",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.support_resolution_chain",
+      "contract_version": 1,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Named oracle and fixture exist, but the Phase 8 qualification gates have not been completed.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    },
+    {
+      "contract_id": "sql.funnel.completion",
+      "contract_version": 3,
+      "evidence_id": "phase8-funnel-contract-inventory",
+      "reason": "Excluded by the frozen mutation-applicability assessment and not Phase 8 qualified.",
+      "scope": [
+        "production",
+        "distinct_selection",
+        "experiment"
+      ]
+    }
+  ],
+  "version": 1
+}
