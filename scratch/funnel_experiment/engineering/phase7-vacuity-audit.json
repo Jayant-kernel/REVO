@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-10-07T01:20:01.713446+00:00",
+  "contracts": 57,
+  "seeds": [
+    1,
+    43,
+    94001
+  ],
+  "csvs": [
+    "phase7-vacuity-seed-1.csv",
+    "phase7-vacuity-seed-43.csv",
+    "phase7-vacuity-seed-94001.csv"
+  ],
+  "readiness_granted": false
+}
