@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-07T01:19:15.386541+00:00",
+  "category": "fuzz",
+  "contract_id": "sql.funnel.saas_activation_payment",
+  "contract_version": 2,
+  "evidence_id": "engineering-7-saas-fuzz",
+  "producer": "scripts/engineering_fuzz.py",
+  "status": "ACTIVE",
+  "checks_run": 1800,
+  "execution_failures": 0,
+  "coverage_random": {
+    "1": {
+      "completed": 118,
+      "incomplete": 300,
+      "repeated_steps": 292,
+      "skipped_steps": 204,
+      "early_later_steps": 299,
+      "same_timestamp_ties": 295,
+      "cancelled": 299,
+      "year_boundaries": 297,
+      "zero_completion_groups": 300,
+      "out_of_scope_only_groups": 32,
+      "multiple_entities": 300,
+      "multiple_groups": 296
+    },
+    "43": {
+      "completed": 112,
+      "incomplete": 298,
+      "repeated_steps": 289,
+      "skipped_steps": 192,
+      "early_later_steps": 297,
+      "same_timestamp_ties": 295,
+      "cancelled": 297,
+      "year_boundaries": 296,
+      "zero_completion_groups": 297,
+      "out_of_scope_only_groups": 28,
+      "multiple_entities": 300,
+      "multiple_groups": 290
+    },
+    "94001": {
+      "completed": 112,
+      "incomplete": 298,
+      "repeated_steps": 298,
+      "skipped_steps": 191,
+      "early_later_steps": 299,
+      "same_timestamp_ties": 297,
+      "cancelled": 298,
+      "year_boundaries": 294,
+      "zero_completion_groups": 297,
+      "out_of_scope_only_groups": 33,
+      "multiple_entities": 300,
+      "multiple_groups": 293
+    }
+  },
+  "coverage_targeted": {},
+  "uncovered": {
+    "1": {},
+    "43": {},
+    "94001": {}
+  },
+  "divergences": [],
+  "unresolved_findings": [],
+  "metrics": {
+    "valid_random_cases": 900,
+    "observed_coverage_pass": true,
+    "divergences": 0
+  },
+  "source_hashes": {
+    "scripts/engineering_fuzz.py": "f8fcd445daa8a9347772f1c9e56efb15cfecd0198573bfed66fab48325d980ca",
+    "src/verified_data_factory/verification/comparator.py": "ffa925cdc9fcae380a195e1078460d835b993ace2e66873abda39c4090f270a7",
+    "src/verified_data_factory/verification/business_oracles.py": "89a60ff5a81e8074d25208131559d3456b07a90cf9d6db928c5307a38b902784",
+    "tests/test_business_tasks.py": "0348ec956e4bc95fff1a35d6ebc66e16ae7f3a50c95a4dad955b81e7dff8e873",
+    "tests/test_saas_v2_differential_sql.py": "483e51de0f04a39e18cfc7833e29256c187936069b9c88ff32db5f0d806a7dc7",
+    "configs/package_a/engineering-rubric.json": "e18a82afc2635c9bc9ef09bda95600e8bb8af073d3adfd78b47597b28c70664e"
+  }
+}
