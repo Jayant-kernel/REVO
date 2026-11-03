@@ -1,0 +1,10 @@
+{
+  "phase": "7r2",
+  "completed_at": "2026-10-07T04:34:50.390838+00:00",
+  "regression_exit_code": 1,
+  "terminal_summary": "================= 1 failed, 1216 passed in 1187.51s (0:19:47) =================",
+  "identity_match": true,
+  "guard_exit_code": 0,
+  "lock_sha256": "95d3662456c8c6f5aab75e11c3261d5d7e98468fc140f9d4ea4557c9f5bf234e",
+  "status": "FAIL"
+}
