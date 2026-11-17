@@ -1,0 +1,4 @@
+label: legacy generic
+legacy rows: []
+oracle rows: [['north', 160], ['south', 0]]
+disagreement: True
