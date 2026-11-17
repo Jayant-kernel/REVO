@@ -1,0 +1,25 @@
+{
+  "actual_columns": [
+    "group_key",
+    "total_amount"
+  ],
+  "actual_rows": [],
+  "comparison_match": false,
+  "comparison_notes": [],
+  "label": "reconstructed legacy-generic formulation",
+  "oracle_columns": [
+    "group_key",
+    "total_amount"
+  ],
+  "oracle_rows": [
+    [
+      "north",
+      160
+    ],
+    [
+      "south",
+      0
+    ]
+  ],
+  "provenance": "Historical SaaS assignment was not independently recovered."
+}
