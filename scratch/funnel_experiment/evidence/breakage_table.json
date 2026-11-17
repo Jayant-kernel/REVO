@@ -1,0 +1,116 @@
+[
+  {
+    "breakage": "last_match_instead_of_first",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "c5593aa15348337fa48959725bc3ed0fe896c00d06e21beb6ab4e5e1c2a88d95",
+    "named_failing_test": "tests/test_saas_funnel_oracle.py::test_repeated_payment_uses_first_matched_payment",
+    "oracle_source_sha256": "7768e7f5a50c5c3be932122aeec94f165edf910c9bc1c5c90dfa636fc4e87b41",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 99] != ['north', 7]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_saas_funnel_oracle.py:67: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_saas_funnel_oracle.py::test_repeated_payment_uses_first_matched_payment",
+      "1 failed in 0.38s"
+    ],
+    "semantic_difference": "Overwrites the first matched completion amount with a later final-step row."
+  },
+  {
+    "breakage": "drop_sequence_tie_break",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "6550d25618e1128b153d1860b449bf09411f2bacc5820083531a8c708f18355c",
+    "named_failing_test": "tests/test_saas_funnel_oracle.py::test_same_timestamp_reverse_input_uses_sequence",
+    "oracle_source_sha256": "7768e7f5a50c5c3be932122aeec94f165edf910c9bc1c5c90dfa636fc4e87b41",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 0] != ['north', 7]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_saas_funnel_oracle.py:45: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_saas_funnel_oracle.py::test_same_timestamp_reverse_input_uses_sequence",
+      "1 failed in 0.17s"
+    ],
+    "semantic_difference": "Uses stable input order for equal timestamps instead of the required sequence key."
+  },
+  {
+    "breakage": "advance_on_any_later_step",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "0279de6ab7de6371d54b59f10a8007afcaf261f7f8c54d37fe751de75d88719e",
+    "named_failing_test": "tests/test_saas_funnel_oracle.py::test_skipped_step_never_completes",
+    "oracle_source_sha256": "7768e7f5a50c5c3be932122aeec94f165edf910c9bc1c5c90dfa636fc4e87b41",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 9] != ['north', 0]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_saas_funnel_oracle.py:71: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_saas_funnel_oracle.py::test_skipped_step_never_completes - ...",
+      "1 failed in 0.19s"
+    ],
+    "semantic_difference": "Allows a later funnel step to skip required earlier steps."
+  },
+  {
+    "breakage": "drop_year_filter",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "6b0ef17a598cad28807f9f10f23a91e5d4107f598893cf762ea663f8b4fefc17",
+    "named_failing_test": "tests/test_saas_funnel_oracle.py::test_2024_signup_does_not_start_2025_completion",
+    "oracle_source_sha256": "7768e7f5a50c5c3be932122aeec94f165edf910c9bc1c5c90dfa636fc4e87b41",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 10] != ['north', 0]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_saas_funnel_oracle.py:94: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_saas_funnel_oracle.py::test_2024_signup_does_not_start_2025_completion",
+      "1 failed in 0.17s"
+    ],
+    "semantic_difference": "Lets an out-of-year signup start a completion."
+  },
+  {
+    "breakage": "sum_all_rows",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "bb8d58da25a51e938c8cddd7b44b6636f04fdb33a21e8e617b445c22f43cc324",
+    "named_failing_test": "tests/test_saas_funnel_oracle.py::test_repeated_payment_uses_first_matched_payment",
+    "oracle_source_sha256": "7768e7f5a50c5c3be932122aeec94f165edf910c9bc1c5c90dfa636fc4e87b41",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         At index 0 diff: ['north', 106] != ['north', 7]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_saas_funnel_oracle.py:67: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_saas_funnel_oracle.py::test_repeated_payment_uses_first_matched_payment",
+      "1 failed in 0.17s"
+    ],
+    "semantic_difference": "Sums all final-step rows rather than using only the first matched amount."
+  },
+  {
+    "breakage": "include_out_of_scope_only_segments",
+    "classification": "KILLED_WRONG_ANSWER",
+    "mutant_source_sha256": "054fe0f8cdc075eef7e0725c7bd701ba8424b1071da32f24148b3ea86e5de24a",
+    "named_failing_test": "tests/test_saas_funnel_oracle.py::test_segment_without_in_scope_rows_is_absent",
+    "oracle_source_sha256": "7768e7f5a50c5c3be932122aeec94f165edf910c9bc1c5c90dfa636fc4e87b41",
+    "pytest_exit_code": 1,
+    "pytest_output_tail": [
+      "E         ",
+      "E         Left contains one more item: ['north', 0]",
+      "E         Use -v to get more diff",
+      "",
+      "tests\\test_saas_funnel_oracle.py:106: AssertionError",
+      "=========================== short test summary info ===========================",
+      "FAILED tests/test_saas_funnel_oracle.py::test_segment_without_in_scope_rows_is_absent",
+      "1 failed in 0.16s"
+    ],
+    "semantic_difference": "Creates a zero segment from an out-of-scope row."
+  }
+]
