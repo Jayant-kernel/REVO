@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T15:04:20.643475+00:00",
+  "tests": [
+    "tests/test_engineering_hidden_diversity.py::test_repeated_fixture_provider_cannot_pass_the_diversity_gate"
+  ],
+  "exit_code": 1,
+  "log_sha256": "a28d4ef3d48e97dbff1f2892b0f0debe25c58cd06e862d615e98bf0b3f5c02b1"
+}
