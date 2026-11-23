@@ -1,0 +1,24 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_____ test_generic_window_contract_without_ranking_proof_is_not_admitted ______
+
+    def test_generic_window_contract_without_ranking_proof_is_not_admitted():
+        ready = contract_readiness_from_manifest(Path("manifests/phase3-contract-readiness.json"))
+>       assert not ready("sql.windows.payments_risk_rank")
+E       AssertionError: assert not True
+E        +  where True = <function contract_readiness_from_manifest.<locals>.<lambda> at 0x00000287F7DCC2C0>('sql.windows.payments_risk_rank')
+
+tests\test_engineering_rule_qualification.py:9: AssertionError
+_____ test_named_contract_without_complete_rule_evidence_is_not_admitted ______
+
+    def test_named_contract_without_complete_rule_evidence_is_not_admitted():
+        ready = contract_readiness_from_manifest(Path("manifests/phase3-contract-readiness.json"))
+>       assert not ready("sql.joins.simple")
+E       AssertionError: assert not True
+E        +  where True = <function contract_readiness_from_manifest.<locals>.<lambda> at 0x00000287F8DF2C00>('sql.joins.simple')
+
+tests\test_engineering_rule_qualification.py:14: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_rule_qualification.py::test_generic_window_contract_without_ranking_proof_is_not_admitted
+FAILED tests/test_engineering_rule_qualification.py::test_named_contract_without_complete_rule_evidence_is_not_admitted
+2 failed in 0.41s
