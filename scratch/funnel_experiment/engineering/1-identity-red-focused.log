@@ -1,0 +1,15 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_verification_identity_cannot_reuse_the_old_comparator_identity _____
+
+    def test_verification_identity_cannot_reuse_the_old_comparator_identity():
+        from verified_data_factory.verification.verifier import build_verification_id
+        old_digest = hashlib.sha256(b"task|candidate|execution|config|1").hexdigest()[:12]
+>       assert build_verification_id("task", "candidate", "execution", "config", 1) != f"candidate.verify-{old_digest}"
+E       AssertionError: assert 'candidate.verify-92862394be06' != 'candidate.verify-92862394be06'
+E        +  where 'candidate.verify-92862394be06' = <function build_verification_id at 0x000002579E1159E0>('task', 'candidate', 'execution', 'config', 1)
+
+tests\test_engineering_comparator.py:113: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_comparator.py::test_verification_identity_cannot_reuse_the_old_comparator_identity
+1 failed in 0.31s
