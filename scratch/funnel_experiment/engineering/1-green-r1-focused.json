@@ -1,0 +1,9 @@
+{
+  "recorded_at": "2026-10-06T08:23:05.656714+00:00",
+  "tests": [
+    "tests/test_engineering_comparator.py",
+    "tests/e2e/test_semantics_e2e.py"
+  ],
+  "exit_code": 0,
+  "log_sha256": "355e30bebed403df50670dab3df46ede26bec8ac065485a1d32ea66929d98b08"
+}
