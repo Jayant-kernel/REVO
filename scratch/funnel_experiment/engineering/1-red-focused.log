@@ -1,0 +1,69 @@
+FFFFFF.....                                                              [100%]
+================================== FAILURES ===================================
+_____________ test_large_integers_differing_by_one_are_not_equal ______________
+
+    def test_large_integers_differing_by_one_are_not_equal():
+>       assert not cells_equal(2**53, 2**53 + 1, ComparisonPolicy(float_abs_tol=0, float_rel_tol=0))
+E       assert not True
+E        +  where True = cells_equal((2 ** 53), ((2 ** 53) + 1), ComparisonPolicy(float_abs_tol=0.0, float_rel_tol=0.0, column_names_case_sensitive=False, column_order_strict=True))
+E        +    where ComparisonPolicy(float_abs_tol=0.0, float_rel_tol=0.0, column_names_case_sensitive=False, column_order_strict=True) = ComparisonPolicy(float_abs_tol=0, float_rel_tol=0)
+
+tests\test_engineering_comparator.py:18: AssertionError
+_________ test_integer_comparison_never_uses_relative_float_tolerance _________
+
+    def test_integer_comparison_never_uses_relative_float_tolerance():
+>       assert not cells_equal(1_000_000_000, 1_000_000_001, ComparisonPolicy())
+E       assert not True
+E        +  where True = cells_equal(1000000000, 1000000001, ComparisonPolicy(float_abs_tol=1e-09, float_rel_tol=1e-07, column_names_case_sensitive=False, column_order_strict=True))
+E        +    where ComparisonPolicy(float_abs_tol=1e-09, float_rel_tol=1e-07, column_names_case_sensitive=False, column_order_strict=True) = ComparisonPolicy()
+
+tests\test_engineering_comparator.py:22: AssertionError
+_________________ test_numeric_looking_text_retains_identity __________________
+
+    def test_numeric_looking_text_retains_identity():
+>       assert not cells_equal("001", "1", ComparisonPolicy())
+E       AssertionError: assert not True
+E        +  where True = cells_equal('001', '1', ComparisonPolicy(float_abs_tol=1e-09, float_rel_tol=1e-07, column_names_case_sensitive=False, column_order_strict=True))
+E        +    where ComparisonPolicy(float_abs_tol=1e-09, float_rel_tol=1e-07, column_names_case_sensitive=False, column_order_strict=True) = ComparisonPolicy()
+
+tests\test_engineering_comparator.py:26: AssertionError
+__________________ test_numeric_looking_text_uses_text_order __________________
+
+    def test_numeric_looking_text_uses_text_order():
+>       assert compare(expected([["10"], ["2"]], "VARCHAR", True), ["v"], [["10"], ["2"]]).match
+E       AssertionError: assert False
+E        +  where False = ComparisonResult(match=False, expected_rows=2, actual_rows=2, expected_columns=['v'], actual_columns=['v'], order_spec...se_sensitive=False, column_order_strict=True), differences=[], notes=['row order violates the task ORDER BY contract']).match
+E        +    where ComparisonResult(match=False, expected_rows=2, actual_rows=2, expected_columns=['v'], actual_columns=['v'], order_spec...se_sensitive=False, column_order_strict=True), differences=[], notes=['row order violates the task ORDER BY contract']) = compare(ExpectedResult(columns=['v'], rows=[['10'], ['2']], order=OrderSpec(type='ordered', keys=[('v', 'asc')])), ['v'], [['10'], ['2']])
+E        +      where ExpectedResult(columns=['v'], rows=[['10'], ['2']], order=OrderSpec(type='ordered', keys=[('v', 'asc')])) = expected([['10'], ['2']], 'VARCHAR', True)
+
+tests\test_engineering_comparator.py:30: AssertionError
+______ test_wrong_width_rows_fail_closed_even_for_empty_expected_result _______
+
+    def test_wrong_width_rows_fail_closed_even_for_empty_expected_result():
+>       assert not compare(expected([], "INTEGER"), ["v"], [[1, 2]]).match
+E       AssertionError: assert not True
+E        +  where True = ComparisonResult(match=True, expected_rows=0, actual_rows=0, expected_columns=['v'], actual_columns=['v'], order_spec=...tol=1e-09, float_rel_tol=1e-07, column_names_case_sensitive=False, column_order_strict=True), differences=[], notes=[]).match
+E        +    where ComparisonResult(match=True, expected_rows=0, actual_rows=0, expected_columns=['v'], actual_columns=['v'], order_spec=...tol=1e-09, float_rel_tol=1e-07, column_names_case_sensitive=False, column_order_strict=True), differences=[], notes=[]) = compare(ExpectedResult(columns=['v'], rows=[], order=OrderSpec(type='unordered', keys=[])), ['v'], [[1, 2]])
+E        +      where ExpectedResult(columns=['v'], rows=[], order=OrderSpec(type='unordered', keys=[])) = expected([], 'INTEGER')
+
+tests\test_engineering_comparator.py:34: AssertionError
+______________ test_tolerant_matching_finds_a_complete_matching _______________
+
+    def test_tolerant_matching_finds_a_complete_matching():
+        policy = ComparisonPolicy(float_abs_tol=0.06, float_rel_tol=0)
+        for rows in ([[0.05], [0.15]], [[0.15], [0.05]]):
+>           assert compare(expected([[0.1], [0.0]]), ["v"], rows, policy).match
+E           AssertionError: assert False
+E            +  where False = ComparisonResult(match=False, expected_rows=2, actual_rows=2, expected_columns=['v'], actual_columns=['v'], order_spec...ces=[RowDifference(index=1, expected=[0.0], actual=[]), RowDifference(index=-1, expected=[], actual=[0.15])], notes=[]).match
+E            +    where ComparisonResult(match=False, expected_rows=2, actual_rows=2, expected_columns=['v'], actual_columns=['v'], order_spec...ces=[RowDifference(index=1, expected=[0.0], actual=[]), RowDifference(index=-1, expected=[], actual=[0.15])], notes=[]) = compare(ExpectedResult(columns=['v'], rows=[[0.1], [0.0]], order=OrderSpec(type='unordered', keys=[])), ['v'], [[0.05], [0.15]], ComparisonPolicy(float_abs_tol=0.06, float_rel_tol=0.0, column_names_case_sensitive=False, column_order_strict=True))
+E            +      where ExpectedResult(columns=['v'], rows=[[0.1], [0.0]], order=OrderSpec(type='unordered', keys=[])) = expected([[0.1], [0.0]])
+
+tests\test_engineering_comparator.py:40: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_comparator.py::test_large_integers_differing_by_one_are_not_equal
+FAILED tests/test_engineering_comparator.py::test_integer_comparison_never_uses_relative_float_tolerance
+FAILED tests/test_engineering_comparator.py::test_numeric_looking_text_retains_identity
+FAILED tests/test_engineering_comparator.py::test_numeric_looking_text_uses_text_order
+FAILED tests/test_engineering_comparator.py::test_wrong_width_rows_fail_closed_even_for_empty_expected_result
+FAILED tests/test_engineering_comparator.py::test_tolerant_matching_finds_a_complete_matching
+6 failed, 5 passed in 0.76s
