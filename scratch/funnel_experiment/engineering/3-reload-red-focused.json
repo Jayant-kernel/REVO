@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T23:38:02.885588+00:00",
+  "tests": [
+    "tests/test_engineering_hidden_diversity.py::test_hidden_transform_uses_bound_metadata_without_reloading_registry"
+  ],
+  "exit_code": 1,
+  "log_sha256": "bf4782a5cab74ac39d1a8f9da3007998551ad2e0d837545633a1fa91ce04aaf9"
+}
