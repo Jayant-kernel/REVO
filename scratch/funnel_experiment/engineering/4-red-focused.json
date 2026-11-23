@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T17:30:17.058093+00:00",
+  "tests": [
+    "tests/test_engineering_rule_qualification.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "7bf61151efa185b06e6c9bdb8f37aa847400fe9438e2e2a3beb2b546a09779f9"
+}
