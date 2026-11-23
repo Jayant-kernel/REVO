@@ -1,0 +1,10 @@
+{
+  "recorded_at": "2026-10-06T17:41:06.572316+00:00",
+  "tests": [
+    "tests/test_engineering_rule_qualification.py",
+    "tests/test_phase10_readiness.py",
+    "tests/test_runner_integrity.py"
+  ],
+  "exit_code": 0,
+  "log_sha256": "583d2f317d33ac0cf4235e3965d26042ac839d78e68dd9f4e369712874116788"
+}
