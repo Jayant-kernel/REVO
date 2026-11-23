@@ -1,0 +1,10 @@
+{
+  "recorded_at": "2026-10-06T08:59:04.677649+00:00",
+  "tests": [
+    "tests/test_engineering_comparator.py",
+    "tests/test_verify_serialization.py",
+    "tests/e2e/test_semantics_e2e.py"
+  ],
+  "exit_code": 0,
+  "log_sha256": "bfcb09fd4c1cb5897db163cf30f58317a39b2515831ec62e997e23c0f401a5f9"
+}
