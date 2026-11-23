@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T08:57:53.885715+00:00",
+  "tests": [
+    "tests/test_engineering_comparator.py::test_verification_identity_cannot_reuse_the_old_comparator_identity"
+  ],
+  "exit_code": 1,
+  "log_sha256": "3608c92b62df30b341bf0cc514242433c0cf96a7d627442cb0de03471555a3aa"
+}
