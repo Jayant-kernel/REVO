@@ -1,0 +1,33 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_hidden_transform_uses_bound_metadata_without_reloading_registry _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000251306459D0>
+
+    def test_hidden_transform_uses_bound_metadata_without_reloading_registry(monkeypatch):
+        from verified_data_factory.task_engine.hidden_fixtures import diverse_hidden_tables
+        import verified_data_factory.task_engine.registry as registry_module
+        task = generate_task(load_builtin_registry().get("sql.funnel.saas_activation_payment", 2), 1)
+        def unexpected_reload(*args, **kwargs):
+            raise AssertionError("redundant registry reload during bound-task transformation")
+        monkeypatch.setattr(registry_module, "load_builtin_registry", unexpected_reload)
+>       tables = diverse_hidden_tables(task, 43, 2)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_engineering_hidden_diversity.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\verified_data_factory\task_engine\hidden_fixtures.py:74: in diverse_hidden_tables
+    template = load_builtin_registry().get(task.template_id, task.template_version)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (), kwargs = {}
+
+    def unexpected_reload(*args, **kwargs):
+>       raise AssertionError("redundant registry reload during bound-task transformation")
+E       AssertionError: redundant registry reload during bound-task transformation
+
+tests\test_engineering_hidden_diversity.py:46: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_hidden_diversity.py::test_hidden_transform_uses_bound_metadata_without_reloading_registry
+1 failed in 0.57s
