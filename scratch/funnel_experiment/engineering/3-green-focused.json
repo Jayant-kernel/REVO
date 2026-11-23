@@ -1,0 +1,10 @@
+{
+  "recorded_at": "2026-10-06T15:33:49.650401+00:00",
+  "tests": [
+    "tests/test_engineering_hidden_diversity.py",
+    "tests/test_verify_hidden.py",
+    "tests/e2e/test_business_task_pipeline.py"
+  ],
+  "exit_code": 0,
+  "log_sha256": "9d7cd289e67b542c3abf5b539962680037cd1f8867a69ee13049de7ca8b87f54"
+}
