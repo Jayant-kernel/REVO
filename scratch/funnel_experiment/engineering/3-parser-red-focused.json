@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T23:40:20.129556+00:00",
+  "tests": [
+    "tests/test_template_safe_loader.py::test_template_loader_prefers_available_safe_accelerator"
+  ],
+  "exit_code": 1,
+  "log_sha256": "51f1eec95faef1cda8032ac1d94ec6056084161617b9c6f4015578d5d37152be"
+}
