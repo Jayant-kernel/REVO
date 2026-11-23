@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_template_loader_prefers_available_safe_accelerator ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000232DF3A72F0>
+
+    def test_template_loader_prefers_available_safe_accelerator(monkeypatch):
+        seen = []
+        class InstrumentedSafeLoader(yaml.SafeLoader):
+            def __init__(self, stream):
+                seen.append(True)
+                super().__init__(stream)
+        monkeypatch.setattr(yaml, "CSafeLoader", InstrumentedSafeLoader, raising=False)
+        load_template_file("templates/sql/funnel/saas_activation_payment.yaml")
+>       assert seen == [True]
+E       assert [] == [True]
+E         
+E         Right contains one more item: True
+E         Use -v to get more diff
+
+tests\test_template_safe_loader.py:17: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_template_safe_loader.py::test_template_loader_prefers_available_safe_accelerator
+1 failed in 0.21s
