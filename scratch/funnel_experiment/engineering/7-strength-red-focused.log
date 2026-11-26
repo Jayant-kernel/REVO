@@ -1,0 +1,73 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+______ test_a_single_semantic_kill_cannot_establish_strong_verification _______
+
+    def test_a_single_semantic_kill_cannot_establish_strong_verification():
+        task = make_task("sql.joins.simple")
+        sql = CORRECT_SQL[task.template_id]
+        candidate = make_candidate(task, sql)
+        columns, rows = oracle_rows(task)
+        labels = {f"mutation:{o.name}" for o in applicable_operators(task, sql, 20)}
+        outcome = verify_candidate(task, candidate, make_execution(task, candidate, rows, columns),
+                                   VerificationConfig(max_mutations=1), SimBackend(perturb_labels=labels))
+        assert outcome.mutation is not None
+        assert outcome.mutation.mutation_score == 1.0
+>       assert outcome.verification_strength != "STRONG"
+E       AssertionError: assert 'STRONG' != 'STRONG'
+E        +  where 'STRONG' = VerificationResult(verification_id='sql.joins.simple.v1.23fc3f6192ef.test.00.testtesttest.verify-0eea4b350582', task_i...ions', oracle_version=1, started_at='2026-10-07T02:52:05.503326+00:00', finished_at='2026-10-07T02:52:06.030815+00:00').verification_strength
+
+tests\test_engineering_strength.py:18: AssertionError
+_________________ test_executed_mutants_record_rule_coverage __________________
+
+    def test_executed_mutants_record_rule_coverage():
+        from verified_data_factory.verification.mutations import run_mutation_checks
+        context = _mutation_ctx("sql.joins.simple", SimBackend())
+        result = run_mutation_checks(context, 20, 1.0)
+>       assert all(detail.rule_ids for detail in result.details)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_engineering_strength.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_engineering_strength.py:25: in <genexpr>
+    assert all(detail.rule_ids for detail in result.details)
+               ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = MutantDetail(operator='agg-sum-to-avg', caught=False, classification='SURVIVED', reason='mutant-passed', sql_sha256='f...03b0f6481879410deed6b39a3c8a75922c4', execution_id='mutant-agg-sum-to-avg.exec-test', duration_ms=5, failure_code=None)
+item = 'rule_ids'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'MutantDetail' object has no attribute 'rule_ids'
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\main.py:1042: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_strength.py::test_a_single_semantic_kill_cannot_establish_strong_verification
+FAILED tests/test_engineering_strength.py::test_executed_mutants_record_rule_coverage
+2 failed in 0.90s
