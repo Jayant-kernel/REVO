@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T18:33:25.010508+00:00",
+  "tests": [
+    "tests/test_engineering_timestamp_inputs.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "41a6242773283d3d52dad9eab52085e235b5ef2b9bd0c23a4550b2e3f5b4908a"
+}
