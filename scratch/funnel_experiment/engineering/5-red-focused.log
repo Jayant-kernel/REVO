@@ -1,0 +1,52 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_rule_qualified_contract_has_two_executed_relations[sql.funnel.saas_activation_payment] _
+
+contract = 'sql.funnel.saas_activation_payment'
+
+    @pytest.mark.parametrize("contract", ["sql.funnel.saas_activation_payment", "sql.aggregation.manufacturing_line_scrap"])
+    def test_rule_qualified_contract_has_two_executed_relations(contract):
+        task = generate_task(load_builtin_registry().get(contract), 94001)
+        candidate = make_candidate(task, _reference_sql()[contract])
+        config = load_config("configs/sandbox_production.yaml")
+        execution = SandboxExecutor(config).execute(task, candidate)
+        assert execution.status == "SUCCEEDED"
+        data = execution.result_data
+        assert data is not None
+        expected = get_oracle(task.template_id, task.template_version).fn(task.requirements, task.tables)
+        context = MetamorphicContext(task, candidate, task.tables, [c.name for c in data.columns], data.rows,
+                                     expected.order, DerivedTaskBackend(config), ComparisonPolicy(), task.seed,
+                                     candidate_types=[c.type for c in data.columns])
+        result = run_metamorphic_checks(context)
+>       assert result.applicable >= 2
+E       AssertionError: assert 1 >= 2
+E        +  where 1 = MetamorphicResult(applicable=1, passed=1, failed=0, outcomes=[MetamorphicOutcome(relation_id='ROW_PERMUTATION', relati...come(relation_id='ADD_DUPLICATE_EVENT', relation_version=1, applicable=False, passed=False, detail='no events table')]).applicable
+
+tests\test_engineering_contract_relations.py:28: AssertionError
+_ test_rule_qualified_contract_has_two_executed_relations[sql.aggregation.manufacturing_line_scrap] _
+
+contract = 'sql.aggregation.manufacturing_line_scrap'
+
+    @pytest.mark.parametrize("contract", ["sql.funnel.saas_activation_payment", "sql.aggregation.manufacturing_line_scrap"])
+    def test_rule_qualified_contract_has_two_executed_relations(contract):
+        task = generate_task(load_builtin_registry().get(contract), 94001)
+        candidate = make_candidate(task, _reference_sql()[contract])
+        config = load_config("configs/sandbox_production.yaml")
+        execution = SandboxExecutor(config).execute(task, candidate)
+        assert execution.status == "SUCCEEDED"
+        data = execution.result_data
+        assert data is not None
+        expected = get_oracle(task.template_id, task.template_version).fn(task.requirements, task.tables)
+        context = MetamorphicContext(task, candidate, task.tables, [c.name for c in data.columns], data.rows,
+                                     expected.order, DerivedTaskBackend(config), ComparisonPolicy(), task.seed,
+                                     candidate_types=[c.type for c in data.columns])
+        result = run_metamorphic_checks(context)
+>       assert result.applicable >= 2
+E       AssertionError: assert 1 >= 2
+E        +  where 1 = MetamorphicResult(applicable=1, passed=1, failed=0, outcomes=[MetamorphicOutcome(relation_id='ROW_PERMUTATION', relation_version=1, applicable=True, passed=True, detail='')]).applicable
+
+tests\test_engineering_contract_relations.py:28: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_contract_relations.py::test_rule_qualified_contract_has_two_executed_relations[sql.funnel.saas_activation_payment]
+FAILED tests/test_engineering_contract_relations.py::test_rule_qualified_contract_has_two_executed_relations[sql.aggregation.manufacturing_line_scrap]
+2 failed in 4.79s
