@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T01:45:43.669249+00:00",
+  "tests": [
+    "tests/test_engineering_receipt_outcomes.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "c429c949a1db78030dc2659915ebce1d7dc4945995af8a3761675eb61a0e73e6"
+}
