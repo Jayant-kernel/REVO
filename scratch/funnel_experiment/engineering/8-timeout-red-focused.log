@@ -1,0 +1,44 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_transient_timeout_retries_evaluation_not_generation ___________
+
+tmp_path = WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-468/test_transient_timeout_retries0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001429A263FB0>
+
+    def test_transient_timeout_retries_evaluation_not_generation(tmp_path, monkeypatch):
+        import scripts.engineering_pipeline as module
+        observed = []
+        def evaluate(task, sql, seed):
+            observed.append(sql)
+            return timeout_result() if len(observed) == 1 else {"execution": {"status": "SUCCEEDED"}, "verification": {"verdict": "PASS", "failure_code": None}}
+        monkeypatch.setattr(module, "execute_sql", evaluate)
+        result = run_slot(tmp_path, Stub(tmp_path, False), KEY)
+>       assert result["verification"]["verdict"] == "PASS"
+E       AssertionError: assert 'FAIL' == 'PASS'
+E         
+E         - PASS
+E         + FAIL
+
+tests\test_engineering_timeout_recovery.py:20: AssertionError
+___________ test_persistent_timeout_is_inconclusive_after_one_retry ___________
+
+tmp_path = WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-468/test_persistent_timeout_is_inc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001429A282720>
+
+    def test_persistent_timeout_is_inconclusive_after_one_retry(tmp_path, monkeypatch):
+        import scripts.engineering_pipeline as module
+        calls = []
+        def evaluate(task, sql, seed):
+            calls.append(sql)
+            return timeout_result()
+        monkeypatch.setattr(module, "execute_sql", evaluate)
+        result = run_slot(tmp_path, Stub(tmp_path, False), KEY)
+>       assert len(calls) == 2
+E       assert 1 == 2
+E        +  where 1 = len(["WITH scoped AS (\n    SELECT * FROM account_funnel\n    WHERE EXTRACT(YEAR FROM occurred_at)=2025\n      AND status ...unt\nFROM segments s LEFT JOIN payments p ON p.group_key = s.group_key\nGROUP BY s.group_key ORDER BY s.group_key ASC"])
+
+tests\test_engineering_timeout_recovery.py:33: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_timeout_recovery.py::test_transient_timeout_retries_evaluation_not_generation
+FAILED tests/test_engineering_timeout_recovery.py::test_persistent_timeout_is_inconclusive_after_one_retry
+2 failed in 0.53s
