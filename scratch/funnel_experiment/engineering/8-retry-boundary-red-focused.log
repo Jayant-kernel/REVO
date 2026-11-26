@@ -1,0 +1,22 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_untrusted_retry_receipt_is_rejected_before_prompt_persistence ______
+
+tmp_path = WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-464/test_untrusted_retry_receipt_i0')
+
+    def test_untrusted_retry_receipt_is_rejected_before_prompt_persistence(tmp_path):
+        forged = {"state": "completed", "key": list(KEY),
+                  "verification": {"verdict": "FAIL", "failure_code": "RESULT_MISMATCH",
+                                   "comparison": {"differences": ["FORBIDDEN_SENTINEL_TEST"]}}}
+        with pytest.raises(ValueError, match="exact completed ledger"):
+            run_slot(tmp_path, Stub(tmp_path, False), ("stub-feedback", *KEY[1:-1], 1), retry_input=forged)
+>       assert list(tmp_path.glob("*.prompt.json")) == []
+E       AssertionError: assert [WindowsPath(...prompt.json')] == []
+E         
+E         Left contains one more item: WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-464/test_untrusted_retry_receipt_i0/a3d167ea19b2051f267aa07b762a00ff119b17aad6d8c075d8b4a1ef64025cd8.prompt.json')
+E         Use -v to get more diff
+
+tests\test_engineering_pipeline.py:107: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_pipeline.py::test_untrusted_retry_receipt_is_rejected_before_prompt_persistence
+1 failed in 0.58s
