@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T02:52:06.458046+00:00",
+  "tests": [
+    "tests/test_engineering_strength.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "d15713f430aa8794511b0e76b734bea0c1e1b9c074e385c08f83c83ab37f16ab"
+}
