@@ -1,0 +1,20 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_backend_exception_evidence_retains_the_actual_safe_reason ________
+
+    def test_backend_exception_evidence_retains_the_actual_safe_reason():
+        context = _mutation_ctx("sql.joins.simple", SimBackend())
+        def fail(*args, **kwargs):
+            raise RuntimeError("sandbox startup unavailable: test marker")
+        context.backend.run = fail
+        result = run_mutation_checks(context, 3, 1.0)
+        assert result.semantic_kills == 0
+        assert result.inconclusive == 3
+>       assert all("test marker" in detail.reason for detail in result.details)
+E       assert False
+E        +  where False = all(<generator object test_backend_exception_evidence_retains_the_actual_safe_reason.<locals>.<genexpr> at 0x00000258EEE9BE00>)
+
+tests\test_engineering_mutation_details.py:14: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_mutation_details.py::test_backend_exception_evidence_retains_the_actual_safe_reason
+1 failed in 0.36s
