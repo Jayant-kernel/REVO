@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T09:00:41.269920+00:00",
+  "tests": [
+    "tests/test_engineering_timeout_recovery.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "2187fa0e89eeced3f5b1d1a5fd0549a73f5c884f13b902604d54de80cc83570b"
+}
