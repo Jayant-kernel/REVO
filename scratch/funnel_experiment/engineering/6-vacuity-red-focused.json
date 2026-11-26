@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T02:09:36.113019+00:00",
+  "tests": [
+    "tests/test_engineering_receipt_outcomes.py::test_diverse_inputs_with_only_empty_outputs_do_not_establish_readiness"
+  ],
+  "exit_code": 1,
+  "log_sha256": "3d5cf7e83e9602abb5892ec7bf9db1380db85cb4a1dfa34abf55b21b45f3c57c"
+}
