@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-06T18:28:11.406865+00:00",
+  "tests": [
+    "tests/test_engineering_contract_relations.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "a0ba6298d03e4834c5c324494624c55102f9b299a17cf7ee263d2ba04e751180"
+}
