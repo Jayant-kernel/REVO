@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T07:33:12.615364+00:00",
+  "tests": [
+    "tests/test_engineering_pipeline.py::test_untrusted_retry_receipt_is_rejected_before_prompt_persistence"
+  ],
+  "exit_code": 1,
+  "log_sha256": "3853baab5ed3602f0ea394a5a7dd48ff2c2a68d419ac2737c4e666080331f84b"
+}
