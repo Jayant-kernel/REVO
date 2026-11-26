@@ -1,0 +1,11 @@
+{
+  "recorded_at": "2026-10-07T01:20:06.938129+00:00",
+  "tests": [
+    "tests/test_engineering_observed_fuzz.py",
+    "tests/test_engineering_mutation_details.py",
+    "tests/test_verify_mutations.py",
+    "tests/test_engineering_readiness.py"
+  ],
+  "exit_code": 0,
+  "log_sha256": "85a8110efdbb30260feb0cb1c786fd077823277c6a74c1b86dc2ed630be81808"
+}
