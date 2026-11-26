@@ -1,0 +1,38 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+______ test_mutation_summary_without_executed_rule_witnesses_is_rejected ______
+
+tmp_path = WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-447/test_mutation_summary_without_0')
+
+    def test_mutation_summary_without_executed_rule_witnesses_is_rejected(tmp_path):
+        record = complete(tmp_path)
+        path = tmp_path / "mutation.json"
+        data = json.loads(path.read_text())
+        data.pop("mutants", None)
+        data.pop("required_rules", None)
+        path.write_text(json.dumps(data))
+        record["evidence"]["mutation"]["sha256"] = sha256(path)
+>       assert not qualify(tmp_path, record)["eligible"]
+E       assert not True
+
+tests\test_engineering_receipt_outcomes.py:16: AssertionError
+__________ test_syntax_error_cannot_satisfy_a_semantic_kill_summary ___________
+
+tmp_path = WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-447/test_syntax_error_cannot_satis0')
+
+    def test_syntax_error_cannot_satisfy_a_semantic_kill_summary(tmp_path):
+        record = complete(tmp_path)
+        path = tmp_path / "mutation.json"
+        data = json.loads(path.read_text())
+        data["required_rules"] = ["year"]
+        data["mutants"] = [{"classification": "SYNTAX_ERROR", "rule_ids": ["year"]}] * 3
+        path.write_text(json.dumps(data))
+        record["evidence"]["mutation"]["sha256"] = sha256(path)
+>       assert not qualify(tmp_path, record)["eligible"]
+E       assert not True
+
+tests\test_engineering_receipt_outcomes.py:27: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_receipt_outcomes.py::test_mutation_summary_without_executed_rule_witnesses_is_rejected
+FAILED tests/test_engineering_receipt_outcomes.py::test_syntax_error_cannot_satisfy_a_semantic_kill_summary
+2 failed in 0.42s
