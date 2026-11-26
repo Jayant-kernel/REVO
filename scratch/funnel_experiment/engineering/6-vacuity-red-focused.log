@@ -1,0 +1,20 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_diverse_inputs_with_only_empty_outputs_do_not_establish_readiness ____
+
+tmp_path = WindowsPath('C:/Users/jayan/AppData/Local/Temp/pytest-of-jayan/pytest-450/test_diverse_inputs_with_only_0')
+
+    def test_diverse_inputs_with_only_empty_outputs_do_not_establish_readiness(tmp_path):
+        record = complete(tmp_path)
+        path = tmp_path / "fixture_diversity.json"
+        data = json.loads(path.read_text())
+        data["expected_results"] = [[], [], [], []]
+        path.write_text(json.dumps(data))
+        record["evidence"]["fixture_diversity"]["sha256"] = sha256(path)
+>       assert not qualify(tmp_path, record)["eligible"]
+E       assert not True
+
+tests\test_engineering_receipt_outcomes.py:37: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_receipt_outcomes.py::test_diverse_inputs_with_only_empty_outputs_do_not_establish_readiness
+1 failed in 0.30s
