@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_where_drop_does_not_treat_exception_literal_as_except_clause ______
+
+    def test_where_drop_does_not_treat_exception_literal_as_except_clause():
+        from verified_data_factory.verification.mutations import OPERATORS
+        task = make_task("sql.joins.simple")
+        sql = "WITH x AS (SELECT * FROM events WHERE event_type='exception') SELECT * FROM x"
+        mutated = OPERATORS["where-clause-drop"].apply(task, sql)
+        assert mutated is not None
+>       assert "exception" not in mutated
+E       AssertionError: assert 'exception' not in 'WITH x AS (...ECT * FROM x'
+E         
+E         'exception' is contained here:
+E           WITH x AS (SELECT * FROM events  exception') SELECT * FROM x
+E         ?                                  +++++++++
+
+tests\test_engineering_strength.py:34: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_engineering_strength.py::test_where_drop_does_not_treat_exception_literal_as_except_clause
+1 failed in 0.35s
