@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T01:13:56.241444+00:00",
+  "tests": [
+    "tests/test_engineering_mutation_details.py"
+  ],
+  "exit_code": 1,
+  "log_sha256": "cf12d74bbffe4648e4c5b3cdf731b80f56080c70bbee01173d3d3284046bb16a"
+}
