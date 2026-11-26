@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-10-07T03:03:13.915742+00:00",
+  "tests": [
+    "tests/test_engineering_strength.py::test_where_drop_does_not_treat_exception_literal_as_except_clause"
+  ],
+  "exit_code": 1,
+  "log_sha256": "9d3a3aa83b50e1c983318408454094d9383f81771894b4170a40f39b2b0179ba"
+}
